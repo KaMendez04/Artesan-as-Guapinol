@@ -4,9 +4,6 @@
 
 export const cloudinaryConfig = {
     cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-    apiKey: import.meta.env.VITE_CLOUDINARY_API_KEY,
-    // La API Secret no debe exponerse en el cliente, 
-    // se mantiene en el .env por si se necesita en un futuro (edge functions, etc.)
 };
 
 /**
