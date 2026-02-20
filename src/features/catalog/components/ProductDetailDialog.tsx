@@ -39,7 +39,7 @@ export function ProductDetailDialog({ product, open, onOpenChange, catalogToken 
         const currentImageUrl = images[currentImageIndex];
 
         // URL directa de Vercel (evitamos la Edge Function para simplicidad)
-        const BASE_URL = "https://artesan-as-guapinol.vercel.app";
+        const BASE_URL = "https://artesanias-guapinol.vercel.app";
         const shareUrl = `${BASE_URL}/v/${catalogToken || ''}?pid=${product.idProduct}`;
 
         const message = `¡Hola! 👋 Me interesa este producto de Artesanías Guapinol:
