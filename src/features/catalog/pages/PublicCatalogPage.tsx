@@ -54,17 +54,15 @@ export default function PublicCatalogPage() {
     )
 
     // Efecto para abrir el producto si viene en el URL
-    const [hasInitialSelectionOccurred, setHasInitialSelectionOccurred] = useState(false)
 
     useEffect(() => {
-        if (pid && products.length > 0 && !selectedProduct && !hasInitialSelectionOccurred) {
+        if (pid && products.length > 0 && !selectedProduct) {
             const product = products.find(p => p.idProduct === Number(pid))
             if (product) {
                 setSelectedProduct(product)
-                setHasInitialSelectionOccurred(true)
             }
         }
-    }, [pid, products, selectedProduct, hasInitialSelectionOccurred])
+    }, [pid, products, selectedProduct])
 
     const handleSelectProduct = (product: Product | null) => {
         setSelectedProduct(product)
