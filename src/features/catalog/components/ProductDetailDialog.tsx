@@ -36,9 +36,11 @@ export function ProductDetailDialog({ product, open, onOpenChange, catalogToken 
 
     const handleWhatsAppOrder = () => {
         const phone = "+50683862234";
+        const currentImageUrl = images[currentImageIndex];
 
-        const PREVIEW_FUNCTION_URL = "https://plkrvcsddwyhkjtmkquo.supabase.co/functions/v1/dynamic-api";
-        const shareUrl = `${PREVIEW_FUNCTION_URL}?token=${catalogToken || ''}&pid=${product.idProduct}`;
+        // URL directa de Vercel (evitamos la Edge Function para simplicidad)
+        const BASE_URL = "https://artesan-as-guapinol.vercel.app";
+        const shareUrl = `${BASE_URL}/v/${catalogToken || ''}?pid=${product.idProduct}`;
 
         const message = `¡Hola! 👋 Me interesa este producto de Artesanías Guapinol:
 
@@ -46,7 +48,9 @@ export function ProductDetailDialog({ product, open, onOpenChange, catalogToken 
 Precio: ₡${product.price?.toFixed(2)}
 
 Ver detalle aquí:
-${shareUrl}`;
+${shareUrl}
+
+Foto: ${currentImageUrl}`;
 
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
