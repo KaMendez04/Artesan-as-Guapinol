@@ -1,4 +1,4 @@
-// ─── Entidad base tal como vive en Supabase ───────────────────────────────────
+// Entidad Category
 export interface Category {
     idCategory: number
     created_at: string
@@ -6,23 +6,22 @@ export interface Category {
     state: CategoryState | null
 }
 
-// Enum que refleja el tipo personalizado `public.states` de Supabase
+// Enum de CategoryState
 export type CategoryState = "active" | "inactive"
 
-// ─── DTOs ─────────────────────────────────────────────────────────────────────
-/** Datos requeridos para crear una categoría */
+//Datos requeridos para crear una categoría
 export interface CreateCategoryDto {
     name: string
     state?: CategoryState
 }
 
-/** Datos opcionales para actualizar una categoría */
+//Datos opcionales para actualizar una categoría
 export interface UpdateCategoryDto {
     name?: string
     state?: CategoryState
 }
 
-// ─── Filtros para listar ──────────────────────────────────────────────────────
+//Filtros para listar
 export interface CategoryFilters {
     state?: CategoryState
     search?: string

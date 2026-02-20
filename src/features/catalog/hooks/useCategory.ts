@@ -14,12 +14,7 @@ import type {
     UpdateCategoryDto,
 } from "@/features/catalog/types/category.types"
 
-// ─── Queries (lectura) ────────────────────────────────────────────────────────
-
-/**
- * Hook para listar categorías.
- * @example const { data, isLoading } = useCategories({ state: "active" })
- */
+// Hook para listar categorías
 export function useCategories(filters?: CategoryFilters) {
     return useQuery({
         queryKey: categoryKeys.list(filters),
@@ -27,10 +22,7 @@ export function useCategories(filters?: CategoryFilters) {
     })
 }
 
-/**
- * Hook para obtener una categoría por ID.
- * @example const { data } = useCategory(1)
- */
+// Hook para obtener una categoría por ID
 export function useCategory(id: number) {
     return useQuery({
         queryKey: categoryKeys.detail(id),
@@ -39,12 +31,7 @@ export function useCategory(id: number) {
     })
 }
 
-// ─── Mutations (escritura) ────────────────────────────────────────────────────
-
-/**
- * Hook para crear una categoría.
- * Al completarse, invalida la lista para refrescarla automáticamente.
- */
+// Hook para crear una categoría
 export function useCreateCategory() {
     const queryClient = useQueryClient()
 
@@ -56,10 +43,7 @@ export function useCreateCategory() {
     })
 }
 
-/**
- * Hook para actualizar una categoría.
- * Invalida tanto la lista como el detalle específico.
- */
+// Hook para actualizar una categoría
 export function useUpdateCategory() {
     const queryClient = useQueryClient()
 
@@ -73,9 +57,7 @@ export function useUpdateCategory() {
     })
 }
 
-/**
- * Hook para eliminar (hard delete) una categoría.
- */
+// Hook para eliminar (hard delete) una categoría
 export function useDeleteCategory() {
     const queryClient = useQueryClient()
 
@@ -87,9 +69,7 @@ export function useDeleteCategory() {
     })
 }
 
-/**
- * Hook para desactivar (soft delete) una categoría.
- */
+// Hook para desactivar (soft delete) una categoría
 export function useDeactivateCategory() {
     const queryClient = useQueryClient()
 

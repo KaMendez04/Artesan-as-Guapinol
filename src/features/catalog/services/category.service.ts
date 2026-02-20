@@ -8,12 +8,6 @@ import type {
 
 const TABLE = "Category" as const
 
-// ─── Read ─────────────────────────────────────────────────────────────────────
-
-/**
- * Obtiene todas las categorías.
- * Acepta filtros opcionales para estado y búsqueda por nombre.
- */
 export async function getCategories(filters?: CategoryFilters): Promise<Category[]> {
     let query = supabase
         .from(TABLE)
@@ -35,9 +29,6 @@ export async function getCategories(filters?: CategoryFilters): Promise<Category
     return data
 }
 
-/**
- * Obtiene una sola categoría por su ID.
- */
 export async function getCategoryById(id: number): Promise<Category> {
     const { data, error } = await supabase
         .from(TABLE)
@@ -50,11 +41,6 @@ export async function getCategoryById(id: number): Promise<Category> {
     return data
 }
 
-// ─── Create ───────────────────────────────────────────────────────────────────
-
-/**
- * Crea una nueva categoría.
- */
 export async function createCategory(dto: CreateCategoryDto): Promise<Category> {
     const { data, error } = await supabase
         .from(TABLE)
@@ -67,11 +53,6 @@ export async function createCategory(dto: CreateCategoryDto): Promise<Category> 
     return data
 }
 
-// ─── Update ───────────────────────────────────────────────────────────────────
-
-/**
- * Actualiza los campos de una categoría existente.
- */
 export async function updateCategory(id: number, dto: UpdateCategoryDto): Promise<Category> {
     const { data, error } = await supabase
         .from(TABLE)
@@ -85,13 +66,6 @@ export async function updateCategory(id: number, dto: UpdateCategoryDto): Promis
     return data
 }
 
-// ─── Delete ───────────────────────────────────────────────────────────────────
-
-/**
- * Elimina una categoría por ID.
- * En lugar de borrar físicamente, considera usar `updateCategory` para
- * cambiar el estado a "inactive" (soft delete).
- */
 export async function deleteCategory(id: number): Promise<void> {
     const { error } = await supabase
         .from(TABLE)
@@ -101,9 +75,6 @@ export async function deleteCategory(id: number): Promise<void> {
     if (error) throw new Error(`Error al eliminar categoría ${id}: ${error.message}`)
 }
 
-/**
- * Soft delete: desactiva la categoría en vez de borrarla.
- */
 export async function deactivateCategory(id: number): Promise<Category> {
     return updateCategory(id, { state: "inactive" })
 }

@@ -1,12 +1,6 @@
-/**
- * Barrel export para la feature de catálogo.
- * Importa todo lo de categorías desde un solo punto:
- *
- * @example
- * import { useCategories, useCreateCategory } from "@/features/catalog"
- */
+// Index de importaciones para evitar hacer muchos imports
 
-// Tipos
+// Tipos    
 export type {
     Category,
     CategoryState,
@@ -15,7 +9,7 @@ export type {
     CategoryFilters,
 } from "./types/category.types"
 
-// Servicio (acceso directo si se necesita fuera de React)
+// Servicios
 export {
     getCategories,
     getCategoryById,
@@ -35,5 +29,5 @@ export {
     useDeactivateCategory,
 } from "./hooks/useCategory"
 
-// Query keys (para invalidación manual si se necesita)
+// Query keys
 export { categoryKeys } from "./constants/category.keys"
