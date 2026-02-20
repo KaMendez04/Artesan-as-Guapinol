@@ -17,7 +17,6 @@ export function CategoryCard({ category, onEdit }: CategoryCardProps) {
             className={`relative overflow-hidden transition-all hover:shadow-md ${!isActive ? "opacity-60" : ""
                 }`}
         >
-            {/* Image placeholder */}
             <div
                 className={`aspect-square w-full rounded-t-xl ${isActive
                         ? "bg-gradient-to-br from-primary/10 to-primary/5"

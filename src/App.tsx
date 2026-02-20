@@ -1,12 +1,15 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router'
+import { Toaster } from 'sileo'
 import AppLayout from '@/shared/components/layout/AppLayout'
 import DashboardPage from '@/features/dashboard/pages/DashboardPage'
 import CatalogPage from '@/features/catalog/pages/CatalogPage'
 
 function App() {
+
   return (
     <Router>
+      <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<DashboardPage />} />

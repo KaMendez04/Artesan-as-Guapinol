@@ -15,7 +15,6 @@ export default function CatalogPage() {
     const [editingCategory, setEditingCategory] = useState<Category | null>(null)
     const [copied, setCopied] = useState(false)
 
-    // Carga categorías, filtrando por búsqueda local
     const { data: categories = [], isLoading } = useCategories()
 
     const filtered = categories.filter((c) =>
@@ -40,14 +39,13 @@ export default function CatalogPage() {
     async function handleShareLink() {
         const url = `${window.location.origin}/catalogo/publico`
         await navigator.clipboard.writeText(url)
-        sileo.info({ title: "Enlace copiado", description: "El catálogo público está listo para compartir." })
+        sileo.info({ title: "Enlace copiado"})
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
     }
 
     return (
         <div className="flex flex-col gap-5">
-            {/* ── Encabezado ── */}
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold tracking-tight">Catálogo</h1>
                 <Button
@@ -61,7 +59,7 @@ export default function CatalogPage() {
                 </Button>
             </div>
 
-            {/* ── Barra de búsqueda + botón agregar ── */}
+
             <div className="flex gap-2">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -78,7 +76,6 @@ export default function CatalogPage() {
                 </Button>
             </div>
 
-            {/* ── Grid de tarjetas ── */}
             {isLoading ? (
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     {Array.from({ length: 6 }).map((_, i) => (
@@ -109,7 +106,6 @@ export default function CatalogPage() {
                 </div>
             )}
 
-            {/* ── Modal crear / editar ── */}
             <CategoryFormDialog
                 open={dialogOpen}
                 onClose={handleCloseDialog}
