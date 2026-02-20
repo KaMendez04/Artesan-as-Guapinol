@@ -1,32 +1,49 @@
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardContent } from "@/shared/components/ui/card"
-import { Pencil } from "lucide-react"
+import { Pencil, Share2 } from "lucide-react"
 import type { Category } from "@/features/catalog/types/category.types"
+import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
 
 interface CategoryCardProps {
     category: Category
-    onEdit: (category: Category) => void
+    onEdit?: (category: Category) => void
+    onShare?: (category: Category) => void
+    onClick?: (category: Category) => void
 }
 
-export function CategoryCard({ category, onEdit }: CategoryCardProps) {
+export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCardProps) {
     const isActive = category.state === "active"
 
     return (
         <Card
-            className={`relative overflow-hidden transition-all hover:shadow-md ${!isActive ? "opacity-60" : ""
-                }`}
+            className={`relative overflow-hidden transition-all p-0 gap-0 ${!isActive ? "opacity-60" : ""
+                } ${onClick ? "cursor-pointer hover:shadow-md ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2" : "hover:shadow-md"}`}
+            onClick={() => onClick?.(category)}
         >
             <div
-                className={`aspect-square w-full rounded-t-xl ${isActive
-                        ? "bg-gradient-to-br from-primary/10 to-primary/5"
-                        : "bg-muted"
+                className={`aspect-square w-full rounded-t-xl overflow-hidden group ${isActive
+                    ? "bg-gradient-to-br from-primary/10 to-primary/5"
+                    : "bg-muted"
                     }`}
             >
-                {!isActive && (
-                    <div className="flex h-full items-center justify-center">
-                        <span className="text-sm font-medium text-muted-foreground">No Disponible</span>
-                    </div>
+                {category.image_url ? (
+                    <img
+                        src={
+                            isCloudinaryUrl(category.image_url)
+                                ? category.image_url.replace('/upload/', '/upload/c_fill,w_400,h_400,q_auto,f_auto/')
+                                : category.image_url
+                        }
+                        alt={category.name ?? "Categoría"}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                    />
+                ) : (
+                    !isActive && (
+                        <div className="flex h-full items-center justify-center">
+                            <span className="text-sm font-medium text-muted-foreground">No Disponible</span>
+                        </div>
+                    )
                 )}
             </div>
 
@@ -42,15 +59,29 @@ export function CategoryCard({ category, onEdit }: CategoryCardProps) {
                         </Badge>
                     </div>
 
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
-                        onClick={() => onEdit(category)}
-                        aria-label={`Editar ${category.name}`}
-                    >
-                        <Pencil className="size-4" />
-                    </Button>
+                    {onShare && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
+                            onClick={() => onShare(category)}
+                            aria-label={`Compartir ${category.name}`}
+                        >
+                            <Share2 className="size-4" />
+                        </Button>
+                    )}
+
+                    {onEdit && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
+                            onClick={() => onEdit(category)}
+                            aria-label={`Editar ${category.name}`}
+                        >
+                            <Pencil className="size-4" />
+                        </Button>
+                    )}
                 </div>
             </CardContent>
         </Card>
