@@ -170,6 +170,7 @@ export default function PublicCatalogPage() {
                 product={selectedProduct}
                 open={!!selectedProduct}
                 onOpenChange={(open) => !open && handleSelectProduct(null)}
+                catalogToken={token}
             />
         </div>
     )

@@ -15,9 +15,10 @@ interface ProductDetailDialogProps {
     product: Product | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    catalogToken?: string;
 }
 
-export function ProductDetailDialog({ product, open, onOpenChange }: ProductDetailDialogProps) {
+export function ProductDetailDialog({ product, open, onOpenChange, catalogToken }: ProductDetailDialogProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     if (!product) return null;
@@ -36,7 +37,15 @@ export function ProductDetailDialog({ product, open, onOpenChange }: ProductDeta
     const handleWhatsAppOrder = () => {
         const phone = "+50683862234";
         const currentImageUrl = images[currentImageIndex];
-        const message = `Hola, me interesa este producto de Artesanías Guapinol:\n\n*${product.name}*\nPrecio: ₡${product.price?.toFixed(2)}\n\nLink del producto: ${window.location.href}\n\nFoto: ${currentImageUrl}`;
+
+        // URL de tu función de Supabase desplegada
+        const PREVIEW_FUNCTION_URL = "https://plkrvcsddwyhkjtmkquo.supabase.co/functions/v1/dynamic-api";
+
+        const shareUrl = PREVIEW_FUNCTION_URL
+            ? `${PREVIEW_FUNCTION_URL}?token=${catalogToken || ''}&pid=${product.idProduct}`
+            : window.location.href;
+
+        const message = `Hola, me interesa este producto de Artesanías Guapinol:\n\n*${product.name}*\nPrecio: ₡${product.price?.toFixed(2)}\n\nLink del producto: ${shareUrl}\n\nFoto: ${currentImageUrl}`;
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
     };
