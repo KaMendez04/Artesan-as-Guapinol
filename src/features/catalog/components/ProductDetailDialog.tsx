@@ -36,16 +36,18 @@ export function ProductDetailDialog({ product, open, onOpenChange, catalogToken 
 
     const handleWhatsAppOrder = () => {
         const phone = "+50683862234";
-        const currentImageUrl = images[currentImageIndex];
 
-        // URL de tu función de Supabase desplegada
         const PREVIEW_FUNCTION_URL = "https://plkrvcsddwyhkjtmkquo.supabase.co/functions/v1/dynamic-api";
+        const shareUrl = `${PREVIEW_FUNCTION_URL}?token=${catalogToken || ''}&pid=${product.idProduct}`;
 
-        const shareUrl = PREVIEW_FUNCTION_URL
-            ? `${PREVIEW_FUNCTION_URL}?token=${catalogToken || ''}&pid=${product.idProduct}`
-            : window.location.href;
+        const message = `¡Hola! 👋 Me interesa este producto de Artesanías Guapinol:
 
-        const message = `Hola, me interesa este producto de Artesanías Guapinol:\n\n*${product.name}*\nPrecio: ₡${product.price?.toFixed(2)}\n\nLink del producto: ${shareUrl}\n\nFoto: ${currentImageUrl}`;
+*${product.name}*
+Precio: ₡${product.price?.toFixed(2)}
+
+Ver detalle aquí:
+${shareUrl}`;
+
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
     };
