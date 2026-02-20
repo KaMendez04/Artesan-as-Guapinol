@@ -6,6 +6,9 @@ import {
     updateCategory,
     deleteCategory,
     deactivateCategory,
+    createCatalogShare,
+    getGeneralCatalogShare,
+    getCatalogShareById,
 } from "@/features/catalog/services/category.service"
 import { categoryKeys } from "@/features/catalog/constants/category.keys"
 import type {
@@ -79,5 +82,30 @@ export function useDeactivateCategory() {
             queryClient.invalidateQueries({ queryKey: categoryKeys.lists() })
             queryClient.invalidateQueries({ queryKey: categoryKeys.detail(id) })
         },
+    })
+}
+
+// Hook para crear un enlace compartido
+export function useCreateCatalogShare() {
+    return useMutation({
+        mutationFn: ({ name, categoryId }: { name?: string; categoryId?: number } = {}) =>
+            createCatalogShare(name, categoryId),
+    })
+}
+
+// Hook para obtener el enlace general existente
+export function useGeneralCatalogShare() {
+    return useQuery({
+        queryKey: ["catalog-share", "general"],
+        queryFn: getGeneralCatalogShare,
+    })
+}
+
+// Hook para obtener detalles de un enlace compartido por su UUID
+export function useCatalogShareDetail(id: string) {
+    return useQuery({
+        queryKey: ["catalog-share", id],
+        queryFn: () => getCatalogShareById(id),
+        enabled: !!id,
     })
 }

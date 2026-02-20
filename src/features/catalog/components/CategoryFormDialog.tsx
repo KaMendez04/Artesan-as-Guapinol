@@ -6,9 +6,11 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogDescription,
     DialogFooter,
 } from "@/shared/components/ui/dialog"
 import { Input } from "@/shared/components/ui/input"
+import { ImageUpload } from "@/shared/components/ui/image-upload"
 import { useCreateCategory, useUpdateCategory } from "@/features/catalog/hooks/useCategory"
 import type { Category, CategoryState } from "@/features/catalog/types/category.types"
 
@@ -23,6 +25,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
     const [name, setName] = useState("")
     const [state, setState] = useState<CategoryState>("active")
+    const [imageUrl, setImageUrl] = useState<string | null>(null)
 
     const { mutate: create, isPending: creating } = useCreateCategory()
     const { mutate: update, isPending: updating } = useUpdateCategory()
@@ -33,9 +36,11 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
         if (category) {
             setName(category.name ?? "")
             setState(category.state ?? "active")
+            setImageUrl(category.image_url)
         } else {
             setName("")
             setState("active")
+            setImageUrl(null)
         }
     }, [category, open])
 
@@ -45,7 +50,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
         if (isEditing && category) {
             update(
-                { id: category.idCategory, dto: { name: name.trim(), state } },
+                { id: category.idCategory, dto: { name: name.trim(), state, image_url: imageUrl?.trim() || null } },
                 {
                     onSuccess: () => {
                         sileo.success({ title: "Categoría actualizada" })
@@ -58,7 +63,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
             )
         } else {
             create(
-                { name: name.trim(), state },
+                { name: name.trim(), state, image_url: imageUrl?.trim() || null },
                 {
                     onSuccess: () => {
                         sileo.success({ title: "Categoría agregada" })
@@ -77,6 +82,9 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
             <DialogContent className="sm:max-w-sm">
                 <DialogHeader>
                     <DialogTitle>{isEditing ? "Editar categoría" : "Nueva categoría"}</DialogTitle>
+                    <DialogDescription className="sr-only">
+                        {isEditing ? "Modifica los detalles de la categoría" : "Crea una nueva categoría para tus productos"}
+                    </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -92,6 +100,19 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                             placeholder="Ej: Pulseras"
                             autoFocus
                             required
+                        />
+                    </div>
+
+                    {/* Imagen */}
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-medium">
+                            Imagen de la categoría
+                        </label>
+                        <ImageUpload
+                            value={imageUrl}
+                            onChange={setImageUrl}
+                            onUploadStart={() => { }} // Opcional: mostrar un loader global si se desea
+                            onUploadEnd={() => { }}
                         />
                     </div>
 

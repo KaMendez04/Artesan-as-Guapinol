@@ -1,21 +1,25 @@
 import { useState } from "react"
 import { Link2, Plus, Search } from "lucide-react"
+import { useNavigate } from "react-router"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { CategoryCard } from "@/features/catalog/components/CategoryCard"
 import { CategoryFormDialog } from "@/features/catalog/components/CategoryFormDialog"
-import { useCategories } from "@/features/catalog/hooks/useCategory"
+import { useCategories, useCreateCatalogShare } from "@/features/catalog/hooks/useCategory"
+import { getGeneralCatalogShare } from "@/features/catalog/services/category.service"
 import type { Category } from "@/features/catalog/types/category.types"
 
 export default function CatalogPage() {
+    const navigate = useNavigate()
     const [search, setSearch] = useState("")
     const [dialogOpen, setDialogOpen] = useState(false)
     const [editingCategory, setEditingCategory] = useState<Category | null>(null)
     const [copied, setCopied] = useState(false)
 
     const { data: categories = [], isLoading } = useCategories()
+    const { mutateAsync: createShare, isPending: isSharing } = useCreateCatalogShare()
 
     const filtered = categories.filter((c) =>
         c.name?.toLowerCase().includes(search.toLowerCase())
@@ -37,11 +41,33 @@ export default function CatalogPage() {
     }
 
     async function handleShareLink() {
-        const url = `${window.location.origin}/catalogo/publico`
-        await navigator.clipboard.writeText(url)
-        sileo.info({ title: "Enlace copiado"})
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+        try {
+            let share = await getGeneralCatalogShare()
+            if (!share) {
+                share = await createShare({ name: "General" })
+            }
+            const url = `${window.location.origin}/v/${share.id}`
+            await navigator.clipboard.writeText(url)
+            sileo.info({ title: "Enlace copiado" })
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        } catch (error) {
+            sileo.error({ title: "Error", description: "No se pudo obtener el enlace" })
+        }
+    }
+
+    async function handleShareCategory(category: Category) {
+        try {
+            const share = await createShare({
+                name: `Categoría: ${category.name}`,
+                categoryId: category.idCategory
+            })
+            const url = `${window.location.origin}/v/${share.id}`
+            await navigator.clipboard.writeText(url)
+            sileo.info({ title: "Enlace de categoría copiado" })
+        } catch (error) {
+            sileo.error({ title: "Error", description: "No se pudo generar el enlace de la categoría" })
+        }
     }
 
     return (
@@ -53,9 +79,10 @@ export default function CatalogPage() {
                     size="sm"
                     onClick={handleShareLink}
                     className="gap-1.5"
+                    disabled={isSharing}
                 >
                     <Link2 className="size-4" />
-                    {copied ? "¡Copiado!" : "Compartir"}
+                    {isSharing ? "Generando..." : (copied ? "¡Copiado!" : "Compartir")}
                 </Button>
             </div>
 
@@ -101,6 +128,8 @@ export default function CatalogPage() {
                             key={category.idCategory}
                             category={category}
                             onEdit={handleEdit}
+                            onShare={handleShareCategory}
+                            onClick={(c) => navigate(`/catalogo/${c.idCategory}/productos`)}
                         />
                     ))}
                 </div>

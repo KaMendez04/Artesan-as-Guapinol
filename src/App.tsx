@@ -4,6 +4,8 @@ import { Toaster } from 'sileo'
 import AppLayout from '@/shared/components/layout/AppLayout'
 import DashboardPage from '@/features/dashboard/pages/DashboardPage'
 import CatalogPage from '@/features/catalog/pages/CatalogPage'
+import PublicCatalogPage from '@/features/catalog/pages/PublicCatalogPage'
+import CategoryProductsPage from '@/features/catalog/pages/CategoryProductsPage'
 
 function App() {
 
@@ -15,8 +17,13 @@ function App() {
           <Route index element={<DashboardPage />} />
           <Route path="ventas" element={<div className="p-4">Ventas Page (Coming Soon)</div>} />
           <Route path="catalogo" element={<CatalogPage />} />
+          <Route path="catalogo/:id/productos" element={<CategoryProductsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+
+        {/* Public Routes */}
+        <Route path="/v/:token" element={<PublicCatalogPage />} />
+        <Route path="/v/:token/:id" element={<PublicCatalogPage />} />
       </Routes>
     </Router>
   )
