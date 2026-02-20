@@ -23,28 +23,24 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 export default function DashboardPage() {
     return (
         <div className="flex flex-col gap-6">
-            {/* Quick Actions */}
+            {/* Quick Actions — estilo igual al sidebar */}
             <div className="grid grid-cols-2 gap-4">
-                <Card className="hover:bg-accent/5 transition-colors cursor-pointer">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Ventas</CardTitle>
-                        <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">Nueva Venta</div>
-                        <p className="text-xs text-muted-foreground">Registrar transacción</p>
-                    </CardContent>
-                </Card>
-                <Card className="hover:bg-accent/5 transition-colors cursor-pointer">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Catálogo</CardTitle>
-                        <Store className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">Ver Productos</div>
-                        <p className="text-xs text-muted-foreground">Gestionar inventario</p>
-                    </CardContent>
-                </Card>
+                <a href="/ventas">
+                    <Card className="hover:bg-accent/10 transition-all hover:shadow-md cursor-pointer">
+                        <CardContent className="flex flex-col items-center justify-center gap-3 py-8">
+                            <ShoppingBag className="size-8 text-muted-foreground" />
+                            <span className="text-xl font-semibold">Ventas</span>
+                        </CardContent>
+                    </Card>
+                </a>
+                <a href="/catalogo">
+                    <Card className="hover:bg-accent/10 transition-all hover:shadow-md cursor-pointer">
+                        <CardContent className="flex flex-col items-center justify-center gap-3 py-8">
+                            <Store className="size-8 text-muted-foreground" />
+                            <span className="text-xl font-semibold">Catálogo</span>
+                        </CardContent>
+                    </Card>
+                </a>
             </div>
 
             {/* Charts Section */}
