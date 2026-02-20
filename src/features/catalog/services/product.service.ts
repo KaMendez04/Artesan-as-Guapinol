@@ -50,7 +50,7 @@ export async function createProduct(dto: CreateProductDto): Promise<Product> {
         .from(TABLE)
         .insert([{
             name: dto.name,
-            imgUrl: dto.imgUrl,
+            images: dto.images,
             price: dto.price,
             idCategory: dto.idCategory,
             state: dto.state ?? "active"

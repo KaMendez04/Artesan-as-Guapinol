@@ -1,19 +1,25 @@
-import { useState } from "react"
-import { useParams, useNavigate } from "react-router"
+import { useState, useEffect } from "react"
+import { useParams, useNavigate, useSearchParams } from "react-router"
 import { Search } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { CategoryCard } from "@/features/catalog/components/CategoryCard"
 import { ProductCard } from "@/features/catalog/components/ProductCard"
+import { ProductDetailDialog } from "@/features/catalog/components/ProductDetailDialog"
 import { useCategories, useCatalogShareDetail } from "@/features/catalog/hooks/useCategory"
 import { useProducts } from "@/features/catalog/hooks/useProduct"
 import type { Product } from "@/features/catalog/types/product.types"
+import type { Category } from "@/features/catalog/types/category.types"
 
 export default function PublicCatalogPage() {
     const { token, id } = useParams()
     const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
     const [search, setSearch] = useState("")
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
+    const pid = searchParams.get("pid")
 
     // Obtener detalles del share
     const { data: share, isLoading: isLoadingShare } = useCatalogShareDetail(token || "")
@@ -33,19 +39,42 @@ export default function PublicCatalogPage() {
     const isLoading = isLoadingShare || isLoadingCats || (!!categoryId && isLoadingProducts)
 
     // Filtrar categorías si no hay una seleccionada
-    const filteredCategories = categories.filter((c) => {
+    const filteredCategories = categories.filter((c: Category) => {
         const matchesSearch = c.name?.toLowerCase().includes(search.toLowerCase())
         const matchesCategory = share?.category_id ? c.idCategory === share.category_id : true
         return matchesSearch && matchesCategory
     })
 
     // Obtener detalles de la categoría actual si hay categoryId
-    const currentCategory = categories.find(c => c.idCategory === categoryId)
+    const currentCategory = categories.find((c: Category) => c.idCategory === categoryId)
 
     // Filtrar productos si hay una categoría seleccionada
     const filteredProducts = products.filter((p: Product) =>
         p.name?.toLowerCase().includes(search.toLowerCase())
     )
+
+    // Efecto para abrir el producto si viene en el URL
+    const [hasInitialSelectionOccurred, setHasInitialSelectionOccurred] = useState(false)
+
+    useEffect(() => {
+        if (pid && products.length > 0 && !selectedProduct && !hasInitialSelectionOccurred) {
+            const product = products.find(p => p.idProduct === Number(pid))
+            if (product) {
+                setSelectedProduct(product)
+                setHasInitialSelectionOccurred(true)
+            }
+        }
+    }, [pid, products, selectedProduct, hasInitialSelectionOccurred])
+
+    const handleSelectProduct = (product: Product | null) => {
+        setSelectedProduct(product)
+        if (product) {
+            searchParams.set("pid", product.idProduct.toString())
+        } else {
+            searchParams.delete("pid")
+        }
+        setSearchParams(searchParams, { replace: true })
+    }
 
     return (
         <div className="min-h-screen bg-background p-4 md:p-8">
@@ -105,6 +134,7 @@ export default function PublicCatalogPage() {
                                 <ProductCard
                                     key={product.idProduct}
                                     product={product}
+                                    onClick={(p) => handleSelectProduct(p)}
                                 />
                             ))}
                         </div>
@@ -119,11 +149,11 @@ export default function PublicCatalogPage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                            {filteredCategories.map((category) => (
+                            {filteredCategories.map((category: Category) => (
                                 <CategoryCard
                                     key={category.idCategory}
                                     category={category}
-                                    onClick={(c) => navigate(`/v/${token}/${c.idCategory}`)}
+                                    onClick={(c: Category) => navigate(`/v/${token}/${c.idCategory}`)}
                                 />
                             ))}
                         </div>
@@ -135,6 +165,12 @@ export default function PublicCatalogPage() {
                     <p>© {new Date().getFullYear()} Artesanías Guapinol. Todos los derechos reservados.</p>
                 </footer>
             </div>
+
+            <ProductDetailDialog
+                product={selectedProduct}
+                open={!!selectedProduct}
+                onOpenChange={(open) => !open && handleSelectProduct(null)}
+            />
         </div>
     )
 }

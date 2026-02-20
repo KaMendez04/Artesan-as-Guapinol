@@ -4,7 +4,7 @@ export interface Product {
     idProduct: number
     created_at: string
     name: string | null
-    imgUrl: string | null
+    images: string[] | null
     price: number | null
     idCategory: number | null
     state: ProductState | null
@@ -12,7 +12,7 @@ export interface Product {
 
 export interface CreateProductDto {
     name: string
-    imgUrl?: string | null
+    images?: string[] | null
     price: number
     idCategory: number
     state?: ProductState
@@ -20,7 +20,7 @@ export interface CreateProductDto {
 
 export interface UpdateProductDto {
     name?: string
-    imgUrl?: string | null
+    images?: string[] | null
     price?: number
     idCategory?: number
     state?: ProductState

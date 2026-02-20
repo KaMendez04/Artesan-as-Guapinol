@@ -13,7 +13,7 @@ import {
 import { Input } from "@/shared/components/ui/input"
 import { Button } from "@/shared/components/ui/button"
 import { Label } from "@/shared/components/ui/label"
-import { ImageUpload } from "@/shared/components/ui/image-upload"
+import { MultiImageUpload } from "@/shared/components/ui/multi-image-upload"
 import { useCreateProduct, useUpdateProduct } from "@/features/catalog/hooks/useProduct"
 import { sileo } from "sileo"
 import type { Product } from "@/features/catalog/types/product.types"
@@ -21,7 +21,7 @@ import type { Product } from "@/features/catalog/types/product.types"
 const productSchema = z.object({
     name: z.string().min(1, "El nombre es requerido"),
     price: z.number().min(0, "El precio debe ser mayor o igual a 0"),
-    imgUrl: z.string().nullable().optional(),
+    images: z.array(z.string()).nullable().optional(),
     state: z.enum(["active", "inactive"]),
 })
 
@@ -56,26 +56,26 @@ export function ProductFormDialog({
         defaultValues: {
             name: "",
             price: 0,
-            imgUrl: null,
+            images: [],
             state: "active",
         },
     })
 
-    const imgUrl = watch("imgUrl")
+    const images = watch("images")
 
     useEffect(() => {
         if (product && open) {
             reset({
                 name: product.name ?? "",
                 price: product.price ?? 0,
-                imgUrl: product.imgUrl,
+                images: product.images || [],
                 state: product.state ?? "active",
             })
         } else if (!open) {
             reset({
                 name: "",
                 price: 0,
-                imgUrl: null,
+                images: [],
                 state: "active",
             })
         }
@@ -88,7 +88,7 @@ export function ProductFormDialog({
                     id: product.idProduct,
                     dto: { ...data, idCategory },
                 })
-                sileo.success({ title: "Producto actualizado"})
+                sileo.success({ title: "Producto actualizado" })
             } else {
                 await createProduct.mutateAsync({
                     ...data,
@@ -114,13 +114,12 @@ export function ProductFormDialog({
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
                     <div className="space-y-4">
-                        <div className="flex justify-center">
-                            <div className="w-full max-w-[200px]">
-                                <ImageUpload
-                                    value={imgUrl || ""}
-                                    onChange={(url) => setValue("imgUrl", url)}
-                                />
-                            </div>
+                        <div className="space-y-2">
+                            <Label>Imágenes del producto</Label>
+                            <MultiImageUpload
+                                value={images}
+                                onChange={(urls) => setValue("images", urls)}
+                            />
                         </div>
 
                         <div className="space-y-2">

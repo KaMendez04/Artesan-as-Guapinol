@@ -9,23 +9,25 @@ interface ProductCardProps {
     product: Product
     onEdit?: (product: Product) => void
     onDelete?: (product: Product) => void
+    onClick?: (product: Product) => void
 }
 
-export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
+export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardProps) {
     const isActive = product.state === "active"
 
     return (
         <Card
-            className={`relative overflow-hidden transition-all hover:shadow-md p-0 gap-0 ${!isActive ? "opacity-60" : ""
+            onClick={() => onClick?.(product)}
+            className={`relative overflow-hidden transition-all hover:shadow-md p-0 gap-0 cursor-pointer ${!isActive ? "opacity-60" : ""
                 }`}
         >
             <div className="relative aspect-square w-full">
-                {product.imgUrl ? (
+                {product.images && product.images.length > 0 ? (
                     <img
                         src={
-                            isCloudinaryUrl(product.imgUrl)
-                                ? product.imgUrl.replace("/upload/", "/upload/f_auto,q_auto,w_400,h_400,c_fill/")
-                                : product.imgUrl
+                            isCloudinaryUrl(product.images[0])
+                                ? product.images[0].replace("/upload/", "/upload/f_auto,q_auto,w_400,h_400,c_fill/")
+                                : product.images[0]
                         }
                         alt={product.name ?? ""}
                         className="h-full w-full object-cover transition-transform hover:scale-105"
