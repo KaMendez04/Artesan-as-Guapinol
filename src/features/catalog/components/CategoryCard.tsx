@@ -64,7 +64,10 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             variant="ghost"
                             size="icon"
                             className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
-                            onClick={() => onShare(category)}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                onShare(category)
+                            }}
                             aria-label={`Compartir ${category.name}`}
                         >
                             <Share2 className="size-4" />
@@ -76,7 +79,10 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             variant="ghost"
                             size="icon"
                             className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
-                            onClick={() => onEdit(category)}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                onEdit(category)
+                            }}
                             aria-label={`Editar ${category.name}`}
                         >
                             <Pencil className="size-4" />

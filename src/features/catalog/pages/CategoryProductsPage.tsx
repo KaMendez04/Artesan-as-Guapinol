@@ -70,9 +70,6 @@ export default function CategoryProductsPage() {
                         <h1 className="text-3xl font-bold tracking-tight">
                             {isLoadingCategory ? <Skeleton className="h-9 w-48" /> : category?.name}
                         </h1>
-                        <p className="text-muted-foreground">
-                            Gestiona los productos de esta categoría
-                        </p>
                     </div>
                     <Button onClick={handleAdd} className="gap-2">
                         <Plus className="size-4" />
