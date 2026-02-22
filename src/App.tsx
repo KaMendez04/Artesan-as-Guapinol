@@ -6,6 +6,8 @@ import DashboardPage from '@/features/dashboard/pages/DashboardPage'
 import CatalogPage from '@/features/catalog/pages/CatalogPage'
 import PublicCatalogPage from '@/features/catalog/pages/PublicCatalogPage'
 import CategoryProductsPage from '@/features/catalog/pages/CategoryProductsPage'
+import SalesPage from './features/sales/pages/SalesPage'
+import SaleDetailPage from './features/sales/pages/SaleDetailPage'
 
 function App() {
 
@@ -13,13 +15,16 @@ function App() {
     <Router>
       <Toaster position="top-right" />
       <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="ventas" element={<div className="p-4">Ventas Page (Coming Soon)</div>} />
-          <Route path="catalogo" element={<CatalogPage />} />
-          <Route path="catalogo/:id/productos" element={<CategoryProductsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
+        import SaleDetailPage from "./features/sales/pages/SaleDetailPage"
+
+      <Route path="/" element={<AppLayout />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="ventas" element={<SalesPage />} />
+        <Route path="ventas/:idSale" element={<SaleDetailPage />} />  {/* ✅ AQUI */}
+        <Route path="catalogo" element={<CatalogPage />} />
+        <Route path="catalogo/:id/productos" element={<CategoryProductsPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
 
         {/* Public Routes */}
         <Route path="/v/:token" element={<PublicCatalogPage />} />
