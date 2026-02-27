@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react"
 import { Calendar, ChevronLeft, MapPin, Plus, Search } from "lucide-react"
 import { useNavigate } from "react-router-dom"
-
 import { useAllSales } from "../hooks/useSale"
 import { usePlaces } from "../hooks/usePlace"
 import { CreateSaleDialog } from "../components/CreateSaleDialog"
+
 
 export default function SalesPage() {
   const navigate = useNavigate()

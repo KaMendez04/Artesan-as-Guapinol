@@ -15,7 +15,7 @@ export default function AppLayout() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Avatar className="size-14">
+                        <Avatar className="size-10">
                             <AvatarImage src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg" alt="@user" />
                         </Avatar>
                     </div>

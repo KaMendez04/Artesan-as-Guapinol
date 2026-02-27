@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useState } from "react"
-import { X } from "lucide-react"
+import { X, Check, ChevronDown } from "lucide-react"
 import { listUniquePricesByCategory } from "../services/productPrice.service"
 import { useInsertSaleLine } from "../hooks/useSaleLine"
 import { formatCRC } from "../utils/date"
+
+import { Checkbox } from "@/shared/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu"
 
 type Category = { idCategory: number; name: string }
 
@@ -64,8 +72,18 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     setSubtotal(Number(qty) * Number(unitPrice))
   }, [qty, unitPrice, subtotalTouched])
 
-  const canSave = idSale && idCategory !== "" && qty > 0 && !isPending
+  const canSave = !!idSale && idCategory !== "" && qty > 0 && !isPending
+
   const computed = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
+
+  const selectedCategoryName = useMemo(() => {
+    if (idCategory === "") return ""
+    return categories.find((c) => c.idCategory === idCategory)?.name ?? ""
+  }, [categories, idCategory])
+
+  const uniquePrices = useMemo(() => {
+    return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
+  }, [prices])
 
   const handleSave = async () => {
     if (!canSave) return
@@ -80,6 +98,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     onClose()
   }
 
+  // ✅ IMPORTANTE: el return condicional VA DESPUÉS de todos los hooks
   if (!open) return null
 
   return (
@@ -109,68 +128,169 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
               type="number"
               min={1}
               value={qty}
-              onChange={(e) => setQty(Math.max(1, Number(e.target.value || 1)))}
+              onChange={(e) => {
+                setQty(Math.max(1, Number(e.target.value || 1)))
+                setSubtotalTouched(false)
+              }}
               className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none
                          focus:ring-2 focus:ring-[#708C3E]/30
                          dark:border-white/10 dark:bg-black/30 dark:text-white"
             />
           </div>
 
-          {/* Categoría */}
+          {/* Categoría (DropdownMenu) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Artículo (Categoría)</label>
-            <select
-              value={idCategory}
-              onChange={(e) => {
-                setIdCategory(e.target.value ? Number(e.target.value) : "")
-                setSubtotalTouched(false)
-              }}
-              className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none
-                         focus:ring-2 focus:ring-[#708C3E]/30
-                         dark:border-white/10 dark:bg-black/30 dark:text-white"
-            >
-              {categories.map((c) => (
-                <option key={c.idCategory} value={c.idCategory}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+              Artículo (Categoría)
+            </label>
+
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="w-full group flex items-center justify-between gap-2 rounded-2xl
+                             border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
+                             hover:bg-gray-50 transition
+                             focus:outline-none focus:ring-2 focus:ring-[#708C3E]/30
+                             dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                >
+                  <span className="truncate">
+                    {idCategory === ""
+                      ? "Seleccioná una categoría"
+                      : selectedCategoryName || "Categoría"}
+                  </span>
+
+                  <ChevronDown
+                    size={16}
+                    className="shrink-0 text-gray-400 group-hover:text-gray-600 dark:text-white/40 dark:group-hover:text-white/70"
+                  />
+                </button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                align="start"
+                className="z-[10050] min-w-[260px] w-full rounded-2xl p-1
+                           border border-gray-200 bg-white shadow-lg
+                           dark:border-white/10 dark:bg-neutral-950"
+              >
+                {categories.length === 0 ? (
+                  <DropdownMenuItem
+                    disabled
+                    className="rounded-xl px-3 py-2 text-sm text-gray-500 dark:text-white/50"
+                  >
+                    No hay categorías
+                  </DropdownMenuItem>
+                ) : (
+                  categories.map((c) => {
+                    const active = Number(idCategory) === c.idCategory
+                    return (
+                      <DropdownMenuItem
+                        key={c.idCategory}
+                        onClick={() => {
+                          setIdCategory(c.idCategory)
+                          setSubtotalTouched(false)
+                        }}
+                        className={`rounded-xl px-3 py-2 text-sm flex items-center justify-between gap-2
+                          ${
+                            active
+                              ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#9FE870]"
+                              : "text-gray-700 hover:bg-gray-100 dark:text-white/80 dark:hover:bg-white/10"
+                          }`}
+                      >
+                        <span className="truncate">{c.name}</span>
+                        {active && <Check size={16} />}
+                      </DropdownMenuItem>
+                    )
+                  })
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          {/* Precio */}
+          {/* Precio individual (DropdownMenu) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Precio individual</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+              Precio individual
+            </label>
 
-            <select
-              value={unitPrice}
-              onChange={(e) => {
-                setUnitPrice(Number(e.target.value))
-                setSubtotalTouched(false)
-              }}
-              disabled={loadingPrices}
-              className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none disabled:opacity-60
-                         focus:ring-2 focus:ring-[#708C3E]/30
-                         dark:border-white/10 dark:bg-black/30 dark:text-white"
-            >
-              {prices.length === 0 ? (
-                <option value={0}>Sin precios registrados</option>
-              ) : (
-                prices.map((p) => (
-                  <option key={p} value={p}>
-                    ₡{Number(p).toLocaleString("es-CR")}
-                  </option>
-                ))
-              )}
-            </select>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild disabled={loadingPrices}>
+                <button
+                  type="button"
+                  className="w-full group flex items-center justify-between gap-2 rounded-2xl
+                             border border-gray-200 bg-white px-3 py-2 text-sm
+                             text-gray-900 hover:bg-gray-50 transition
+                             disabled:opacity-60
+                             focus:outline-none focus:ring-2 focus:ring-[#708C3E]/30
+                             dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                >
+                  <span className="truncate">
+                    {loadingPrices
+                      ? "Cargando precios…"
+                      : uniquePrices.length === 0
+                      ? "Sin precios registrados"
+                      : `₡${Number(unitPrice).toLocaleString("es-CR")}`}
+                  </span>
+
+                  <ChevronDown
+                    size={16}
+                    className="shrink-0 text-gray-400 group-hover:text-gray-600 dark:text-white/40 dark:group-hover:text-white/70"
+                  />
+                </button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                align="start"
+                className="z-[10050] w-[300px] max-h-60 overflow-y-auto
+                           rounded-2xl p-1 border border-gray-200 bg-white shadow-lg
+                           dark:border-white/10 dark:bg-neutral-950"
+              >
+                {uniquePrices.length === 0 ? (
+                  <DropdownMenuItem
+                    disabled
+                    className="rounded-xl px-3 py-2 text-sm text-gray-500 dark:text-white/50"
+                  >
+                    No hay precios
+                  </DropdownMenuItem>
+                ) : (
+                  uniquePrices.map((p) => {
+                    const active = Number(unitPrice) === Number(p)
+                    return (
+                      <DropdownMenuItem
+                        key={p}
+                        onClick={() => {
+                          setUnitPrice(Number(p))
+                          setSubtotalTouched(false)
+                        }}
+                        className={`rounded-xl px-3 py-2 text-sm flex items-center justify-between gap-2
+                          ${
+                            active
+                              ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#9FE870]"
+                              : "text-gray-700 hover:bg-gray-100 dark:text-white/80 dark:hover:bg-white/10"
+                          }`}
+                      >
+                        <span>₡{Number(p).toLocaleString("es-CR")}</span>
+                        {active && <Check size={16} />}
+                      </DropdownMenuItem>
+                    )
+                  })
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <div className="text-xs text-gray-500 dark:text-white/60">
-              Usar calculado: <span className="text-[#708C3E] dark:text-[#9FE870]">{formatCRC(computed)}</span>
+              Usar calculado:{" "}
+              <span className="text-[#708C3E] dark:text-[#9FE870]">
+                {formatCRC(computed)}
+              </span>
             </div>
           </div>
 
           {/* Subtotal */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Subtotal (editable)</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+              Subtotal (editable)
+            </label>
             <input
               type="number"
               min={0}
@@ -185,16 +305,24 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
             />
           </div>
 
-          {/* Fiado */}
-          <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-white/80">
-            <input
-              type="checkbox"
+          {/* Fiado (Checkbox shadcn verde) */}
+          <div className="flex items-center gap-2">
+            <Checkbox
               checked={oweMoney}
-              onChange={(e) => setOweMoney(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 dark:border-white/20"
+              onCheckedChange={(value) => setOweMoney(!!value)}
+              className="
+                h-5 w-5 rounded-md
+                border-gray-300 dark:border-white/20
+                data-[state=checked]:bg-[#708C3E]
+                data-[state=checked]:border-[#708C3E]
+                data-[state=checked]:text-white
+                focus-visible:ring-[#708C3E]/30
+              "
             />
-            Fiado/debe
-          </label>
+            <label className="text-sm text-gray-700 dark:text-white/80">
+              Fiado
+            </label>
+          </div>
 
           <button
             type="button"
