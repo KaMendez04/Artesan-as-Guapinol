@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { X, Trash2, Check, ChevronDown } from "lucide-react"
 import { listUniquePricesByCategory } from "../services/productPrice.service"
 import { useUpdateSaleLine, useDeleteSaleLine } from "../hooks/useSaleLine"
@@ -79,7 +79,6 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
     setSubtotal(Number(qty) * Number(unitPrice))
   }, [qty, unitPrice, subtotalTouched])
 
-  const computed = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
   const canSave = !!line?.idSaleLine && idCategory !== "" && qty > 0 && !updating && !deleting
 
   const handleSave = async () => {
