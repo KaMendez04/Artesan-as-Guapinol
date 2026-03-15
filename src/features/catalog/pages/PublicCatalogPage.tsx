@@ -81,7 +81,7 @@ export default function PublicCatalogPage() {
     const showBackButton = categoryId && !share?.category_id
 
     return (
-        <div className="min-h-screen bg-[#FAFAF5]" style={{ fontFamily: "'Inter', sans-serif" }}>
+        <div className="flex min-h-screen flex-col bg-[#FAFAF5]" style={{ fontFamily: "'Inter', sans-serif" }}>
 
             {/* ═══ HEADER — Logo centered ═══ */}
             <header className="bg-white border-b border-[#E8E5D8]">
@@ -141,7 +141,7 @@ export default function PublicCatalogPage() {
             </div>
 
             {/* ═══ CONTENT GRID ═══ */}
-            <main className="mx-auto max-w-5xl px-5 py-8">
+            <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
                 {isLoading ? (
                     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
                         {Array.from({ length: 8 }).map((_, i) => (
