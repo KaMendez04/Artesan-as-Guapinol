@@ -56,8 +56,9 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                         sileo.success({ title: "Categoría actualizada" })
                         onClose()
                     },
-                    onError: () => {
-                        sileo.error({ title: "Error al actualizar", description: "Intenta de nuevo." })
+                    onError: (error) => {
+                        console.error("Error al actualizar categoría:", error)
+                        sileo.error({ title: "Error al actualizar", description: error instanceof Error ? error.message : "Intenta de nuevo." })
                     },
                 }
             )
@@ -69,8 +70,9 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                         sileo.success({ title: "Categoría agregada" })
                         onClose()
                     },
-                    onError: () => {
-                        sileo.error({ title: "Error al agregar", description: "Intenta de nuevo." })
+                    onError: (error) => {
+                        console.error("Error al crear categoría:", error)
+                        sileo.error({ title: "Error al agregar", description: error instanceof Error ? error.message : "Intenta de nuevo." })
                     },
                 }
             )

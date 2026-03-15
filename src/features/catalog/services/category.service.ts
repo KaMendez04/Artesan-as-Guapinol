@@ -64,9 +64,10 @@ export async function updateCategory(id: number, dto: UpdateCategoryDto): Promis
         .update(dto)
         .eq("idCategory", id)
         .select("idCategory, created_at, name, state, image_url")
-        .single()
+        .maybeSingle()
 
     if (error) throw new Error(`Error al actualizar categoría ${id}: ${error.message}`)
+    if (!data) throw new Error(`No se pudo actualizar la categoría ${id}. Verifica tus permisos.`)
 
     return data
 }
