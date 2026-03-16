@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -20,6 +20,11 @@ interface ProductDetailDialogProps {
 
 export function ProductDetailDialog({ product, open, onOpenChange, catalogToken }: ProductDetailDialogProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    // Reset image index when a different product is opened
+    useEffect(() => {
+        setCurrentImageIndex(0);
+    }, [product?.idProduct]);
 
     if (!product) return null;
 
@@ -102,7 +107,7 @@ Foto: ${currentImageUrl}`;
                                                     className={cn(
                                                         "h-2 rounded-full transition-all duration-300",
                                                         i === currentImageIndex
-                                                            ? "w-5 bg-[#8AB528]"
+                                                            ? "w-5 bg-[#708C3E]"
                                                             : "w-2 bg-white/50 hover:bg-white/80"
                                                     )}
                                                 />
@@ -112,13 +117,13 @@ Foto: ${currentImageUrl}`;
                                 )}
                                 {/* Image counter */}
                                 {hasMultipleImages && (
-                                    <div className="absolute top-3 right-3 rounded-full bg-[#5D4037]/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                                    <div className="absolute top-3 left-3 rounded-full bg-[#5D4037]/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
                                         {currentImageIndex + 1}/{images.length}
                                     </div>
                                 )}
                             </>
                         ) : (
-                            <div className="text-[#8AB528]/40 flex flex-col items-center gap-3">
+                            <div className="text-[#708C3E]/40 flex flex-col items-center gap-3">
                                 <span className="text-6xl">🎨</span>
                                 <p className="text-sm font-medium text-[#5D4037]/40">Sin imagen disponible</p>
                             </div>
@@ -143,9 +148,9 @@ Foto: ${currentImageUrl}`;
 
                             {/* Divider */}
                             <div className="flex items-center gap-3">
-                                <div className="h-px flex-1 bg-gradient-to-r from-[#8AB528]/30 to-transparent" />
-                                <div className="h-1.5 w-1.5 rounded-full bg-[#8AB528]" />
-                                <div className="h-px flex-1 bg-gradient-to-l from-[#8AB528]/30 to-transparent" />
+                                <div className="h-px flex-1 bg-gradient-to-r from-[#708C3E]/30 to-transparent" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-[#708C3E]" />
+                                <div className="h-px flex-1 bg-gradient-to-l from-[#708C3E]/30 to-transparent" />
                             </div>
 
                             {/* Description */}
@@ -154,11 +159,8 @@ Foto: ${currentImageUrl}`;
                                     Esta pieza es una artesanía de Guapinol, hecha a mano con dedicación y arte costarricense. Cada producto es único e irrepetible.
                                 </p>
                                 <div className="flex flex-wrap gap-2">
-                                    <span className="inline-flex items-center rounded-full bg-[#8AB528]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[#2E7D32]">
+                                    <span className="inline-flex items-center rounded-full bg-[#708C3E]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[#2E7D32]">
                                         🌿 Hecho a mano
-                                    </span>
-                                    <span className="inline-flex items-center rounded-full bg-[#5D4037]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[#5D4037]">
-                                        🇨🇷 Costa Rica
                                     </span>
                                 </div>
                             </div>

@@ -1,6 +1,5 @@
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
-import { Card, CardContent } from "@/shared/components/ui/card"
 import { Pencil, Trash2, Eye } from "lucide-react"
 import type { Product } from "@/features/catalog/types/product.types"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
@@ -21,7 +20,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
         return (
             <div
                 onClick={() => onClick?.(product)}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-xl hover:shadow-[#8AB528]/10 hover:ring-[#8AB528]/40 ${!isActive ? "opacity-50 grayscale" : ""
+                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-xl hover:shadow-[#708C3E]/10 hover:ring-[#708C3E]/40 ${!isActive ? "opacity-50 grayscale" : ""
                     }`}
             >
                 {/* Image */}
@@ -39,7 +38,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                         />
                     ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                            <span className="text-5xl font-extrabold text-[#8AB528]/15">
+                            <span className="text-5xl font-extrabold text-[#708C3E]/15">
                                 {product.name?.[0]?.toUpperCase()}
                             </span>
                         </div>
@@ -83,76 +82,93 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
         )
     }
 
-    /* ═══ ADMIN VIEW (original) ═══ */
+    /* ═══ ADMIN VIEW ═══ */
     return (
-        <Card
+        <div
             onClick={() => onClick?.(product)}
-            className={`relative overflow-hidden transition-all hover:shadow-md p-0 gap-0 cursor-pointer ${!isActive ? "opacity-60" : ""
-                }`}
+            className={`group relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 hover:ring-[#708C3E]/40 cursor-pointer ${
+                !isActive ? "opacity-60" : ""
+            }`}
         >
-            <div className="relative aspect-square w-full">
+            {/* Image */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB]">
                 {product.images && product.images.length > 0 ? (
                     <img
                         src={
                             isCloudinaryUrl(product.images[0])
-                                ? product.images[0].replace("/upload/", "/upload/f_auto,q_auto,w_400,h_400,c_fill/")
+                                ? product.images[0].replace("/upload/", "/upload/f_auto,q_auto,w_400,h_300,c_fill/")
                                 : product.images[0]
                         }
                         alt={product.name ?? ""}
-                        className="h-full w-full object-cover transition-transform hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                         loading="lazy"
                     />
                 ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted">
-                        <span className="text-4xl font-bold text-muted-foreground/20">
+                    <div className="flex h-full w-full items-center justify-center">
+                        <span className="text-4xl font-extrabold text-[#708C3E]/15">
                             {product.name?.[0]?.toUpperCase()}
                         </span>
                     </div>
                 )}
+
                 {!isActive && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-background/40 backdrop-blur-[2px]">
-                        <Badge variant="secondary" className="font-semibold uppercase tracking-wider">
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[2px]">
+                        <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
                             Inactivo
                         </Badge>
                     </div>
                 )}
+
+                {/* Image count badge */}
+                {product.images && product.images.length > 1 && (
+                    <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                        {product.images.length} fotos
+                    </div>
+                )}
             </div>
 
-            <CardContent className="flex items-center justify-between p-4 pt-4">
+            {/* Info + Actions */}
+            <div className="flex items-center justify-between p-3.5">
                 <div className="flex min-w-0 flex-col gap-0.5">
-                    <h3 className="truncate font-semibold text-foreground">
+                    <h3 className="truncate font-bold text-sm text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
                         {product.name}
                     </h3>
-                    <p className="text-sm font-medium text-primary">
-                        ₡ {product.price?.toFixed(2)}
+                    <p className="text-sm font-extrabold text-[#2E7D32]">
+                        ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                     </p>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5">
                     {onEdit && (
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 shrink-0 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary"
-                            onClick={() => onEdit(product)}
+                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-[#708C3E]/10 hover:text-[#2E7D32] transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                onEdit(product)
+                            }}
                             aria-label={`Editar ${product.name}`}
                         >
-                            <Pencil className="size-4" />
+                            <Pencil className="size-3.5" />
                         </Button>
                     )}
                     {onDelete && (
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 shrink-0 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                            onClick={() => onDelete(product)}
+                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-red-50 hover:text-red-500 transition-colors"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                onDelete(product)
+                            }}
                             aria-label={`Eliminar ${product.name}`}
                         >
-                            <Trash2 className="size-4" />
+                            <Trash2 className="size-3.5" />
                         </Button>
                     )}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }

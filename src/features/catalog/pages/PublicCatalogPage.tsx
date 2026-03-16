@@ -111,7 +111,7 @@ export default function PublicCatalogPage() {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="shrink-0 gap-1.5 rounded-full border-[#E8E5D8] text-[#5D4037]/70 hover:bg-white hover:text-[#2E7D32] hover:border-[#8AB528]/40"
+                                className="shrink-0 gap-1.5 rounded-full border-[#E8E5D8] text-[#5D4037]/70 hover:bg-white hover:text-[#2E7D32] hover:border-[#708C3E]/40"
                                 onClick={() => navigate(`/v/${token}`)}
                             >
                                 <ArrowLeft className="size-4" />
@@ -123,7 +123,7 @@ export default function PublicCatalogPage() {
                         <div className="relative flex-1 max-w-md mx-auto">
                             <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#5D4037]/30" />
                             <Input
-                                className="h-10 rounded-full border border-[#E8E5D8] bg-white pl-10 text-sm text-[#5D4037] shadow-none placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#8AB528]/50 focus-visible:border-[#8AB528]/50"
+                                className="h-10 rounded-full border border-[#E8E5D8] bg-white pl-10 text-sm text-[#5D4037] shadow-none placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                                 placeholder={categoryId ? "Buscar productos..." : "Buscar categorías..."}
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -158,8 +158,8 @@ export default function PublicCatalogPage() {
                     /* ── Products View ── */
                     filteredProducts.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-24 text-center">
-                            <div className="mb-5 flex size-20 items-center justify-center rounded-full bg-[#8AB528]/10">
-                                <ShoppingBag className="size-9 text-[#8AB528]" />
+                            <div className="mb-5 flex size-20 items-center justify-center rounded-full bg-[#708C3E]/10">
+                                <ShoppingBag className="size-9 text-[#708C3E]" />
                             </div>
                             <h3 className="text-xl font-bold text-[#5D4037]">
                                 {search ? "No encontramos productos" : "Aún no hay productos"}
@@ -172,7 +172,7 @@ export default function PublicCatalogPage() {
                             {search && (
                                 <Button
                                     variant="outline"
-                                    className="mt-5 rounded-full border-[#8AB528]/30 text-[#2E7D32] hover:bg-[#8AB528]/5"
+                                    className="mt-5 rounded-full border-[#708C3E]/30 text-[#2E7D32] hover:bg-[#708C3E]/5"
                                     onClick={() => setSearch("")}
                                 >
                                     Limpiar búsqueda
@@ -197,7 +197,7 @@ export default function PublicCatalogPage() {
                                     <Button
                                         variant="outline"
                                         size="icon"
-                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#8AB528]/40 disabled:opacity-30"
+                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
                                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                         disabled={currentPage === 1}
                                     >
@@ -211,7 +211,7 @@ export default function PublicCatalogPage() {
                                             className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-colors ${
                                                 page === currentPage
                                                     ? "bg-[#2E7D32] text-white"
-                                                    : "text-[#5D4037]/60 hover:bg-[#8AB528]/10 hover:text-[#2E7D32]"
+                                                    : "text-[#5D4037]/60 hover:bg-[#708C3E]/10 hover:text-[#2E7D32]"
                                             }`}
                                         >
                                             {page}
@@ -221,7 +221,7 @@ export default function PublicCatalogPage() {
                                     <Button
                                         variant="outline"
                                         size="icon"
-                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#8AB528]/40 disabled:opacity-30"
+                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
                                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                         disabled={currentPage === totalPages}
                                     >
@@ -235,17 +235,17 @@ export default function PublicCatalogPage() {
                     /* ── Categories View ── */
                     <>
                         <div className="mb-8 flex items-center gap-3">
-                            <div className="h-px flex-1 bg-gradient-to-r from-[#8AB528]/40 to-transparent" />
+                            <div className="h-px flex-1 bg-gradient-to-r from-[#708C3E]/40 to-transparent" />
                             <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-[#5D4037]/50">
                                 Categorías
                             </h2>
-                            <div className="h-px flex-1 bg-gradient-to-l from-[#8AB528]/40 to-transparent" />
+                            <div className="h-px flex-1 bg-gradient-to-l from-[#708C3E]/40 to-transparent" />
                         </div>
 
                         {filteredCategories.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-24 text-center">
-                                <div className="mb-5 flex size-20 items-center justify-center rounded-full bg-[#8AB528]/10">
-                                    <Search className="size-9 text-[#8AB528]" />
+                                <div className="mb-5 flex size-20 items-center justify-center rounded-full bg-[#708C3E]/10">
+                                    <Search className="size-9 text-[#708C3E]" />
                                 </div>
                                 <h3 className="text-xl font-bold text-[#5D4037]">No encontramos lo que buscás</h3>
                                 <p className="mt-2 max-w-xs text-sm text-[#5D4037]/50">
@@ -254,7 +254,7 @@ export default function PublicCatalogPage() {
                                 {search && (
                                     <Button
                                         variant="outline"
-                                        className="mt-5 rounded-full border-[#8AB528]/30 text-[#2E7D32] hover:bg-[#8AB528]/5"
+                                        className="mt-5 rounded-full border-[#708C3E]/30 text-[#2E7D32] hover:bg-[#708C3E]/5"
                                         onClick={() => setSearch("")}
                                     >
                                         Limpiar búsqueda
@@ -278,23 +278,16 @@ export default function PublicCatalogPage() {
 
             {/* ═══ FOOTER ═══ */}
             <footer className="border-t border-[#E8E5D8] bg-white">
-                <div className="mx-auto max-w-5xl px-5 py-10">
-                    <div className="flex flex-col items-center gap-4 text-center">
+                <div className="mx-auto max-w-5xl px-5 py-6">
+                    <div className="flex flex-col items-center gap-3">
                         <img
                             src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg"
                             alt="Artesanías Guapinol"
-                            className="h-14 w-auto object-contain"
+                            className="h-10 w-auto object-contain"
                         />
-
-                        <p className="max-w-sm text-sm leading-relaxed text-[#5D4037]/50">
-                            Artesanías con alma costarricense. Cada pieza es única, hecha a mano con materiales naturales.
-                        </p>
-
-                        <div className="flex items-center gap-2 text-xs text-[#5D4037]/30">
-                            <span>© {new Date().getFullYear()} Artesanías Guapinol</span>
-                            <span>·</span>
-                            <span>Costa Rica 🇨🇷</span>
-                        </div>
+                        <span className="text-[11px] text-[#5D4037]/30">
+                            © {new Date().getFullYear()} Artesanías Guapinol · Costa Rica
+                        </span>
                     </div>
                 </div>
             </footer>

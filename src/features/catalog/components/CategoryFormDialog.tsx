@@ -81,9 +81,11 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-            <DialogContent className="sm:max-w-sm">
+            <DialogContent className="sm:max-w-sm border-0 rounded-2xl shadow-2xl bg-white">
                 <DialogHeader>
-                    <DialogTitle>{isEditing ? "Editar categoría" : "Nueva categoría"}</DialogTitle>
+                    <DialogTitle className="text-lg font-bold text-[#5D4037]">
+                        {isEditing ? "Editar categoría" : "Nueva categoría"}
+                    </DialogTitle>
                     <DialogDescription className="sr-only">
                         {isEditing ? "Modifica los detalles de la categoría" : "Crea una nueva categoría para tus productos"}
                     </DialogDescription>
@@ -92,7 +94,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     {/* Nombre */}
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="cat-name" className="text-sm font-medium">
+                        <label htmlFor="cat-name" className="text-sm font-semibold text-[#5D4037]">
                             Nombre
                         </label>
                         <Input
@@ -102,34 +104,37 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                             placeholder="Ej: Pulseras"
                             autoFocus
                             required
+                            className="rounded-xl border-[#E8E5D8] text-[#5D4037] placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                         />
                     </div>
 
                     {/* Imagen */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium">
+                        <label className="text-sm font-semibold text-[#5D4037]">
                             Imagen de la categoría
                         </label>
                         <ImageUpload
                             value={imageUrl}
                             onChange={setImageUrl}
-                            onUploadStart={() => { }} // Opcional: mostrar un loader global si se desea
+                            onUploadStart={() => { }}
                             onUploadEnd={() => { }}
                         />
                     </div>
 
                     {/* Estado */}
                     <div className="flex flex-col gap-1.5">
-                        <span className="text-sm font-medium">Estado</span>
+                        <span className="text-sm font-semibold text-[#5D4037]">Estado</span>
                         <div className="flex gap-2">
                             {(["active", "inactive"] as CategoryState[]).map((s) => (
                                 <button
                                     key={s}
                                     type="button"
                                     onClick={() => setState(s)}
-                                    className={`flex-1 rounded-lg border py-2 text-sm font-medium transition-colors ${state === s
-                                        ? "border-primary bg-primary text-primary-foreground"
-                                        : "border-border bg-background hover:bg-muted"
+                                    className={`flex-1 rounded-xl border py-2 text-sm font-semibold transition-all duration-200 ${state === s
+                                        ? s === "active"
+                                            ? "border-[#708C3E] bg-[#708C3E]/10 text-[#708C3E] ring-1 ring-[#708C3E]/30"
+                                            : "border-[#5D4037]/40 bg-[#5D4037]/10 text-[#5D4037] ring-1 ring-[#5D4037]/20"
+                                        : "border-[#E8E5D8] bg-white text-[#5D4037]/40 hover:bg-[#FAFAF5]"
                                         }`}
                                 >
                                     {s === "active" ? "Disponible" : "No disponible"}
@@ -138,11 +143,21 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                         </div>
                     </div>
 
-                    <DialogFooter className="gap-2">
-                        <Button type="button" variant="ghost" onClick={onClose} disabled={isPending}>
+                    <DialogFooter className="gap-2 pt-2">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={onClose}
+                            disabled={isPending}
+                            className="rounded-xl text-[#5D4037]/60 hover:bg-[#5D4037]/5 hover:text-[#5D4037]"
+                        >
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={isPending || !name.trim()}>
+                        <Button
+                            type="submit"
+                            disabled={isPending || !name.trim()}
+                            className="rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 disabled:opacity-40"
+                        >
                             {isPending ? "Guardando…" : isEditing ? "Guardar cambios" : "Agregar"}
                         </Button>
                     </DialogFooter>

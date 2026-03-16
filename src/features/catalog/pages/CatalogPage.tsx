@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link2, Plus, Search } from "lucide-react"
+import { Link2, Plus, Search, Store } from "lucide-react"
 import { useNavigate } from "react-router"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
@@ -71,14 +71,20 @@ export default function CatalogPage() {
     }
 
     return (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-6">
+            {/* ═══ HEADER ═══ */}
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold tracking-tight">Catálogo</h1>
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-[#5D4037]">Catálogo</h1>
+                    <p className="mt-1 text-sm text-[#5D4037]/50">
+                        Gestiona tus categorías de productos
+                    </p>
+                </div>
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={handleShareLink}
-                    className="gap-1.5"
+                    className="gap-1.5 rounded-full border-[#E8E5D8] text-[#5D4037] hover:bg-[#708C3E]/10 hover:text-[#2E7D32] hover:border-[#708C3E]/40 transition-colors"
                     disabled={isSharing}
                 >
                     <Link2 className="size-4" />
@@ -86,43 +92,64 @@ export default function CatalogPage() {
                 </Button>
             </div>
 
-
+            {/* ═══ SEARCH + ADD ═══ */}
             <div className="flex gap-2">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#5D4037]/30" />
                     <Input
                         id="catalog-search"
-                        className="pl-9"
+                        className="h-10 rounded-xl border-[#E8E5D8] bg-white pl-10 text-sm text-[#5D4037] shadow-none placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                         placeholder="Buscar categoría…"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
-                <Button size="icon" onClick={handleAdd} aria-label="Agregar categoría">
+                <Button
+                    size="icon"
+                    onClick={handleAdd}
+                    aria-label="Agregar categoría"
+                    className="size-10 rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 transition-colors"
+                >
                     <Plus className="size-5" />
                 </Button>
             </div>
 
+            {/* ═══ GRID ═══ */}
             {isLoading ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <Skeleton key={i} className="aspect-[3/4] rounded-xl" />
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8]">
+                            <Skeleton className="aspect-[4/3] w-full bg-[#E8E5D8]/40" />
+                            <div className="space-y-2 p-4">
+                                <Skeleton className="h-4 w-3/4 bg-[#E8E5D8]/40" />
+                                <Skeleton className="h-3 w-1/2 bg-[#E8E5D8]/40" />
+                            </div>
+                        </div>
                     ))}
                 </div>
             ) : filtered.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-2 py-16 text-muted-foreground">
-                    <p className="text-base font-medium">
+                <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
+                    <div className="flex size-16 items-center justify-center rounded-full bg-[#708C3E]/10">
+                        <Store className="size-7 text-[#708C3E]" />
+                    </div>
+                    <p className="text-base font-semibold text-[#5D4037]">
                         {search ? "Sin resultados para tu búsqueda" : "Aún no hay categorías"}
                     </p>
+                    <p className="text-sm text-[#5D4037]/40">
+                        {search ? "Intentá con otra palabra clave" : "Creá tu primera categoría para empezar"}
+                    </p>
                     {!search && (
-                        <Button variant="outline" size="sm" onClick={handleAdd}>
-                            <Plus className="mr-1 size-4" />
+                        <Button
+                            onClick={handleAdd}
+                            className="mt-2 gap-1.5 rounded-full bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm"
+                        >
+                            <Plus className="size-4" />
                             Agregar primera categoría
                         </Button>
                     )}
                 </div>
             ) : (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     {filtered.map((category) => (
                         <CategoryCard
                             key={category.idCategory}

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Plus, Search } from "lucide-react"
+import { ArrowLeft, Plus, Search, Package } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
@@ -54,11 +54,12 @@ export default function CategoryProductsPage() {
 
     return (
         <div className="flex flex-col gap-6">
+            {/* ═══ BACK + HEADER ═══ */}
             <div className="flex flex-col gap-4">
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="w-fit gap-2 -ml-2 text-muted-foreground"
+                    className="w-fit gap-2 -ml-2 rounded-full text-[#5D4037]/60 hover:text-[#2E7D32] hover:bg-[#708C3E]/10 transition-colors"
                     onClick={() => navigate("/catalogo")}
                 >
                     <ArrowLeft className="size-4" />
@@ -66,34 +67,49 @@ export default function CategoryProductsPage() {
                 </Button>
 
                 <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-1">
-                        <h1 className="text-3xl font-bold tracking-tight">
-                            {isLoadingCategory ? <Skeleton className="h-9 w-48" /> : category?.name}
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight text-[#5D4037]">
+                            {isLoadingCategory ? <Skeleton className="h-8 w-48 bg-[#E8E5D8]/40" /> : category?.name}
                         </h1>
+                        {!isLoadingCategory && (
+                            <p className="mt-1 text-sm text-[#5D4037]/50">
+                                {products.length} {products.length === 1 ? "producto" : "productos"}
+                            </p>
+                        )}
                     </div>
-                    <Button onClick={handleAdd} className="gap-2">
+                    <Button
+                        onClick={handleAdd}
+                        className="gap-2 rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 transition-colors"
+                    >
                         <Plus className="size-4" />
-                        Nuevo Producto
+                        <span className="hidden sm:inline">Nuevo Producto</span>
+                        <span className="sm:hidden">Nuevo</span>
                     </Button>
                 </div>
             </div>
 
-            {/* Filtros */}
+            {/* ═══ SEARCH ═══ */}
             <div className="relative max-w-sm">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#5D4037]/30" />
                 <Input
                     placeholder="Buscar productos..."
-                    className="pl-9"
+                    className="h-10 rounded-xl border-[#E8E5D8] bg-white pl-10 text-sm text-[#5D4037] shadow-none placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
 
-            {/* Grid de Productos */}
+            {/* ═══ PRODUCT GRID ═══ */}
             {isLoading ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <Skeleton key={i} className="aspect-square rounded-xl" />
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8]">
+                            <Skeleton className="aspect-[4/3] w-full bg-[#E8E5D8]/40" />
+                            <div className="space-y-2 p-4">
+                                <Skeleton className="h-4 w-3/4 bg-[#E8E5D8]/40" />
+                                <Skeleton className="h-3 w-1/2 bg-[#E8E5D8]/40" />
+                            </div>
+                        </div>
                     ))}
                 </div>
             ) : products.length > 0 ? (
@@ -108,11 +124,25 @@ export default function CategoryProductsPage() {
                     ))}
                 </div>
             ) : (
-                <div className="flex h-64 flex-col items-center justify-center gap-2 rounded-xl border border-dashed bg-muted/30">
-                    <p className="font-medium text-muted-foreground">No hay productos en esta categoría</p>
-                    <Button variant="outline" size="sm" onClick={handleAdd}>
-                        Añadir el primero
-                    </Button>
+                <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
+                    <div className="flex size-16 items-center justify-center rounded-full bg-[#708C3E]/10">
+                        <Package className="size-7 text-[#708C3E]" />
+                    </div>
+                    <p className="text-base font-semibold text-[#5D4037]">
+                        {search ? "Sin resultados para tu búsqueda" : "No hay productos en esta categoría"}
+                    </p>
+                    <p className="text-sm text-[#5D4037]/40">
+                        {search ? "Intentá con otra palabra clave" : "Agregá tu primer producto para empezar"}
+                    </p>
+                    {!search && (
+                        <Button
+                            onClick={handleAdd}
+                            className="mt-2 gap-1.5 rounded-full bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm"
+                        >
+                            <Plus className="size-4" />
+                            Añadir el primero
+                        </Button>
+                    )}
                 </div>
             )}
 

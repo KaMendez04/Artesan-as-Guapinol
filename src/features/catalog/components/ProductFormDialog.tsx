@@ -104,63 +104,72 @@ export function ProductFormDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white">
                 <DialogHeader>
-                    <DialogTitle>{isEditing ? "Editar producto" : "Nuevo producto"}</DialogTitle>
+                    <DialogTitle className="text-lg font-bold text-[#5D4037]">
+                        {isEditing ? "Editar producto" : "Nuevo producto"}
+                    </DialogTitle>
                     <DialogDescription className="sr-only">
                         {isEditing ? "Modifica los detalles del producto" : "Completa los campos para añadir un nuevo producto"}
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 py-2">
                     <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label>Imágenes del producto</Label>
+                        {/* Images */}
+                        <div className="space-y-1.5">
+                            <Label className="text-sm font-semibold text-[#5D4037]">Imágenes del producto</Label>
                             <MultiImageUpload
                                 value={images}
                                 onChange={(urls) => setValue("images", urls)}
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Nombre</Label>
+                        {/* Name */}
+                        <div className="space-y-1.5">
+                            <Label htmlFor="name" className="text-sm font-semibold text-[#5D4037]">Nombre</Label>
                             <Input
                                 id="name"
                                 placeholder="Ej. Jarra de Barro Grande"
+                                className="rounded-xl border-[#E8E5D8] text-[#5D4037] placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                                 {...register("name")}
                             />
                             {errors.name && (
-                                <p className="text-sm text-destructive">{errors.name.message}</p>
+                                <p className="text-xs font-medium text-red-500">{errors.name.message}</p>
                             )}
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="price">Precio (₡)</Label>
+                        {/* Price */}
+                        <div className="space-y-1.5">
+                            <Label htmlFor="price" className="text-sm font-semibold text-[#5D4037]">Precio (₡)</Label>
                             <Input
                                 id="price"
                                 type="number"
                                 step="any"
                                 placeholder="0.00"
+                                className="rounded-xl border-[#E8E5D8] text-[#5D4037] placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                                 {...register("price", { valueAsNumber: true })}
                             />
                             {errors.price && (
-                                <p className="text-sm text-destructive">{errors.price.message}</p>
+                                <p className="text-xs font-medium text-red-500">{errors.price.message}</p>
                             )}
                         </div>
                     </div>
 
-                    <DialogFooter>
+                    <DialogFooter className="gap-2 pt-2">
                         <Button
                             type="button"
                             variant="ghost"
                             onClick={() => onOpenChange(false)}
                             disabled={createProduct.isPending || updateProduct.isPending}
+                            className="rounded-xl text-[#5D4037]/60 hover:bg-[#5D4037]/5 hover:text-[#5D4037]"
                         >
                             Cancelar
                         </Button>
                         <Button
                             type="submit"
                             disabled={createProduct.isPending || updateProduct.isPending}
+                            className="rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 disabled:opacity-40"
                         >
                             {createProduct.isPending || updateProduct.isPending
                                 ? "Guardando..."

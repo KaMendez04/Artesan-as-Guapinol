@@ -1,6 +1,6 @@
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
-import { Card, CardContent } from "@/shared/components/ui/card"
+import { CardContent } from "@/shared/components/ui/card"
 import { Pencil, Share2, ArrowRight } from "lucide-react"
 import type { Category } from "@/features/catalog/types/category.types"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
@@ -20,7 +20,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
     if (isPublicView) {
         return (
             <div
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-xl hover:shadow-[#8AB528]/10 hover:ring-[#8AB528]/40 ${!isActive ? "opacity-50 grayscale" : ""
+                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-xl hover:shadow-[#708C3E]/10 hover:ring-[#708C3E]/40 ${!isActive ? "opacity-50 grayscale" : ""
                     }`}
                 onClick={() => onClick?.(category)}
             >
@@ -39,7 +39,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center">
-                            <span className="text-5xl font-extrabold text-[#8AB528]/20">
+                            <span className="text-5xl font-extrabold text-[#708C3E]/20">
                                 {category.name?.[0]?.toUpperCase()}
                             </span>
                         </div>
@@ -72,82 +72,95 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
         )
     }
 
-    /* ═══ ADMIN VIEW (original) ═══ */
+    /* ═══ ADMIN VIEW ═══ */
     return (
-        <Card
-            className={`relative overflow-hidden transition-all p-0 gap-0 ${!isActive ? "opacity-60" : ""
-                } ${onClick ? "cursor-pointer hover:shadow-md ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2" : "hover:shadow-md"}`}
+        <div
+            className={`group relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 hover:ring-[#708C3E]/40 ${
+                !isActive ? "opacity-60" : ""
+            } ${onClick ? "cursor-pointer" : ""}`}
             onClick={() => onClick?.(category)}
         >
-            <div
-                className={`aspect-square w-full rounded-t-xl overflow-hidden group ${isActive
-                    ? "bg-gradient-to-br from-primary/10 to-primary/5"
-                    : "bg-muted"
-                    }`}
-            >
+            {/* Image */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB]">
                 {category.image_url ? (
                     <img
                         src={
                             isCloudinaryUrl(category.image_url)
-                                ? category.image_url.replace('/upload/', '/upload/c_fill,w_400,h_400,q_auto,f_auto/')
+                                ? category.image_url.replace('/upload/', '/upload/c_fill,w_400,h_300,q_auto,f_auto/')
                                 : category.image_url
                         }
                         alt={category.name ?? "Categoría"}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                         loading="lazy"
                     />
                 ) : (
-                    !isActive && (
-                        <div className="flex h-full items-center justify-center">
-                            <span className="text-sm font-medium text-muted-foreground">No Disponible</span>
-                        </div>
-                    )
+                    <div className="flex h-full items-center justify-center">
+                        <span className="text-4xl font-extrabold text-[#708C3E]/15">
+                            {category.name?.[0]?.toUpperCase()}
+                        </span>
+                    </div>
+                )}
+
+                {!isActive && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[2px]">
+                        <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider">
+                            No disponible
+                        </Badge>
+                    </div>
                 )}
             </div>
 
-            <CardContent className="p-3">
+            {/* Info */}
+            <CardContent className="p-3.5">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold">{category.name ?? "Sin nombre"}</p>
+                        <p className="truncate font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                            {category.name ?? "Sin nombre"}
+                        </p>
                         <Badge
-                            variant={isActive ? "default" : "secondary"}
-                            className="mt-1 text-xs"
+                            className={`mt-1.5 text-[10px] font-semibold border-0 ${
+                                isActive
+                                    ? "bg-[#708C3E]/10 text-[#2E7D32]"
+                                    : "bg-[#5D4037]/10 text-[#5D4037]/60"
+                            }`}
                         >
                             {isActive ? "Disponible" : "No disponible"}
                         </Badge>
                     </div>
 
-                    {onShare && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onShare(category)
-                            }}
-                            aria-label={`Compartir ${category.name}`}
-                        >
-                            <Share2 className="size-4" />
-                        </Button>
-                    )}
+                    <div className="flex items-center gap-0.5">
+                        {onShare && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-[#708C3E]/10 hover:text-[#2E7D32] transition-colors"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onShare(category)
+                                }}
+                                aria-label={`Compartir ${category.name}`}
+                            >
+                                <Share2 className="size-3.5" />
+                            </Button>
+                        )}
 
-                    {onEdit && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 shrink-0 rounded-full text-muted-foreground hover:text-foreground"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onEdit(category)
-                            }}
-                            aria-label={`Editar ${category.name}`}
-                        >
-                            <Pencil className="size-4" />
-                        </Button>
-                    )}
+                        {onEdit && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-[#708C3E]/10 hover:text-[#2E7D32] transition-colors"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onEdit(category)
+                                }}
+                                aria-label={`Editar ${category.name}`}
+                            >
+                                <Pencil className="size-3.5" />
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </CardContent>
-        </Card>
+        </div>
     )
 }
