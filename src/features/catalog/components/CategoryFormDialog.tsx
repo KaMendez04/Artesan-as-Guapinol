@@ -81,9 +81,9 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-            <DialogContent className="sm:max-w-sm border-0 rounded-2xl shadow-2xl bg-white">
+            <DialogContent className="sm:max-w-sm border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-bold text-[#5D4037]">
+                    <DialogTitle className="text-lg font-bold text-[#5D4037] dark:text-[#D7CCC8]">
                         {isEditing ? "Editar categoría" : "Nueva categoría"}
                     </DialogTitle>
                     <DialogDescription className="sr-only">
@@ -94,7 +94,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     {/* Nombre */}
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="cat-name" className="text-sm font-semibold text-[#5D4037]">
+                        <label htmlFor="cat-name" className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">
                             Nombre
                         </label>
                         <Input
@@ -104,13 +104,13 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                             placeholder="Ej: Pulseras"
                             autoFocus
                             required
-                            className="rounded-xl border-[#E8E5D8] text-[#5D4037] placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
+                            className="rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 text-[#5D4037] dark:text-[#D7CCC8] placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                         />
                     </div>
 
                     {/* Imagen */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-semibold text-[#5D4037]">
+                        <label className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">
                             Imagen de la categoría
                         </label>
                         <ImageUpload
@@ -123,7 +123,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
                     {/* Estado */}
                     <div className="flex flex-col gap-1.5">
-                        <span className="text-sm font-semibold text-[#5D4037]">Estado</span>
+                        <span className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Estado</span>
                         <div className="flex gap-2">
                             {(["active", "inactive"] as CategoryState[]).map((s) => (
                                 <button
@@ -132,9 +132,9 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                                     onClick={() => setState(s)}
                                     className={`flex-1 rounded-xl border py-2 text-sm font-semibold transition-all duration-200 ${state === s
                                         ? s === "active"
-                                            ? "border-[#708C3E] bg-[#708C3E]/10 text-[#708C3E] ring-1 ring-[#708C3E]/30"
-                                            : "border-[#5D4037]/40 bg-[#5D4037]/10 text-[#5D4037] ring-1 ring-[#5D4037]/20"
-                                        : "border-[#E8E5D8] bg-white text-[#5D4037]/40 hover:bg-[#FAFAF5]"
+                                            ? "border-[#708C3E] bg-[#708C3E]/10 text-[#708C3E] ring-1 ring-[#708C3E]/30 dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
+                                            : "border-[#5D4037]/40 bg-[#5D4037]/10 text-[#5D4037] ring-1 ring-[#5D4037]/20 dark:border-zinc-600 dark:bg-zinc-700/50 dark:text-[#D7CCC8]"
+                                        : "border-[#E8E5D8] bg-white text-[#5D4037]/40 hover:bg-[#FAFAF5] dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-[#D7CCC8]/40 dark:hover:bg-zinc-800"
                                         }`}
                                 >
                                     {s === "active" ? "Disponible" : "No disponible"}
@@ -149,7 +149,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                             variant="ghost"
                             onClick={onClose}
                             disabled={isPending}
-                            className="rounded-xl text-[#5D4037]/60 hover:bg-[#5D4037]/5 hover:text-[#5D4037]"
+                            className="rounded-xl text-[#5D4037]/60 dark:text-[#D7CCC8]/60 hover:bg-[#5D4037]/5 dark:hover:bg-zinc-800 hover:text-[#5D4037] dark:hover:text-[#D7CCC8]"
                         >
                             Cancelar
                         </Button>

@@ -1,6 +1,6 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router'
-import { Toaster } from 'sileo'
+import { ThemedToaster } from '@/shared/components/ui/themed-toaster'
 import AppLayout from '@/shared/components/layout/AppLayout'
 import DashboardPage from '@/features/dashboard/pages/DashboardPage'
 import CatalogPage from '@/features/catalog/pages/CatalogPage'
@@ -13,7 +13,7 @@ function App() {
 
   return (
     <Router>
-      <Toaster position="top-right" />
+      <ThemedToaster />
       <Routes>
         import SaleDetailPage from "./features/sales/pages/SaleDetailPage"
 

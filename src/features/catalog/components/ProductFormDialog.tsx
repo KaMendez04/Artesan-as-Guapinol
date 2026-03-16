@@ -104,9 +104,9 @@ export function ProductFormDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white">
+            <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-bold text-[#5D4037]">
+                    <DialogTitle className="text-lg font-bold text-[#5D4037] dark:text-[#D7CCC8]">
                         {isEditing ? "Editar producto" : "Nuevo producto"}
                     </DialogTitle>
                     <DialogDescription className="sr-only">
@@ -118,7 +118,7 @@ export function ProductFormDialog({
                     <div className="space-y-4">
                         {/* Images */}
                         <div className="space-y-1.5">
-                            <Label className="text-sm font-semibold text-[#5D4037]">Imágenes del producto</Label>
+                            <Label className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Imágenes del producto</Label>
                             <MultiImageUpload
                                 value={images}
                                 onChange={(urls) => setValue("images", urls)}
@@ -127,31 +127,31 @@ export function ProductFormDialog({
 
                         {/* Name */}
                         <div className="space-y-1.5">
-                            <Label htmlFor="name" className="text-sm font-semibold text-[#5D4037]">Nombre</Label>
+                            <Label htmlFor="name" className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Nombre</Label>
                             <Input
                                 id="name"
                                 placeholder="Ej. Jarra de Barro Grande"
-                                className="rounded-xl border-[#E8E5D8] text-[#5D4037] placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
+                                className="rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 text-[#5D4037] dark:text-[#D7CCC8] placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                                 {...register("name")}
                             />
                             {errors.name && (
-                                <p className="text-xs font-medium text-red-500">{errors.name.message}</p>
+                                <p className="text-xs font-medium text-red-500 dark:text-red-400">{errors.name.message}</p>
                             )}
                         </div>
 
                         {/* Price */}
                         <div className="space-y-1.5">
-                            <Label htmlFor="price" className="text-sm font-semibold text-[#5D4037]">Precio (₡)</Label>
+                            <Label htmlFor="price" className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Precio (₡)</Label>
                             <Input
                                 id="price"
                                 type="number"
                                 step="any"
                                 placeholder="0.00"
-                                className="rounded-xl border-[#E8E5D8] text-[#5D4037] placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
+                                className="rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 text-[#5D4037] dark:text-[#D7CCC8] placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                                 {...register("price", { valueAsNumber: true })}
                             />
                             {errors.price && (
-                                <p className="text-xs font-medium text-red-500">{errors.price.message}</p>
+                                <p className="text-xs font-medium text-red-500 dark:text-red-400">{errors.price.message}</p>
                             )}
                         </div>
                     </div>
@@ -162,7 +162,7 @@ export function ProductFormDialog({
                             variant="ghost"
                             onClick={() => onOpenChange(false)}
                             disabled={createProduct.isPending || updateProduct.isPending}
-                            className="rounded-xl text-[#5D4037]/60 hover:bg-[#5D4037]/5 hover:text-[#5D4037]"
+                            className="rounded-xl text-[#5D4037]/60 dark:text-[#D7CCC8]/60 hover:bg-[#5D4037]/5 dark:hover:bg-zinc-800 hover:text-[#5D4037] dark:hover:text-[#D7CCC8]"
                         >
                             Cancelar
                         </Button>

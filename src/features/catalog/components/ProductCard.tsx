@@ -86,12 +86,12 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
     return (
         <div
             onClick={() => onClick?.(product)}
-            className={`group relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 hover:ring-[#708C3E]/40 cursor-pointer ${
+            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 cursor-pointer ${
                 !isActive ? "opacity-60" : ""
             }`}
         >
             {/* Image */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB]">
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB] dark:bg-zinc-800">
                 {product.images && product.images.length > 0 ? (
                     <img
                         src={
@@ -105,14 +105,14 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                     />
                 ) : (
                     <div className="flex h-full w-full items-center justify-center">
-                        <span className="text-4xl font-extrabold text-[#708C3E]/15">
+                        <span className="text-4xl font-extrabold text-[#708C3E]/15 dark:text-[#708C3E]/25">
                             {product.name?.[0]?.toUpperCase()}
                         </span>
                     </div>
                 )}
 
                 {!isActive && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[2px]">
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-[2px]">
                         <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
                             Inactivo
                         </Badge>
@@ -121,7 +121,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
 
                 {/* Image count badge */}
                 {product.images && product.images.length > 1 && (
-                    <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                    <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 dark:bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
                         {product.images.length} fotos
                     </div>
                 )}
@@ -130,10 +130,10 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
             {/* Info + Actions */}
             <div className="flex items-center justify-between p-3.5">
                 <div className="flex min-w-0 flex-col gap-0.5">
-                    <h3 className="truncate font-bold text-sm text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                    <h3 className="truncate font-bold text-sm text-[#5D4037] dark:text-[#D7CCC8] group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                         {product.name}
                     </h3>
-                    <p className="text-sm font-extrabold text-[#2E7D32]">
+                    <p className="text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
                         ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                     </p>
                 </div>
@@ -143,7 +143,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-[#708C3E]/10 hover:text-[#2E7D32] transition-colors"
+                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation()
                                 onEdit(product)
@@ -157,7 +157,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-red-50 hover:text-red-500 transition-colors"
+                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation()
                                 onDelete(product)

@@ -75,13 +75,13 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
     /* ═══ ADMIN VIEW ═══ */
     return (
         <div
-            className={`group relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 hover:ring-[#708C3E]/40 ${
+            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 ${
                 !isActive ? "opacity-60" : ""
             } ${onClick ? "cursor-pointer" : ""}`}
             onClick={() => onClick?.(category)}
         >
             {/* Image */}
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB]">
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB] dark:bg-zinc-800">
                 {category.image_url ? (
                     <img
                         src={
@@ -95,15 +95,15 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                     />
                 ) : (
                     <div className="flex h-full items-center justify-center">
-                        <span className="text-4xl font-extrabold text-[#708C3E]/15">
+                        <span className="text-4xl font-extrabold text-[#708C3E]/15 dark:text-[#708C3E]/25">
                             {category.name?.[0]?.toUpperCase()}
                         </span>
                     </div>
                 )}
 
                 {!isActive && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[2px]">
-                        <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider">
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-[2px]">
+                        <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
                             No disponible
                         </Badge>
                     </div>
@@ -114,14 +114,14 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
             <CardContent className="p-3.5">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <p className="truncate font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                        <p className="truncate font-bold text-[#5D4037] dark:text-[#D7CCC8] group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                             {category.name ?? "Sin nombre"}
                         </p>
                         <Badge
                             className={`mt-1.5 text-[10px] font-semibold border-0 ${
                                 isActive
-                                    ? "bg-[#708C3E]/10 text-[#2E7D32]"
-                                    : "bg-[#5D4037]/10 text-[#5D4037]/60"
+                                    ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
+                                    : "bg-[#5D4037]/10 text-[#5D4037]/60 dark:bg-zinc-700 dark:text-zinc-400"
                             }`}
                         >
                             {isActive ? "Disponible" : "No disponible"}
@@ -133,7 +133,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-[#708C3E]/10 hover:text-[#2E7D32] transition-colors"
+                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     onShare(category)
@@ -148,7 +148,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 hover:bg-[#708C3E]/10 hover:text-[#2E7D32] transition-colors"
+                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     onEdit(category)
