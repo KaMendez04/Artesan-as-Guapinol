@@ -7,9 +7,10 @@ import {
     DialogDescription,
 } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
-import { MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { MessageCircle, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Product } from "@/features/catalog/types/product.types";
 import { cn } from "@/shared/utils";
+import { Dialog as DialogPrimitive } from "radix-ui";
 
 interface ProductDetailDialogProps {
     product: Product | null;
@@ -61,11 +62,19 @@ Foto: ${currentImageUrl}`;
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-2xl p-0 overflow-hidden border-0 bg-white rounded-2xl shadow-2xl">
+            <DialogContent showCloseButton={false} className="sm:max-w-2xl p-0 overflow-hidden border-0 bg-white rounded-2xl shadow-2xl">
                 <DialogHeader className="sr-only">
                     <DialogTitle>{product.name}</DialogTitle>
                     <DialogDescription>Detalles del producto y galería de imágenes</DialogDescription>
                 </DialogHeader>
+
+                {/* Custom close button with visible styling */}
+                <DialogPrimitive.Close
+                    className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-[#5D4037]/60 text-white backdrop-blur-sm transition-all hover:bg-[#5D4037]/90 focus:outline-none focus:ring-2 focus:ring-white/50"
+                >
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Cerrar</span>
+                </DialogPrimitive.Close>
 
                 <div className="flex flex-col md:flex-row h-full max-h-[90vh] md:max-h-[600px]">
                     {/* ── Image Gallery ── */}
