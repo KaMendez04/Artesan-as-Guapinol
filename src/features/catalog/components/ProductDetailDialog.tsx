@@ -179,7 +179,7 @@ Foto: ${currentImageUrl}`;
                         <div className="mt-8 space-y-3">
                             <Button
                                 onClick={handleWhatsAppOrder}
-                                className="w-full h-13 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold gap-2.5 text-base shadow-lg shadow-[#25D366]/25 active:scale-[0.98] transition-all duration-200 rounded-xl"
+                                className="w-full h-13 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-bold gap-2.5 text-base shadow-lg shadow-[#2E7D32]/25 active:scale-[0.98] transition-all duration-200 rounded-xl"
                             >
                                 <MessageCircle className="h-5 w-5 fill-current" />
                                 Comprar por WhatsApp
