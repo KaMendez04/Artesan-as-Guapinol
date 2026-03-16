@@ -48,12 +48,12 @@ export function ImageUpload({ value, onChange, onUploadStart, onUploadEnd }: Ima
     return (
         <div className="flex flex-col gap-4">
             <div
-                className={`relative aspect-video w-full rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-primary/50 ${!value ? 'bg-muted/50' : 'bg-background'
+                className={`relative w-full rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-primary/50 ${value ? 'max-h-[200px] bg-background' : 'aspect-video bg-muted/50'
                     }`}
                 onClick={() => !isUploading && fileInputRef.current?.click()}
             >
                 {value ? (
-                    <div className="relative h-full w-full overflow-hidden rounded-lg">
+                    <div className="relative h-full w-full max-h-[200px] overflow-hidden rounded-lg">
                         <img
                             src={value}
                             alt="Upload preview"

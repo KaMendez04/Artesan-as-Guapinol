@@ -81,7 +81,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-            <DialogContent className="sm:max-w-sm border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900">
+            <DialogContent className="sm:max-w-sm border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-lg font-bold text-[#5D4037] dark:text-[#D7CCC8]">
                         {isEditing ? "Editar categoría" : "Nueva categoría"}

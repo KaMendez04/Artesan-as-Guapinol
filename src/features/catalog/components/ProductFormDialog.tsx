@@ -104,7 +104,7 @@ export function ProductFormDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900">
+            <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-lg font-bold text-[#5D4037] dark:text-[#D7CCC8]">
                         {isEditing ? "Editar producto" : "Nuevo producto"}
