@@ -1,4 +1,4 @@
-import { Home, ShoppingBag, Store, Settings, Moon, Sun } from "lucide-react"
+import { Home, ShoppingBag, Store, Settings, Moon, Sun, BarChart3 } from "lucide-react"
 import { Link } from "react-router"
 import {
   Sidebar,
@@ -15,6 +15,7 @@ const navItems = [
   { title: "Inicio", url: "/", icon: Home },
   { title: "Ventas", url: "/ventas", icon: ShoppingBag },
   { title: "Catálogo", url: "/catalogo", icon: Store },
+  { title: "Reportes", url: "/reportes", icon: BarChart3 },
 ]
 
 export function AppSidebar() {
