@@ -64,10 +64,6 @@ export default function PublicCatalogPage() {
         return filteredCategories.slice(start, start + CATEGORIES_PER_PAGE)
     }, [filteredCategories, currentPage])
 
-    // Reset page when search changes
-    useEffect(() => {
-        setCurrentPage(1)
-    }, [search, categoryId])
 
     useEffect(() => {
         if (pid && products.length > 0 && !selectedProduct) {
@@ -135,7 +131,10 @@ export default function PublicCatalogPage() {
                                 className="h-10 rounded-full border border-[#E8E5D8] bg-white pl-10 text-sm text-[#5D4037] shadow-none placeholder:text-[#5D4037]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
                                 placeholder={categoryId ? "Buscar productos..." : "Buscar categorías..."}
                                 value={search}
-                                onChange={(e) => setSearch(e.target.value)}
+                                onChange={(e) => {
+                                    setSearch(e.target.value)
+                                    setCurrentPage(1)
+                                }}
                             />
                         </div>
 
@@ -343,6 +342,7 @@ export default function PublicCatalogPage() {
             </footer>
 
             <ProductDetailDialog
+                key={selectedProduct?.idProduct || 'none'}
                 product={selectedProduct}
                 isOpen={!!selectedProduct}
                 onOpenChange={() => handleSelectProduct(null)}

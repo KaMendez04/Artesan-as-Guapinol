@@ -26,12 +26,6 @@ export function ProductDetailDialog({ product, isOpen, onOpenChange, catalogToke
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isImageLoading, setIsImageLoading] = useState(true);
 
-    // Reset image index when a different product is opened
-    useEffect(() => {
-        setCurrentImageIndex(0);
-        setIsImageLoading(true);
-    }, [product?.idProduct]);
-
     // Pre-load all images when the dialog is open
     useEffect(() => {
         if (isOpen && product?.images && Array.isArray(product.images)) {
