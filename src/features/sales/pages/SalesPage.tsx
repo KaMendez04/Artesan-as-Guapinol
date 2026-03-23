@@ -206,7 +206,7 @@ export default function SalesPage() {
                     <SelectValue placeholder="Lugar" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos los lugares</SelectItem>
+                    <SelectItem value="all">Lugares</SelectItem>
                     {places.map((p) => (
                       <SelectItem key={p.idPlace} value={String(p.idPlace)}>
                         {p.name}
@@ -229,7 +229,7 @@ export default function SalesPage() {
                     <SelectValue placeholder="Período" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todo el tiempo</SelectItem>
+                    <SelectItem value="all">Período</SelectItem>
                     <SelectItem value="year">Este año</SelectItem>
                     <SelectItem value="month">Este mes</SelectItem>
                     <SelectItem value="week">Esta semana</SelectItem>
