@@ -23,8 +23,9 @@ type Props = {
 
 export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) {
   const { mutateAsync: insertLine, isPending } = useInsertSaleLine(idSale)
+  const [sinpe, setSinpe] = useState(false)
 
-  const [qty, setQty] = useState(1)
+  const [qty, setQty] = useState("1")
   const [idCategory, setIdCategory] = useState<number | "">("")
   const [unitPrice, setUnitPrice] = useState<number>(0)
 
@@ -37,13 +38,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
   useEffect(() => {
     if (!open) return
-    setQty(1)
+    setQty("1")
     setIdCategory(categories?.[0]?.idCategory ?? "")
     setPrices([])
     setUnitPrice(0)
     setSubtotal(0)
     setSubtotalTouched(false)
     setOweMoney(false)
+    setSinpe(false)
   }, [open, categories])
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     setSubtotal(Number(qty) * Number(unitPrice))
   }, [qty, unitPrice, subtotalTouched])
 
-  const canSave = !!idSale && idCategory !== "" && qty > 0 && !isPending
+  const canSave = !!idSale && idCategory !== "" && Number(qty) > 0 && !isPending
 
   const computed = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
 
@@ -85,6 +87,8 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
   }, [prices])
 
+  
+
   const handleSave = async () => {
     if (!canSave) return
     await insertLine({
@@ -94,9 +98,11 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
       unitPrice: Number(unitPrice),
       subtotal: Number(subtotal),
       oweMoney: !!oweMoney,
+      sinpe: !!sinpe,
     })
     onClose()
   }
+  
 
   // ✅ IMPORTANTE: el return condicional VA DESPUÉS de todos los hooks
   if (!open) return null
@@ -125,16 +131,17 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
             <input
-              type="number"
-              min={1}
+              type="text"
+              inputMode="numeric"
               value={qty}
               onChange={(e) => {
-                setQty(Math.max(1, Number(e.target.value || 1)))
+                const value = e.target.value.replace(/\D/g, "")
+                setQty(value)
                 setSubtotalTouched(false)
               }}
               className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none
-                         focus:ring-2 focus:ring-[#708C3E]/30
-                         dark:border-white/10 dark:bg-black/30 dark:text-white"
+                        focus:ring-2 focus:ring-[#708C3E]/30
+                        dark:border-white/10 dark:bg-black/30 dark:text-white"
             />
           </div>
 
@@ -317,10 +324,29 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
                 data-[state=checked]:border-[#708C3E]
                 data-[state=checked]:text-white
                 focus-visible:ring-[#708C3E]/30
+                dark:data-[state=checked]:bg-[#708C3E]
               "
             />
             <label className="text-sm text-gray-700 dark:text-white/80">
               Fiado
+            </label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={sinpe}
+              onCheckedChange={(value) => setSinpe(!!value)}
+              className="
+                h-5 w-5 rounded-md
+                border-gray-300 dark:border-white/20
+                data-[state=checked]:bg-[#708C3E]
+                data-[state=checked]:border-[#708C3E]
+                data-[state=checked]:text-white
+                focus-visible:ring-[#708C3E]/30
+                dark:data-[state=checked]:bg-[#708C3E]
+              "
+            />
+            <label className="text-sm text-gray-700 dark:text-white/80">
+              Pagado con SINPE
             </label>
           </div>
 

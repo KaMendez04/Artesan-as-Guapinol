@@ -18,6 +18,7 @@ export type Sale = {
   oweMoney: boolean
   idPlace: number
   place?: Place // opcional (si haces join)
+  sinpe: boolean 
 }
 
 export type SaleCategoryRow = {
