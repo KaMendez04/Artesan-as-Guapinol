@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ChevronLeft, Plus, Search, Package } from "lucide-react"
+import { ChevronLeft, Plus, Search, Package, ChevronRight } from "lucide-react"
+import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { ProductCard } from "@/features/catalog/components/ProductCard"
@@ -18,6 +19,8 @@ export default function CategoryProductsPage() {
     const navigate = useNavigate()
 
     const [search, setSearch] = useState("")
+    const [currentPage, setCurrentPage] = useState(1)
+    const ITEMS_PER_PAGE = 15
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [viewProduct, setViewProduct] = useState<Product | null>(null)
@@ -27,10 +30,20 @@ export default function CategoryProductsPage() {
 
     const { data: category, isLoading: isLoadingCategory } = useCategory(idCategory)
 
-    const { data: products = [], isLoading: isLoadingProducts } = useProducts({
+    const { data: products = [], isLoading: isLoadingResources } = useProducts({
         idCategory,
-        search: search || undefined
+        // search: search || undefined // We will paginate client-side for consistent feel in admin
     })
+
+    const filteredProducts = products.filter(p => 
+        p.name?.toLowerCase().includes(search.toLowerCase())
+    )
+
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
+    const paginatedProducts = filteredProducts.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    )
 
     const deleteProduct = useDeleteProduct()
 
@@ -56,7 +69,7 @@ export default function CategoryProductsPage() {
         try {
             await deleteProduct.mutateAsync(productToDelete.idProduct)
             sileo.success({ title: "Producto eliminado" })
-        } catch (error) {
+        } catch {
             sileo.error({ title: "Error al eliminar" })
         } finally {
             setIsConfirmOpen(false)
@@ -64,7 +77,7 @@ export default function CategoryProductsPage() {
         }
     }
 
-    const isLoading = isLoadingCategory || isLoadingProducts
+    const isLoading = isLoadingCategory || isLoadingResources
 
     return (
         <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 md:p-0">
@@ -94,7 +107,10 @@ export default function CategoryProductsPage() {
                         placeholder="Buscar productos..."
                         className="h-10 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value)
+                            setCurrentPage(1)
+                        }}
                     />
                 </div>
                 <button
@@ -123,7 +139,7 @@ export default function CategoryProductsPage() {
                 </div>
             ) : products.length > 0 ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                    {products.map((product) => (
+                    {paginatedProducts.map((product) => (
                         <ProductCard
                             key={product.idProduct}
                             product={product}
@@ -159,11 +175,52 @@ export default function CategoryProductsPage() {
             )}
 
             {/* ═══ PRODUCT COUNT ═══ */}
-            {!isLoadingProducts && products.length > 0 && (
+            {!isLoadingResources && products.length > 0 && (
                 <div className="mt-4 text-center">
                     <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                         {products.length} {products.length === 1 ? "producto" : "productos"} en total
                     </p>
+                </div>
+            )}
+
+            {/* ═══ PAGINATION ═══ */}
+            {!isLoading && totalPages > 1 && (
+                <div className="mt-8 flex items-center justify-center gap-2">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                    >
+                        <ChevronLeft className="size-4" />
+                    </Button>
+
+                    <div className="flex items-center gap-1">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-all ${
+                                    page === currentPage
+                                        ? "bg-[#708C3E] text-white shadow-sm shadow-[#708C3E]/20"
+                                        : "text-gray-500 dark:text-white/50 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7]"
+                                }`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </div>
+
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                    >
+                        <ChevronRight className="size-4" />
+                    </Button>
                 </div>
             )}
 

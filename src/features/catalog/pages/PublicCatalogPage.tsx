@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { useParams, useNavigate, useSearchParams } from "react-router"
+import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { Search, ArrowLeft, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
@@ -13,6 +13,7 @@ import type { Product } from "@/features/catalog/types/product.types"
 import type { Category } from "@/features/catalog/types/category.types"
 
 const PRODUCTS_PER_PAGE = 12
+const CATEGORIES_PER_PAGE = 9
 
 export default function PublicCatalogPage() {
     const { token, id } = useParams()
@@ -49,12 +50,19 @@ export default function PublicCatalogPage() {
         p.name?.toLowerCase().includes(search.toLowerCase())
     )
 
-    // Pagination
+    // Products Pagination
     const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE)
     const paginatedProducts = useMemo(() => {
         const start = (currentPage - 1) * PRODUCTS_PER_PAGE
         return filteredProducts.slice(start, start + PRODUCTS_PER_PAGE)
     }, [filteredProducts, currentPage])
+
+    // Categories Pagination
+    const totalPagesCats = Math.ceil(filteredCategories.length / CATEGORIES_PER_PAGE)
+    const paginatedCategories = useMemo(() => {
+        const start = (currentPage - 1) * CATEGORIES_PER_PAGE
+        return filteredCategories.slice(start, start + CATEGORIES_PER_PAGE)
+    }, [filteredCategories, currentPage])
 
     // Reset page when search changes
     useEffect(() => {
@@ -66,7 +74,8 @@ export default function PublicCatalogPage() {
             const product = products.find(p => p.idProduct === Number(pid))
             if (product) setSelectedProduct(product)
         }
-    }, [pid, products, selectedProduct])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pid, products])
 
     const handleSelectProduct = (product: Product | null) => {
         setSelectedProduct(product)
@@ -174,12 +183,12 @@ export default function PublicCatalogPage() {
                                     variant="outline"
                                     className="mt-5 rounded-full border-[#708C3E]/30 text-[#2E7D32] hover:bg-[#708C3E]/5"
                                     onClick={() => setSearch("")}
-                                >
-                                    Limpiar búsqueda
-                                </Button>
-                            )}
-                        </div>
-                    ) : (
+                            >
+                                Limpiar búsqueda
+                            </Button>
+                        )}
+                    </div>
+                ) : (
                         <>
                             <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
                                 {paginatedProducts.map((product) => (
@@ -262,15 +271,56 @@ export default function PublicCatalogPage() {
                                 )}
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
-                                {filteredCategories.map((category: Category) => (
-                                    <CategoryCard
-                                        key={category.idCategory}
-                                        category={category}
-                                        onClick={(c: Category) => navigate(`/v/${token}/${c.idCategory}`)}
-                                    />
-                                ))}
-                            </div>
+                            <>
+                                <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+                                    {paginatedCategories.map((category: Category) => (
+                                        <CategoryCard
+                                            key={category.idCategory}
+                                            category={category}
+                                            onClick={(c: Category) => navigate(`/v/${token}/${c.idCategory}`)}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Categories Pagination */}
+                                {totalPagesCats > 1 && (
+                                    <div className="mt-10 flex items-center justify-center gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
+                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                            disabled={currentPage === 1}
+                                        >
+                                            <ChevronLeft className="size-4" />
+                                        </Button>
+
+                                        {Array.from({ length: totalPagesCats }, (_, i) => i + 1).map((page) => (
+                                            <button
+                                                key={page}
+                                                onClick={() => setCurrentPage(page)}
+                                                className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                                                    page === currentPage
+                                                        ? "bg-[#2E7D32] text-white"
+                                                        : "text-[#5D4037]/60 hover:bg-[#708C3E]/10 hover:text-[#2E7D32]"
+                                                }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
+                                            onClick={() => setCurrentPage(p => Math.min(totalPagesCats, p + 1))}
+                                            disabled={currentPage === totalPagesCats}
+                                        >
+                                            <ChevronRight className="size-4" />
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </>
                 )}

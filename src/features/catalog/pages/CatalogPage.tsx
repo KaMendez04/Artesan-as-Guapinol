@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { ChevronLeft, Link2, Plus, Search, Store } from "lucide-react"
-import { useNavigate } from "react-router"
+import { ChevronLeft, Link2, Plus, Search, Store, ChevronRight } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
@@ -18,12 +18,21 @@ export default function CatalogPage() {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [editingCategory, setEditingCategory] = useState<Category | null>(null)
     const [copied, setCopied] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+    const ITEMS_PER_PAGE = 12
 
     const { data: categories = [], isLoading } = useCategories()
     const { mutateAsync: createShare, isPending: isSharing } = useCreateCatalogShare()
 
     const filtered = categories.filter((c) =>
         c.name?.toLowerCase().includes(search.toLowerCase())
+    )
+
+    // Pagination
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+    const paginatedCategories = filtered.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
     )
 
     function handleEdit(category: Category) {
@@ -52,7 +61,7 @@ export default function CatalogPage() {
             sileo.info({ title: "Enlace copiado" })
             setCopied(true)
             setTimeout(() => setCopied(false), 2000)
-        } catch (error) {
+        } catch {
             sileo.error({ title: "Error", description: "No se pudo obtener el enlace" })
         }
     }
@@ -66,7 +75,7 @@ export default function CatalogPage() {
             const url = `${APP_CONFIG.PROD_URL}/v/${share.id}`
             await navigator.clipboard.writeText(url)
             sileo.info({ title: "Enlace de categoría copiado" })
-        } catch (error) {
+        } catch {
             sileo.error({ title: "Error", description: "No se pudo generar el enlace de la categoría" })
         }
     }
@@ -109,7 +118,10 @@ export default function CatalogPage() {
                         className="h-10 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
                         placeholder="Buscar categoría…"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value)
+                            setCurrentPage(1)
+                        }}
                     />
                 </div>
                 <button
@@ -159,7 +171,7 @@ export default function CatalogPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {filtered.map((category) => (
+                    {paginatedCategories.map((category) => (
                         <CategoryCard
                             key={category.idCategory}
                             category={category}
@@ -168,6 +180,47 @@ export default function CatalogPage() {
                             onClick={(c) => navigate(`/catalogo/${c.idCategory}/productos`)}
                         />
                     ))}
+                </div>
+            )}
+
+            {/* ═══ PAGINATION ═══ */}
+            {!isLoading && totalPages > 1 && (
+                <div className="mt-8 flex items-center justify-center gap-2">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                    >
+                        <ChevronLeft className="size-4" />
+                    </Button>
+
+                    <div className="flex items-center gap-1">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-all ${
+                                    page === currentPage
+                                        ? "bg-[#708C3E] text-white shadow-sm shadow-[#708C3E]/20"
+                                        : "text-gray-500 dark:text-white/50 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7]"
+                                }`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </div>
+
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
+                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                    >
+                        <ChevronRight className="size-4" />
+                    </Button>
                 </div>
             )}
 
