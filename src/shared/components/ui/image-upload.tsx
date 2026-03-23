@@ -6,13 +6,14 @@ import { sileo } from 'sileo';
 import { ImageCropper } from './image-cropper';
 
 interface ImageUploadProps {
+    id?: string;
     value?: string | null;
     onChange: (url: string | null) => void;
     onUploadStart?: () => void;
     onUploadEnd?: () => void;
 }
 
-export function ImageUpload({ value, onChange, onUploadStart, onUploadEnd }: ImageUploadProps) {
+export function ImageUpload({ id, value, onChange, onUploadStart, onUploadEnd }: ImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [croppingFile, setCroppingFile] = useState<{ file: File; url: string } | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -100,6 +101,7 @@ export function ImageUpload({ value, onChange, onUploadStart, onUploadEnd }: Ima
                 )}
 
                 <input
+                    id={id}
                     type="file"
                     ref={fileInputRef}
                     className="hidden"

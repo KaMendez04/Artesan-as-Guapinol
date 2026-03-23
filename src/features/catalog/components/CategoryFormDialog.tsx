@@ -102,7 +102,6 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Ej: Pulseras"
-                            autoFocus
                             required
                             className="h-11 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20 focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all"
                         />
@@ -110,10 +109,11 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
 
                     {/* Imagen */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <label htmlFor="cat-image" className="text-sm font-semibold text-gray-700 dark:text-gray-300 cursor-pointer">
                             Imagen de la categoría
                         </label>
                         <ImageUpload
+                            id="cat-image"
                             value={imageUrl}
                             onChange={setImageUrl}
                             onUploadStart={() => { }}

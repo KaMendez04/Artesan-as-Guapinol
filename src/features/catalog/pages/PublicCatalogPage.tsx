@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { Search, ArrowLeft, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react"
+import { cn } from "@/shared/utils"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
@@ -14,6 +15,7 @@ import type { Category } from "@/features/catalog/types/category.types"
 
 const PRODUCTS_PER_PAGE = 12
 const CATEGORIES_PER_PAGE = 9
+const EMPTY_ARRAY: any[] = []
 
 export default function PublicCatalogPage() {
     const { token, id } = useParams()
@@ -26,9 +28,9 @@ export default function PublicCatalogPage() {
 
     const categoryId = id ? Number(id) : share?.category_id
 
-    const { data: categories = [], isLoading: isLoadingCats } = useCategories({ state: "active" })
+    const { data: categories = EMPTY_ARRAY, isLoading: isLoadingCats } = useCategories({ state: "active" })
 
-    const { data: products = [], isLoading: isLoadingProducts } = useProducts({
+    const { data: products = EMPTY_ARRAY, isLoading: isLoadingProducts } = useProducts({
         idCategory: categoryId || undefined,
         state: "active"
     })
@@ -145,9 +147,9 @@ export default function PublicCatalogPage() {
             {/* ═══ CONTENT GRID ═══ */}
             <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
                 {isLoading ? (
-                    <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
-                        {Array.from({ length: 8 }).map((_, i) => (
-                            <div key={i} className="overflow-hidden rounded-2xl bg-white shadow-sm">
+                    <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <div key={`skeleton-cat-${i}`} className="p-4 rounded-3xl bg-white shadow-sm ring-1 ring-[#E8E5D8]">
                                 <Skeleton className="aspect-square w-full bg-[#E8E5D8]/50" />
                                 <div className="space-y-2 p-4">
                                     <Skeleton className="h-4 w-3/4 bg-[#E8E5D8]/50" />
@@ -208,13 +210,14 @@ export default function PublicCatalogPage() {
 
                                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                                         <button
-                                            key={page}
+                                            key={`page-prod-${page}`}
                                             onClick={() => setCurrentPage(page)}
-                                            className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-colors ${
-                                                page === currentPage
-                                                    ? "bg-[#2E7D32] text-white"
-                                                    : "text-[#5D4037]/60 hover:bg-[#708C3E]/10 hover:text-[#2E7D32]"
-                                            }`}
+                                            className={cn(
+                                                "size-9 rounded-full text-sm font-bold transition-all",
+                                                currentPage === page
+                                                    ? "bg-[#708C3E] text-white shadow-lg shadow-[#708C3E]/20"
+                                                    : "bg-white text-[#5D4037] hover:bg-[#F5F3EB] ring-1 ring-[#E8E5D8]"
+                                            )}
                                         >
                                             {page}
                                         </button>
@@ -290,13 +293,14 @@ export default function PublicCatalogPage() {
 
                                         {Array.from({ length: totalPagesCats }, (_, i) => i + 1).map((page) => (
                                             <button
-                                                key={page}
+                                                key={`page-cat-${page}`}
                                                 onClick={() => setCurrentPage(page)}
-                                                className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-colors ${
-                                                    page === currentPage
-                                                        ? "bg-[#2E7D32] text-white"
-                                                        : "text-[#5D4037]/60 hover:bg-[#708C3E]/10 hover:text-[#2E7D32]"
-                                                }`}
+                                                className={cn(
+                                                    "size-9 rounded-full text-sm font-bold transition-all",
+                                                    currentPage === page
+                                                        ? "bg-[#708C3E] text-white shadow-lg shadow-[#708C3E]/20"
+                                                        : "bg-white text-[#5D4037] hover:bg-[#F5F3EB] ring-1 ring-[#E8E5D8]"
+                                                )}
                                             >
                                                 {page}
                                             </button>

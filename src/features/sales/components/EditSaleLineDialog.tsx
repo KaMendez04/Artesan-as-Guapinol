@@ -67,9 +67,9 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
         <div className="mt-4 space-y-4">
           {/* Cantidad */}
           <div className="space-y-2">
-            <label htmlFor="qty-edit" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
+            <label htmlFor="edit-qty" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
             <input
-              id="qty-edit"
+              id="edit-qty"
               type="number"
               min={1}
               value={qty}
@@ -85,14 +85,14 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
 
           {/* Categoría */}
           <div className="space-y-2">
-            <label htmlFor="category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="edit-category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Artículo (Categoría)
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <button
-                  id="category-trigger"
+                  id="edit-category-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                             border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
@@ -145,14 +145,14 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
 
           {/* Precio individual */}
           <div className="space-y-2">
-            <label htmlFor="price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="edit-price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Precio individual
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild disabled={loadingPrices}>
                 <button
-                  id="price-trigger"
+                  id="edit-price-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                                 border border-gray-200 bg-white px-3 py-2 text-sm
@@ -226,9 +226,9 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
 
           {/* Subtotal */}
           <div className="space-y-2">
-            <label htmlFor="subtotal-edit" className="text-sm font-medium text-gray-700 dark:text-white/80">Subtotal (editable)</label>
+            <label htmlFor="edit-subtotal" className="text-sm font-medium text-gray-700 dark:text-white/80">Subtotal (editable)</label>
             <input
-              id="subtotal-edit"
+              id="edit-subtotal"
               type="number"
               min={0}
               value={subtotal}
@@ -246,7 +246,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <Checkbox
-                id="owe-edit"
+                id="edit-owe"
                 checked={oweMoney}
                 onCheckedChange={(value) => setOweMoney(!!value)}
                 className="
@@ -258,14 +258,14 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
                   focus-visible:ring-[#708C3E]/30
                 "
               />
-              <label htmlFor="owe-edit" className="text-sm text-gray-700 dark:text-white/80">
+              <label htmlFor="edit-owe" className="text-sm text-gray-700 dark:text-white/80">
                 Fiado
               </label>
             </div>
 
             <div className="flex items-center gap-2">
               <Checkbox
-                id="sinpe-edit"
+                id="edit-sinpe"
                 checked={sinpe}
                 onCheckedChange={(value) => setSinpe(!!value)}
                 className="
@@ -277,7 +277,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
                   focus-visible:ring-[#708C3E]/30
                 "
               />
-              <label htmlFor="sinpe-edit" className="text-sm text-gray-700 dark:text-white/80">
+              <label htmlFor="edit-sinpe" className="text-sm text-gray-700 dark:text-white/80">
                 SINPE
               </label>
             </div>

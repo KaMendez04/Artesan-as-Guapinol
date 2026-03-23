@@ -198,6 +198,7 @@ export function CreateSaleDialog({ open, onClose, onCreated }: Props) {
             <Popover>
               <PopoverTrigger asChild>
                 <button
+                  id="date-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 dark:border-neutral-700
