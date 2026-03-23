@@ -5,6 +5,7 @@ import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { ProductCard } from "@/features/catalog/components/ProductCard"
 import { ProductFormDialog } from "@/features/catalog/components/ProductFormDialog"
+import { ProductDetailDialog } from "@/features/catalog/components/ProductDetailDialog"
 import { useProducts, useDeleteProduct } from "@/features/catalog/hooks/useProduct"
 import { useCategory } from "@/features/catalog/hooks/useCategory"
 import { sileo } from "sileo"
@@ -19,6 +20,7 @@ export default function CategoryProductsPage() {
     const [search, setSearch] = useState("")
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+    const [viewProduct, setViewProduct] = useState<Product | null>(null)
     const [isConfirmOpen, setIsConfirmOpen] = useState(false)
     const [productToDelete, setProductToDelete] = useState<Product | null>(null)
     const [formKey, setFormKey] = useState(0) // Used to force reset "Add" form
@@ -125,8 +127,10 @@ export default function CategoryProductsPage() {
                         <ProductCard
                             key={product.idProduct}
                             product={product}
+                            onClick={handleEdit}
                             onEdit={handleEdit}
                             onDelete={() => handleDeleteClick(product)}
+                            onView={setViewProduct}
                         />
                     ))}
                 </div>
@@ -178,6 +182,12 @@ export default function CategoryProductsPage() {
                 onOpenChange={setIsDialogOpen}
                 product={selectedProduct}
                 idCategory={idCategory}
+            />
+
+            <ProductDetailDialog
+                product={viewProduct}
+                open={!!viewProduct}
+                onOpenChange={(open) => !open && setViewProduct(null)}
             />
         </div>
     )

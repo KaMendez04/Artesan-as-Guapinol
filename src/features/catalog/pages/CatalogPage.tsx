@@ -9,6 +9,7 @@ import { CategoryCard } from "@/features/catalog/components/CategoryCard"
 import { CategoryFormDialog } from "@/features/catalog/components/CategoryFormDialog"
 import { useCategories, useCreateCatalogShare } from "@/features/catalog/hooks/useCategory"
 import { getGeneralCatalogShare } from "@/features/catalog/services/category.service"
+import { APP_CONFIG } from "@/shared/constants/config"
 import type { Category } from "@/features/catalog/types/category.types"
 
 export default function CatalogPage() {
@@ -46,7 +47,7 @@ export default function CatalogPage() {
             if (!share) {
                 share = await createShare({ name: "General" })
             }
-            const url = `${window.location.origin}/v/${share.id}`
+            const url = `${APP_CONFIG.PROD_URL}/v/${share.id}`
             await navigator.clipboard.writeText(url)
             sileo.info({ title: "Enlace copiado" })
             setCopied(true)
@@ -62,7 +63,7 @@ export default function CatalogPage() {
                 name: `Categoría: ${category.name}`,
                 categoryId: category.idCategory
             })
-            const url = `${window.location.origin}/v/${share.id}`
+            const url = `${APP_CONFIG.PROD_URL}/v/${share.id}`
             await navigator.clipboard.writeText(url)
             sileo.info({ title: "Enlace de categoría copiado" })
         } catch (error) {

@@ -33,6 +33,7 @@ export function ThemedToaster() {
     return (
         <Toaster
             position="top-right"
+            offset={{ top: "calc(1rem + var(--safe-area-inset-top))", right: 16 }}
             options={
                 isDark
                     ? {
