@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { X, Trash2, Check, ChevronDown } from "lucide-react"
-import { listUniquePricesByCategory } from "../services/productPrice.service"
-import { useUpdateSaleLine, useDeleteSaleLine } from "../hooks/useSaleLine"
+import { useEditSaleLineForm } from "../hooks/useEditSaleLineForm"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu" // ajusta ruta si es diferente
+} from "@/shared/components/ui/dropdown-menu"
 import { Checkbox } from "@/shared/components/ui/checkbox"
 
 type Category = { idCategory: number; name: string }
@@ -21,78 +20,18 @@ type Props = {
 }
 
 export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: Props) {
-  const { mutateAsync: updateLine, isPending: updating } = useUpdateSaleLine(idSale)
-  const { mutateAsync: deleteLine, isPending: deleting } = useDeleteSaleLine(idSale)
-
-  const [qty, setQty] = useState(() => Number(line?.qty ?? 1))
-  const [idCategory, setIdCategory] = useState<number | "">(() => Number(line?.idCategory ?? ""))
-  const [unitPrice, setUnitPrice] = useState<number>(() => Number(line?.unitPrice ?? 0))
-
-  const [subtotal, setSubtotal] = useState<number>(() => Number(line?.subtotal ?? 0))
-  const [subtotalTouched, setSubtotalTouched] = useState(true)
-  const [oweMoney, setOweMoney] = useState(() => !!line?.oweMoney)
-  const [sinpe, setSinpe] = useState(() => !!line?.sinpe)
-
-  const [loadingPrices, setLoadingPrices] = useState(false)
-  const [prices, setPrices] = useState<number[]>([])
+  const {
+    qty, setQty,
+    idCategory, setIdCategory,
+    unitPrice, setUnitPrice,
+    subtotal, setSubtotal, setSubtotalTouched,
+    oweMoney, setOweMoney,
+    sinpe, setSinpe,
+    loadingPrices, prices, deleting, canSave,
+    handleSave, handleDelete
+  } = useEditSaleLineForm(idSale, line, onClose)
 
   const [confirmOpen, setConfirmOpen] = useState(false)
-
-  // cargar precios cuando cambia categoría
-  useEffect(() => {
-    if (!open) return
-    if (idCategory === "") return
-
-    ;(async () => {
-      setLoadingPrices(true)
-      try {
-        const list = await listUniquePricesByCategory(idCategory as number)
-        setPrices(list)
-        // si el unitPrice actual ya no existe, cae al primero
-        if (!list.includes(Number(unitPrice))) {
-          setUnitPrice(Number(list?.[0] ?? 0))
-          setSubtotalTouched(false)
-        }
-      } catch (e) {
-        console.error("Error cargando precios:", e)
-        setPrices([])
-      } finally {
-        setLoadingPrices(false)
-      }
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, idCategory])
-
-  // recalcular subtotal si no lo tocaron manual
-  useEffect(() => {
-    if (subtotalTouched) return
-    setSubtotal(Number(qty) * Number(unitPrice))
-  }, [qty, unitPrice, subtotalTouched])
-
-  const canSave = !!line?.idSaleLine && idCategory !== "" && qty > 0 && !updating && !deleting
-
-  const handleSave = async () => {
-    if (!canSave) return
-    await updateLine({
-      idSaleLine: line.idSaleLine,
-      idCategory: idCategory as number,
-      qty: Number(qty),
-      unitPrice: Number(unitPrice),
-      subtotal: Number(subtotal),
-      oweMoney: !!oweMoney,
-      sinpe: !!sinpe,
-    })
-    onClose()
-  }
-
-  const handleAskDelete = () => setConfirmOpen(true)
-
-  const handleConfirmDelete = async () => {
-    if (!line?.idSaleLine) return
-    await deleteLine(line.idSaleLine)
-    setConfirmOpen(false)
-    onClose()
-  }
 
   if (!open || !line) return null
 
@@ -103,12 +42,11 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
       <div className="relative w-full max-w-md rounded-3xl bg-white border border-gray-200 p-5 shadow-xl text-gray-900
                       dark:bg-neutral-950 dark:border-white/10 dark:text-white">
         <div className="flex items-center justify-between">
-        
             <h2 className="text-lg font-semibold">Editar artículo</h2>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
                 <button
                     type="button"
-                    onClick={handleAskDelete}
+                    onClick={() => setConfirmOpen(true)}
                     className="inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm font-medium
                             text-red-600 hover:bg-red-50 transition
                             dark:text-red-400 dark:hover:bg-red-500/10"
@@ -387,7 +325,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
               {/* Izquierda: Sí, aceptar */}
               <button
                 type="button"
-                onClick={handleConfirmDelete}
+                onClick={handleDelete}
                 disabled={deleting}
                 className="rounded-2xl bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-medium py-2.5 transition"
               >
