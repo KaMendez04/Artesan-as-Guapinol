@@ -107,7 +107,10 @@ export default function SaleDetailPage() {
 
           <button
             type="button"
-            onClick={() => setOpenAdd(true)}
+            onClick={() => {
+              setAddKey((k) => k + 1)
+              setOpenAdd(true)
+            }}
             className="rounded-2xl bg-[#708C3E] p-2.5 text-white transition hover:bg-[#5f7634]"
             aria-label="Agregar"
             title="Agregar"
