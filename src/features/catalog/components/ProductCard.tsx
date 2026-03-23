@@ -45,8 +45,8 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                     )}
 
                     {!isActive && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
-                            <Badge className="bg-[#5D4037]/80 text-white font-semibold uppercase tracking-wider text-xs">
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-[2px]">
+                            <Badge className="bg-[#5D4037]/80 dark:bg-zinc-800 text-white font-semibold uppercase tracking-wider text-xs border-0">
                                 No disponible
                             </Badge>
                         </div>
@@ -63,7 +63,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
 
                     {/* Image count badge */}
                     {product.images && product.images.length > 1 && (
-                        <div className="absolute right-2 top-2 rounded-full bg-[#5D4037]/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                        <div className="absolute right-2 top-2 rounded-full bg-[#5D4037]/70 dark:bg-black/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
                             +{product.images.length - 1}
                         </div>
                     )}
@@ -71,10 +71,10 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
 
                 {/* Info */}
                 <div className="p-3.5">
-                    <h3 className="truncate text-sm font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                    <h3 className="truncate text-sm font-bold text-[#5D4037] dark:text-gray-100 group-hover:text-[#2E7D32] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                         {product.name}
                     </h3>
-                    <p className="mt-1 text-base font-extrabold text-[#2E7D32]">
+                    <p className="mt-1 text-base font-extrabold text-[#2E7D32] dark:text-[#A5D6A7]">
                         ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                     </p>
                 </div>
@@ -130,7 +130,8 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
             {/* Info + Actions */}
             <div className="flex items-center justify-between p-3.5">
                 <div className="flex min-w-0 flex-col gap-0.5">
-                    <h3 className="truncate font-bold text-sm text-[#5D4037] dark:text-[#D7CCC8] group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                    <h3 className="truncate font-bold text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300
+">
                         {product.name}
                     </h3>
                     <p className="text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
@@ -143,7 +144,8 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
+                            className="size-8 shrink-0 rounded-full text-gray-400 dark:text-gray-500 hover:bg-[#708C3E]/10
+ hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation()
                                 onEdit(product)
@@ -157,7 +159,8 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                            className="size-8 shrink-0 rounded-full text-gray-400 dark:text-gray-500 hover:bg-red-500/10
+ hover:text-red-500 dark:hover:text-red-400 transition-colors"
                             onClick={(e) => {
                                 e.stopPropagation()
                                 onDelete(product)
