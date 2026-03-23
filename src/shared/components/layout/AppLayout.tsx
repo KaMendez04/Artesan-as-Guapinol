@@ -18,8 +18,15 @@ export default function AppLayout() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Avatar className="size-10">
-                            <AvatarImage src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg" alt="@user" />
+                        <Avatar className="size-10 border border-border/50 shadow-sm bg-white hover:opacity-90 cursor-pointer transition-opacity">
+                            <AvatarImage 
+                                src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg" 
+                                alt="Arte Guapinol" 
+                                className="object-contain p-1"
+                            />
+                            <div className="flex size-full items-center justify-center bg-muted text-xs font-bold text-muted-foreground uppercase">
+                                AG
+                            </div>
                         </Avatar>
                     </div>
                 </header>

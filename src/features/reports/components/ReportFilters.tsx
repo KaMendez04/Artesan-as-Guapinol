@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components/ui/button"
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react"
-import { format, addMonths, subMonths, addWeeks, subWeeks } from "date-fns"
+import { format, addMonths, subMonths, addWeeks, subWeeks, isAfter, startOfMonth, startOfWeek } from "date-fns"
 import { es } from "date-fns/locale"
 import type { ReportFilters as IReportFilters } from "../types/reports.types"
 
@@ -10,12 +10,7 @@ interface ReportFiltersProps {
 }
 
 export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) {
-  /* const handleToggleMode = () => {
-    onFiltersChange({
-      ...filters,
-      mode: filters.mode === "month" ? "week" : "month"
-    })
-  } */
+  const now = new Date()
 
   const handlePrevious = () => {
     onFiltersChange({
@@ -25,10 +20,22 @@ export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) 
   }
 
   const handleNext = () => {
+    const nextDate = filters.mode === "month" ? addMonths(filters.date, 1) : addWeeks(filters.date, 1)
+    
+    // Si la fecha siguiente empieza después de ahora, no permitir
+    const nextStart = filters.mode === "month" ? startOfMonth(nextDate) : startOfWeek(nextDate, { weekStartsOn: 1 })
+    if (isAfter(nextStart, now)) return
+
     onFiltersChange({
       ...filters,
-      date: filters.mode === "month" ? addMonths(filters.date, 1) : addWeeks(filters.date, 1)
+      date: nextDate
     })
+  }
+
+  const isNextDisabled = () => {
+    const nextDate = filters.mode === "month" ? addMonths(filters.date, 1) : addWeeks(filters.date, 1)
+    const nextStart = filters.mode === "month" ? startOfMonth(nextDate) : startOfWeek(nextDate, { weekStartsOn: 1 })
+    return isAfter(nextStart, now)
   }
 
   return (
@@ -85,7 +92,12 @@ export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) 
           variant="ghost" 
           size="icon" 
           onClick={handleNext}
-          className="rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/40"
+          disabled={isNextDisabled()}
+          className={`rounded-xl transition-opacity ${
+            isNextDisabled() 
+              ? "opacity-30 cursor-not-allowed" 
+              : "hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/40"
+          }`}
         >
           <ChevronRight className="h-5 w-5" />
         </Button>
@@ -93,3 +105,4 @@ export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) 
     </div>
   )
 }
+
