@@ -24,6 +24,7 @@ type Props = {
 export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) {
   const { mutateAsync: insertLine, isPending } = useInsertSaleLine(idSale)
 
+  const [sinpe, setSinpe] = useState(false)
   const [qty, setQty] = useState(1)
   const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
   const [unitPrice, setUnitPrice] = useState<number>(0)
@@ -84,6 +85,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
       unitPrice: Number(unitPrice),
       subtotal: Number(subtotal),
       oweMoney: !!oweMoney,
+      sinpe: !!sinpe,
     })
     onClose()
   }
@@ -300,23 +302,46 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
           </div>
 
           {/* Fiado (Checkbox shadcn verde) */}
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={oweMoney}
-              onCheckedChange={(value) => setOweMoney(!!value)}
-              className="
-                h-5 w-5 rounded-md
-                border-gray-300 dark:border-white/20
-                data-[state=checked]:bg-[#708C3E]
-                data-[state=checked]:border-[#708C3E]
-                data-[state=checked]:text-white
-                focus-visible:ring-[#708C3E]/30
-                dark:data-[state=checked]:bg-[#708C3E]
-              "
-            />
-            <label className="text-sm text-gray-700 dark:text-white/80">
-              Fiado
-            </label>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="owe-add"
+                checked={oweMoney}
+                onCheckedChange={(value) => setOweMoney(!!value)}
+                className="
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
+                  dark:data-[state=checked]:bg-[#708C3E]
+                "
+              />
+              <label htmlFor="owe-add" className="text-sm text-gray-700 dark:text-white/80">
+                Fiado
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="sinpe-add"
+                checked={sinpe}
+                onCheckedChange={(value) => setSinpe(!!value)}
+                className="
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
+                  dark:data-[state=checked]:bg-[#708C3E]
+                "
+              />
+              <label htmlFor="sinpe-add" className="text-sm text-gray-700 dark:text-white/80">
+                SINPE
+              </label>
+            </div>
           </div>
 
           <button

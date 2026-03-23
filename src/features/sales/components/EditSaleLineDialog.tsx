@@ -31,6 +31,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
   const [subtotal, setSubtotal] = useState<number>(() => Number(line?.subtotal ?? 0))
   const [subtotalTouched, setSubtotalTouched] = useState(true)
   const [oweMoney, setOweMoney] = useState(() => !!line?.oweMoney)
+  const [sinpe, setSinpe] = useState(() => !!line?.sinpe)
 
   const [loadingPrices, setLoadingPrices] = useState(false)
   const [prices, setPrices] = useState<number[]>([])
@@ -79,6 +80,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
       unitPrice: Number(unitPrice),
       subtotal: Number(subtotal),
       oweMoney: !!oweMoney,
+      sinpe: !!sinpe,
     })
     onClose()
   }
@@ -302,23 +304,46 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
             />
           </div>
 
+          {/* Fiado (Checkbox shadcn verde) */}
+          <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-            <Checkbox
+              <Checkbox
+                id="owe-edit"
                 checked={oweMoney}
                 onCheckedChange={(value) => setOweMoney(!!value)}
                 className="
-                h-5 w-5 rounded-md
-                border-gray-300 dark:border-white/20
-                data-[state=checked]:bg-[#708C3E]
-                data-[state=checked]:border-[#708C3E]
-                data-[state=checked]:text-white
-                focus-visible:ring-[#708C3E]/30
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
                 "
-            />
-            <label className="text-sm text-gray-700 dark:text-white/80">
+              />
+              <label htmlFor="owe-edit" className="text-sm text-gray-700 dark:text-white/80">
                 Fiado
-            </label>
+              </label>
             </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="sinpe-edit"
+                checked={sinpe}
+                onCheckedChange={(value) => setSinpe(!!value)}
+                className="
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
+                "
+              />
+              <label htmlFor="sinpe-edit" className="text-sm text-gray-700 dark:text-white/80">
+                SINPE
+              </label>
+            </div>
+          </div>
 
           {/* Acciones */}
           <div className="grid grid-cols-2 gap-3 pt-4">
