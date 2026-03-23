@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { X, Check, ChevronDown, Calendar as CalendarIcon } from "lucide-react"
 import { usePlaces } from "../hooks/usePlace"
 import { useCreateSale } from "../hooks/useSale"
@@ -30,22 +30,9 @@ export function CreateSaleDialog({ open, onClose, onCreated }: Props) {
   const { mutateAsync: createSale, isPending } = useCreateSale()
   const [placeSearch, setPlaceSearch] = useState("")
   const [placeId, setPlaceId] = useState<number | "">("")
-  const [dateValue, setDateValue] = useState(toInputDateValue(new Date()))
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [dateValue, setDateValue] = useState(() => toInputDateValue(new Date()))
+  const [date, setDate] = useState<Date | undefined>(() => new Date())
   const [creatingPlace, setCreatingPlace] = useState(false)
-  console.log("Device local:", new Date().toString())
-console.log("CR time:", new Date().toLocaleString("es-CR", { timeZone: "America/Costa_Rica" }))
-console.log("Payload:", buildCRZonedISOFromDateValueWithNowTime(dateValue))
-
-  useEffect(() => {
-    if (!open) return
-    setPlaceSearch("")
-    setPlaceId("")
-    const now = new Date()
-    setDateValue(toInputDateValue(now))
-    setDate(now)
-    setCreatingPlace(false)
-  }, [open])
 
   const filtered = useMemo(() => {
     const q = placeSearch.trim().toLowerCase()
@@ -119,11 +106,12 @@ console.log("Payload:", buildCRZonedISOFromDateValueWithNowTime(dateValue))
         <div className="mt-4 space-y-4">
           {/* Lugar */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            <label htmlFor="place-input" className="text-sm font-medium text-gray-700 dark:text-gray-200">
               Lugar
             </label>
 
             <input
+              id="place-input"
               value={placeSearch}
               onChange={(e) => setPlaceSearch(e.target.value)}
               placeholder="Escribí para buscar o crear..."
@@ -205,7 +193,7 @@ console.log("Payload:", buildCRZonedISOFromDateValueWithNowTime(dateValue))
 
           {/* Fecha (shadcn DatePicker) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            <label htmlFor="date-trigger" className="text-sm font-medium text-gray-700 dark:text-gray-200">
               Fecha
             </label>
 

@@ -25,7 +25,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
   const { mutateAsync: insertLine, isPending } = useInsertSaleLine(idSale)
 
   const [qty, setQty] = useState(1)
-  const [idCategory, setIdCategory] = useState<number | "">("")
+  const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
   const [unitPrice, setUnitPrice] = useState<number>(0)
 
   const [subtotal, setSubtotal] = useState<number>(0)
@@ -34,17 +34,6 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
   const [oweMoney, setOweMoney] = useState(false)
   const [loadingPrices, setLoadingPrices] = useState(false)
   const [prices, setPrices] = useState<number[]>([])
-
-  useEffect(() => {
-    if (!open) return
-    setQty(1)
-    setIdCategory(categories?.[0]?.idCategory ?? "")
-    setPrices([])
-    setUnitPrice(0)
-    setSubtotal(0)
-    setSubtotalTouched(false)
-    setOweMoney(false)
-  }, [open, categories])
 
   useEffect(() => {
     if (!open) return

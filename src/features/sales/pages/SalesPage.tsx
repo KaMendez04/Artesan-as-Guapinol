@@ -10,6 +10,7 @@ export default function SalesPage() {
   const navigate = useNavigate()
 
   const [openCreate, setOpenCreate] = useState(false)
+  const [createKey, setCreateKey] = useState(0)
   const [search, setSearch] = useState("")
 
   const { data: sales = [], isLoading, error } = useAllSales()
@@ -76,7 +77,10 @@ export default function SalesPage() {
   {/* Botón Agregar */}
   <button
     type="button"
-    onClick={() => setOpenCreate(true)}
+    onClick={() => {
+      setCreateKey(prev => prev + 1)
+      setOpenCreate(true)
+    }}
     className="
       rounded-2xl bg-[#708C3E] hover:bg-[#5f7634] 
       text-white p-2.5 transition shrink-0
@@ -145,6 +149,7 @@ export default function SalesPage() {
         </div>
 
         <CreateSaleDialog
+          key={createKey}
           open={openCreate}
           onClose={() => setOpenCreate(false)}
           onCreated={(idSale) => navigate(`/ventas/${idSale}`)}

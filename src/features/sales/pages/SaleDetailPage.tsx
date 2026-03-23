@@ -22,6 +22,7 @@ export default function SaleDetailPage() {
   const [openAdd, setOpenAdd] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
   const [selectedLine, setSelectedLine] = useState<any>(null)
+  const [addKey, setAddKey] = useState(0)
 
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["Category", "list"],
@@ -89,7 +90,10 @@ export default function SaleDetailPage() {
 
             <button
               type="button"
-              onClick={() => setOpenAdd(true)}
+              onClick={() => {
+                setAddKey(prev => prev + 1)
+                setOpenAdd(true)
+              }}
               className="rounded-2xl bg-[#708C3E] hover:bg-[#5f7634] text-white p-2.5 transition"
               aria-label="Agregar"
               title="Agregar"
@@ -222,6 +226,7 @@ export default function SaleDetailPage() {
 
           {/* Add */}
           <AddSaleLineDialog
+            key={`add-${addKey}`}
             open={openAdd}
             onClose={() => setOpenAdd(false)}
             idSale={idSale}
@@ -230,6 +235,7 @@ export default function SaleDetailPage() {
 
           {/* Edit */}
           <EditSaleLineDialog
+            key={selectedLine?.idSaleLine ?? "edit-idle"}
             open={openEdit}
             onClose={() => setOpenEdit(false)}
             idSale={idSale}
