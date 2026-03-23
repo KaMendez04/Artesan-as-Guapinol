@@ -71,7 +71,7 @@ Foto: ${currentImageUrl}`;
 
                 {/* Custom close button with visible styling */}
                 <DialogPrimitive.Close
-                    className="absolute top-3 right-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#5D4037]/60 text-white backdrop-blur-sm transition-all hover:bg-[#5D4037]/90 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    className="absolute top-3 right-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#5D4037]/80 text-white backdrop-blur-sm transition-all hover:bg-[#5D4037] focus:outline-none focus:ring-2 focus:ring-white/50 shadow-md"
                 >
                     <X className="h-4 w-4" />
                     <span className="sr-only">Cerrar</span>
@@ -110,7 +110,7 @@ Foto: ${currentImageUrl}`;
                                     )}
                                     {/* Image counter */}
                                     {hasMultipleImages && (
-                                        <div className="absolute top-3 left-3 rounded-full bg-[#5D4037]/60 dark:bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                                        <div className="absolute top-3 left-3 rounded-full bg-[#5D4037]/80 dark:bg-black/80 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
                                             {currentImageIndex + 1}/{images.length}
                                         </div>
                                     )}
@@ -154,7 +154,7 @@ Foto: ${currentImageUrl}`;
                                     {product.name}
                                 </h3>
                                 <div className="mt-3 flex items-baseline gap-1">
-                                    <span className="text-sm text-[#5D4037]/40 dark:text-zinc-400">₡</span>
+                                    <span className="text-sm font-medium text-[#5D4037]/60 dark:text-zinc-400">₡</span>
                                     <span className="text-3xl font-extrabold text-[#2E7D32] dark:text-[#708C3E]">
                                         {product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                                     </span>
@@ -190,7 +190,7 @@ Foto: ${currentImageUrl}`;
                                 <MessageCircle className="h-5 w-5 fill-current" />
                                 Comprar por WhatsApp
                             </Button>
-                            <p className="text-[10px] text-center text-[#5D4037]/30 dark:text-zinc-500 uppercase tracking-[0.15em] font-semibold">
+                            <p className="text-[10px] text-center text-[#5D4037]/50 dark:text-zinc-500 uppercase tracking-[0.15em] font-bold">
                                 Respuesta rápida · Pago contra entrega
                             </p>
                         </div>

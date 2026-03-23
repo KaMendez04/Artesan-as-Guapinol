@@ -132,7 +132,7 @@ export default function PublicCatalogPage() {
 
                         {/* Product count on right for balance */}
                         {categoryId && !isLoading && (
-                            <span className="hidden sm:block shrink-0 text-xs text-[#5D4037]/40">
+                            <span className="hidden sm:block shrink-0 text-xs font-medium text-[#5D4037]/60">
                                 {filteredProducts.length} {filteredProducts.length === 1 ? "producto" : "productos"}
                             </span>
                         )}
@@ -236,7 +236,7 @@ export default function PublicCatalogPage() {
                     <>
                         <div className="mb-8 flex items-center gap-3">
                             <div className="h-px flex-1 bg-gradient-to-r from-[#708C3E]/40 to-transparent" />
-                            <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-[#5D4037]/50">
+                            <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-[#5D4037]/70">
                                 Categorías
                             </h2>
                             <div className="h-px flex-1 bg-gradient-to-l from-[#708C3E]/40 to-transparent" />
@@ -248,7 +248,7 @@ export default function PublicCatalogPage() {
                                     <Search className="size-9 text-[#708C3E]" />
                                 </div>
                                 <h3 className="text-xl font-bold text-[#5D4037]">No encontramos lo que buscás</h3>
-                                <p className="mt-2 max-w-xs text-sm text-[#5D4037]/50">
+                                <p className="mt-2 max-w-xs text-sm font-medium text-[#5D4037]/60">
                                     Intentá con otra palabra clave
                                 </p>
                                 {search && (
@@ -285,7 +285,7 @@ export default function PublicCatalogPage() {
                             alt="Artesanías Guapinol"
                             className="h-10 w-auto object-contain"
                         />
-                        <span className="text-[11px] text-[#5D4037]/30">
+                        <span className="text-[11px] font-medium text-[#5D4037]/50">
                             © {new Date().getFullYear()} Artesanías Guapinol · Costa Rica
                         </span>
                     </div>

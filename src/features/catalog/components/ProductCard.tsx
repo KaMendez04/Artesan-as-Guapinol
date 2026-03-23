@@ -77,11 +77,11 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                 </div>
 
                 {/* Info */}
-                <div className="p-3.5">
-                    <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-bold text-[#5D4037] dark:text-gray-100 group-hover:text-[#2E7D32] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                <div className="p-3.5 text-center">
+                    <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
                         {product.name}
                     </h3>
-                    <p className="mt-1 text-base font-extrabold text-[#2E7D32] dark:text-[#A5D6A7]">
+                    <p className="mt-1 text-base font-extrabold text-[#2E7D32]">
                         ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                     </p>
                 </div>

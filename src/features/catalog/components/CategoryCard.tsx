@@ -66,12 +66,12 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                 </div>
 
                 {/* Info */}
-                <div className="p-4">
-                    <h3 className="font-bold text-[#5D4037] dark:text-gray-100 group-hover:text-[#2E7D32] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                <div className="p-4 text-center">
+                    <h3 className="font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
                         {category.name ?? "Sin nombre"}
                     </h3>
-                    <p className="mt-0.5 text-xs text-[#5D4037]/40 dark:text-white/40">
-                        Artesanías únicas
+                    <p className="mt-0.5 text-xs font-medium text-[#5D4037]/60">
+                        Explorar categoría
                     </p>
                 </div>
             </div>
