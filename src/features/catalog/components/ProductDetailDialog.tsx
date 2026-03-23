@@ -10,6 +10,7 @@ import { Button } from "@/shared/components/ui/button";
 import { MessageCircle, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Product } from "@/features/catalog/types/product.types";
 import { cn } from "@/shared/utils";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { APP_CONFIG } from "@/shared/constants/config";
 
@@ -23,11 +24,23 @@ interface ProductDetailDialogProps {
 
 export function ProductDetailDialog({ product, isOpen, onOpenChange, catalogToken, forceLight }: ProductDetailDialogProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isImageLoading, setIsImageLoading] = useState(true);
 
     // Reset image index when a different product is opened
     useEffect(() => {
         setCurrentImageIndex(0);
+        setIsImageLoading(true);
     }, [product?.idProduct]);
+
+    // Pre-load all images when the dialog is open
+    useEffect(() => {
+        if (isOpen && product?.images && Array.isArray(product.images)) {
+            product.images.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+    }, [isOpen, product?.images]);
 
     if (!product) return null;
 
@@ -35,10 +48,12 @@ export function ProductDetailDialog({ product, isOpen, onOpenChange, catalogToke
     const hasMultipleImages = images.length > 1;
 
     const nextImage = () => {
+        setIsImageLoading(true);
         setCurrentImageIndex((prev) => (prev + 1) % images.length);
     };
 
     const prevImage = () => {
+        setIsImageLoading(true);
         setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
@@ -91,10 +106,20 @@ Foto: ${currentImageUrl}`;
                         <div className="relative flex-1 flex items-center justify-center overflow-hidden h-[300px] md:h-auto">
                             {images.length > 0 ? (
                                 <>
+                                    {isImageLoading && (
+                                        <Skeleton className={cn(
+                                            "absolute inset-0 z-10 w-full h-full bg-[#E8E5D8]/40",
+                                            !forceLight && "dark:bg-zinc-800/40"
+                                        )} />
+                                    )}
                                     <img
                                         src={images[currentImageIndex]}
                                         alt={product.name || ""}
-                                        className="h-full w-full object-contain transition-all duration-500 ease-in-out"
+                                        className={cn(
+                                            "h-full w-full object-contain transition-all duration-500 ease-in-out",
+                                            isImageLoading ? "opacity-0" : "opacity-100"
+                                        )}
+                                        onLoad={() => setIsImageLoading(false)}
                                     />
                                     {hasMultipleImages && (
                                         <>
@@ -151,7 +176,10 @@ Foto: ${currentImageUrl}`;
                                         key={i}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            setCurrentImageIndex(i);
+                                            if (i !== currentImageIndex) {
+                                                setIsImageLoading(true);
+                                                setCurrentImageIndex(i);
+                                            }
                                         }}
                                         className={cn(
                                             "h-1.5 rounded-full transition-all duration-300",
