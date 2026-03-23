@@ -7,12 +7,13 @@ import { cn } from '@/shared/utils';
 import { ImageCropper } from './image-cropper';
 
 interface MultiImageUploadProps {
+    id?: string;
     value?: string[] | null;
     onChange: (urls: string[]) => void;
     maxImages?: number;
 }
 
-export function MultiImageUpload({ value = [], onChange, maxImages = 30 }: MultiImageUploadProps) {
+export function MultiImageUpload({ id, value = [], onChange, maxImages = 30 }: MultiImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
     const [croppingFile, setCroppingFile] = useState<{ file: File; url: string } | null>(null);
     const [filesQueue, setFilesQueue] = useState<File[]>([]);
@@ -122,6 +123,7 @@ export function MultiImageUpload({ value = [], onChange, maxImages = 30 }: Multi
 
             <input
                 type="file"
+                id={id}
                 ref={fileInputRef}
                 className="hidden"
                 accept="image/*"

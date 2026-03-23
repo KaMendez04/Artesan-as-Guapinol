@@ -23,10 +23,10 @@ type Props = {
 
 export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) {
   const { mutateAsync: insertLine, isPending } = useInsertSaleLine(idSale)
-  const [sinpe, setSinpe] = useState(false)
 
-  const [qty, setQty] = useState("1")
-  const [idCategory, setIdCategory] = useState<number | "">("")
+  const [sinpe, setSinpe] = useState(false)
+  const [qty, setQty] = useState(1)
+  const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
   const [unitPrice, setUnitPrice] = useState<number>(0)
 
   const [subtotal, setSubtotal] = useState<number>(0)
@@ -36,18 +36,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
   const [loadingPrices, setLoadingPrices] = useState(false)
   const [prices, setPrices] = useState<number[]>([])
 
-  useEffect(() => {
-    if (!open) return
-    setQty("1")
-    setIdCategory(categories?.[0]?.idCategory ?? "")
-    setPrices([])
-    setUnitPrice(0)
-    setSubtotal(0)
-    setSubtotalTouched(false)
-    setOweMoney(false)
-    setSinpe(false)
-  }, [open, categories])
-
+  // cargar precios cuando cambia categoría
   useEffect(() => {
     if (!open) return
     if (idCategory === "") return
@@ -87,8 +76,6 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
   }, [prices])
 
-  
-
   const handleSave = async () => {
     if (!canSave) return
     await insertLine({
@@ -102,7 +89,6 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     })
     onClose()
   }
-  
 
   // ✅ IMPORTANTE: el return condicional VA DESPUÉS de todos los hooks
   if (!open) return null
@@ -129,31 +115,32 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
         <div className="mt-4 space-y-4">
           {/* Cantidad */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
+            <label htmlFor="qty-add" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
             <input
-              type="text"
-              inputMode="numeric"
+              id="qty-add"
+              type="number"
+              min={1}
               value={qty}
               onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, "")
-                setQty(value)
+                setQty(Math.max(1, Number(e.target.value || 1)))
                 setSubtotalTouched(false)
               }}
               className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none
-                        focus:ring-2 focus:ring-[#708C3E]/30
-                        dark:border-white/10 dark:bg-black/30 dark:text-white"
+                         focus:ring-2 focus:ring-[#708C3E]/30
+                         dark:border-white/10 dark:bg-black/30 dark:text-white"
             />
           </div>
 
           {/* Categoría (DropdownMenu) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Artículo (Categoría)
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <button
+                  id="category-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
@@ -216,13 +203,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Precio individual (DropdownMenu) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Precio individual
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild disabled={loadingPrices}>
                 <button
+                  id="price-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 bg-white px-3 py-2 text-sm
@@ -295,10 +283,11 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Subtotal */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="subtotal-add" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Subtotal (editable)
             </label>
             <input
+              id="subtotal-add"
               type="number"
               min={0}
               value={subtotal}
@@ -313,41 +302,46 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
           </div>
 
           {/* Fiado (Checkbox shadcn verde) */}
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={oweMoney}
-              onCheckedChange={(value) => setOweMoney(!!value)}
-              className="
-                h-5 w-5 rounded-md
-                border-gray-300 dark:border-white/20
-                data-[state=checked]:bg-[#708C3E]
-                data-[state=checked]:border-[#708C3E]
-                data-[state=checked]:text-white
-                focus-visible:ring-[#708C3E]/30
-                dark:data-[state=checked]:bg-[#708C3E]
-              "
-            />
-            <label className="text-sm text-gray-700 dark:text-white/80">
-              Fiado
-            </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={sinpe}
-              onCheckedChange={(value) => setSinpe(!!value)}
-              className="
-                h-5 w-5 rounded-md
-                border-gray-300 dark:border-white/20
-                data-[state=checked]:bg-[#708C3E]
-                data-[state=checked]:border-[#708C3E]
-                data-[state=checked]:text-white
-                focus-visible:ring-[#708C3E]/30
-                dark:data-[state=checked]:bg-[#708C3E]
-              "
-            />
-            <label className="text-sm text-gray-700 dark:text-white/80">
-              Pagado con SINPE
-            </label>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="owe-add"
+                checked={oweMoney}
+                onCheckedChange={(value) => setOweMoney(!!value)}
+                className="
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
+                  dark:data-[state=checked]:bg-[#708C3E]
+                "
+              />
+              <label htmlFor="owe-add" className="text-sm text-gray-700 dark:text-white/80">
+                Fiado
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="sinpe-add"
+                checked={sinpe}
+                onCheckedChange={(value) => setSinpe(!!value)}
+                className="
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
+                  dark:data-[state=checked]:bg-[#708C3E]
+                "
+              />
+              <label htmlFor="sinpe-add" className="text-sm text-gray-700 dark:text-white/80">
+                SINPE
+              </label>
+            </div>
           </div>
 
           <button

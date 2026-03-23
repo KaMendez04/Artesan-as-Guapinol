@@ -104,8 +104,9 @@ export function ProductFormDialog({
                     <div className="space-y-4">
                         {/* Images */}
                         <div className="space-y-1.5">
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Imágenes del producto</Label>
+                            <Label htmlFor="images-upload" className="text-sm font-semibold text-gray-700 dark:text-gray-300">Imágenes del producto</Label>
                             <MultiImageUpload
+                                id="images-upload"
                                 value={images}
                                 onChange={(urls) => setValue("images", urls)}
                                 maxImages={30}

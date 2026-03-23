@@ -24,29 +24,19 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
   const { mutateAsync: updateLine, isPending: updating } = useUpdateSaleLine(idSale)
   const { mutateAsync: deleteLine, isPending: deleting } = useDeleteSaleLine(idSale)
 
-  const [qty, setQty] = useState(1)
-  const [idCategory, setIdCategory] = useState<number | "">("")
-  const [unitPrice, setUnitPrice] = useState<number>(0)
+  const [qty, setQty] = useState(() => Number(line?.qty ?? 1))
+  const [idCategory, setIdCategory] = useState<number | "">(() => Number(line?.idCategory ?? ""))
+  const [unitPrice, setUnitPrice] = useState<number>(() => Number(line?.unitPrice ?? 0))
 
-  const [subtotal, setSubtotal] = useState<number>(0)
-  const [subtotalTouched, setSubtotalTouched] = useState(false)
-  const [oweMoney, setOweMoney] = useState(false)
+  const [subtotal, setSubtotal] = useState<number>(() => Number(line?.subtotal ?? 0))
+  const [subtotalTouched, setSubtotalTouched] = useState(true)
+  const [oweMoney, setOweMoney] = useState(() => !!line?.oweMoney)
+  const [sinpe, setSinpe] = useState(() => !!line?.sinpe)
 
   const [loadingPrices, setLoadingPrices] = useState(false)
   const [prices, setPrices] = useState<number[]>([])
 
   const [confirmOpen, setConfirmOpen] = useState(false)
-
-  useEffect(() => {
-    if (!open || !line) return
-    setQty(Number(line.qty ?? 1))
-    setIdCategory(Number(line.idCategory ?? ""))
-    setUnitPrice(Number(line.unitPrice ?? 0))
-    setSubtotal(Number(line.subtotal ?? 0))
-    setSubtotalTouched(true) // porque ya viene guardado
-    setOweMoney(!!line.oweMoney)
-    setConfirmOpen(false)
-  }, [open, line])
 
   // cargar precios cuando cambia categoría
   useEffect(() => {
@@ -90,6 +80,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
       unitPrice: Number(unitPrice),
       subtotal: Number(subtotal),
       oweMoney: !!oweMoney,
+      sinpe: !!sinpe,
     })
     onClose()
   }
@@ -138,8 +129,9 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
         <div className="mt-4 space-y-4">
           {/* Cantidad */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
+            <label htmlFor="qty-edit" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
             <input
+              id="qty-edit"
               type="number"
               min={1}
               value={qty}
@@ -154,95 +146,97 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
           </div>
 
           {/* Categoría */}
-         <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
-                Artículo (Categoría)
+          <div className="space-y-2">
+            <label htmlFor="category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
+              Artículo (Categoría)
             </label>
 
             <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild>
                 <button
-                    type="button"
-                    className="w-full group flex items-center justify-between gap-2 rounded-2xl
+                  id="category-trigger"
+                  type="button"
+                  className="w-full group flex items-center justify-between gap-2 rounded-2xl
                             border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
                             hover:bg-gray-50 transition
                             focus:outline-none focus:ring-2 focus:ring-[#708C3E]/30
                             dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
                 >
-                    <span className="truncate">
+                  <span className="truncate">
                     {idCategory === ""
-                        ? "Seleccioná una categoría"
-                        : (categories.find((c) => c.idCategory === idCategory)?.name ?? "Categoría")}
-                    </span>
+                      ? "Seleccioná una categoría"
+                      : (categories.find((c) => c.idCategory === idCategory)?.name ?? "Categoría")}
+                  </span>
 
-                    <ChevronDown
+                  <ChevronDown
                     size={16}
                     className="shrink-0 text-gray-400 group-hover:text-gray-600 dark:text-white/40 dark:group-hover:text-white/70"
-                    />
+                  />
                 </button>
-                </DropdownMenuTrigger>
+              </DropdownMenuTrigger>
 
-                <DropdownMenuContent
+              <DropdownMenuContent
                 align="start"
                 className="z-[10050] min-w-[260px] w-full rounded-2xl p-1
-                            border border-gray-200 bg-white shadow-lg
-                            dark:border-white/10 dark:bg-neutral-950"
-                >
+                          border border-gray-200 bg-white shadow-lg
+                          dark:border-white/10 dark:bg-neutral-950"
+              >
                 {categories.map((c) => {
-                    const active = Number(idCategory) === c.idCategory
-                    return (
+                  const active = Number(idCategory) === c.idCategory
+                  return (
                     <DropdownMenuItem
-                        key={c.idCategory}
-                        onClick={() => {
+                      key={c.idCategory}
+                      onClick={() => {
                         setIdCategory(c.idCategory)
                         setSubtotalTouched(false)
-                        }}
-                        className={`rounded-xl px-3 py-2 text-sm flex items-center justify-between gap-2
-                                    ${active
-                                    ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#9FE870]"
-                                    : "text-gray-700 hover:bg-gray-100 dark:text-white/80 dark:hover:bg-white/10"
-                                    }`}
+                      }}
+                      className={`rounded-xl px-3 py-2 text-sm flex items-center justify-between gap-2
+                                ${active
+                          ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#9FE870]"
+                          : "text-gray-700 hover:bg-gray-100 dark:text-white/80 dark:hover:bg-white/10"
+                        }`}
                     >
-                        <span className="truncate">{c.name}</span>
-                        {active && <Check size={16} />}
+                      <span className="truncate">{c.name}</span>
+                      {active && <Check size={16} />}
                     </DropdownMenuItem>
-                    )
+                  )
                 })}
-                </DropdownMenuContent>
+              </DropdownMenuContent>
             </DropdownMenu>
-            </div>
+          </div>
 
           {/* Precio individual */}
-            <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
-                Precio individual
+          <div className="space-y-2">
+            <label htmlFor="price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
+              Precio individual
             </label>
 
             <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild disabled={loadingPrices}>
+              <DropdownMenuTrigger asChild disabled={loadingPrices}>
                 <button
-                    type="button"
-                    className="w-full group flex items-center justify-between gap-2 rounded-2xl
-                            border border-gray-200 bg-white px-3 py-2 text-sm
-                            text-gray-900 hover:bg-gray-50 transition
-                            disabled:opacity-60
-                            focus:outline-none focus:ring-2 focus:ring-[#f0f3eb]/30
-                            dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                  id="price-trigger"
+                  type="button"
+                  className="w-full group flex items-center justify-between gap-2 rounded-2xl
+                                border border-gray-200 bg-white px-3 py-2 text-sm
+                                text-gray-900 hover:bg-gray-50 transition
+                                disabled:opacity-60
+                                focus:outline-none focus:ring-2 focus:ring-[#f0f3eb]/30
+                                dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
                 >
-                    <span className="truncate">
+                  <span className="truncate">
                     {loadingPrices
-                        ? "Cargando precios…"
-                        : prices.length === 0
+                      ? "Cargando precios…"
+                      : prices.length === 0
                         ? "Sin precios registrados"
                         : `₡${Number(unitPrice).toLocaleString("es-CR")}`}
-                    </span>
+                  </span>
 
-                    <ChevronDown
+                  <ChevronDown
                     size={16}
                     className="shrink-0 text-gray-400 group-hover:text-gray-600 dark:text-white/40 dark:group-hover:text-white/70"
-                    />
+                  />
                 </button>
-                </DropdownMenuTrigger>
+              </DropdownMenuTrigger>
 
                 <DropdownMenuContent
                 align="start"
@@ -294,8 +288,9 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
 
           {/* Subtotal */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Subtotal (editable)</label>
+            <label htmlFor="subtotal-edit" className="text-sm font-medium text-gray-700 dark:text-white/80">Subtotal (editable)</label>
             <input
+              id="subtotal-edit"
               type="number"
               min={0}
               value={subtotal}
@@ -309,23 +304,46 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
             />
           </div>
 
+          {/* Fiado (Checkbox shadcn verde) */}
+          <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-            <Checkbox
+              <Checkbox
+                id="owe-edit"
                 checked={oweMoney}
                 onCheckedChange={(value) => setOweMoney(!!value)}
                 className="
-                h-5 w-5 rounded-md
-                border-gray-300 dark:border-white/20
-                data-[state=checked]:bg-[#708C3E]
-                data-[state=checked]:border-[#708C3E]
-                data-[state=checked]:text-white
-                focus-visible:ring-[#708C3E]/30
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
                 "
-            />
-            <label className="text-sm text-gray-700 dark:text-white/80">
+              />
+              <label htmlFor="owe-edit" className="text-sm text-gray-700 dark:text-white/80">
                 Fiado
-            </label>
+              </label>
             </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="sinpe-edit"
+                checked={sinpe}
+                onCheckedChange={(value) => setSinpe(!!value)}
+                className="
+                  h-5 w-5 rounded-md
+                  border-gray-300 dark:border-white/20
+                  data-[state=checked]:bg-[#708C3E]
+                  data-[state=checked]:border-[#708C3E]
+                  data-[state=checked]:text-white
+                  focus-visible:ring-[#708C3E]/30
+                "
+              />
+              <label htmlFor="sinpe-edit" className="text-sm text-gray-700 dark:text-white/80">
+                SINPE
+              </label>
+            </div>
+          </div>
 
           {/* Acciones */}
           <div className="grid grid-cols-2 gap-3 pt-4">
