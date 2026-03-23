@@ -79,15 +79,14 @@ export function useSaleDetailData() {
 
   const totalPages = Math.max(1, Math.ceil(orderedLines.length / ITEMS_PER_PAGE))
 
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [idSale, lines.length])
+  // Clamp current page at render time instead of using useEffect to reset it
+  const safePage = Math.min(currentPage, totalPages)
 
   const paginatedLines = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    const start = (safePage - 1) * ITEMS_PER_PAGE
     const end = start + ITEMS_PER_PAGE
     return orderedLines.slice(start, end)
-  }, [orderedLines, currentPage])
+  }, [orderedLines, safePage])
 
   return {
     idSale,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -23,26 +23,14 @@ interface CategoryFormDialogProps {
 export function CategoryFormDialog({ open, onClose, category }: CategoryFormDialogProps) {
     const isEditing = !!category
 
-    const [name, setName] = useState("")
-    const [state, setState] = useState<CategoryState>("active")
-    const [imageUrl, setImageUrl] = useState<string | null>(null)
+    const [name, setName] = useState(category?.name ?? "")
+    const [state, setState] = useState<CategoryState>(category?.state ?? "active")
+    const [imageUrl, setImageUrl] = useState<string | null>(category?.image_url ?? null)
 
     const { mutate: create, isPending: creating } = useCreateCategory()
     const { mutate: update, isPending: updating } = useUpdateCategory()
 
     const isPending = creating || updating
-
-    useEffect(() => {
-        if (category) {
-            setName(category.name ?? "")
-            setState(category.state ?? "active")
-            setImageUrl(category.image_url)
-        } else {
-            setName("")
-            setState("active")
-            setImageUrl(null)
-        }
-    }, [category, open])
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault()

@@ -237,6 +237,7 @@ const EMPTY_ARRAY: any[] = []
             )}
 
             <CategoryFormDialog
+                key={editingCategory ? `edit-${editingCategory.idCategory}` : `add-${dialogOpen}`}
                 open={dialogOpen}
                 onClose={handleCloseDialog}
                 category={editingCategory}

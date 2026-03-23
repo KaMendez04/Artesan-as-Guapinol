@@ -17,7 +17,6 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
 
   const { data: prices = [], isLoading: loadingPrices } = useProductPrices(idCategory)
 
-  // Derived values
   const uniquePrices = useMemo(() => {
     return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
   }, [prices])
@@ -48,25 +47,9 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
 
   const handleIdCategoryChange = (id: number | "") => {
     setIdCategory(id)
-    // We don't update unitPrice here because we wait for prices to load in the next render
-    // However, react-doctor wants us to avoid effects. 
-    // In a keyed component, this hook is new every time the 'line' or 'product' changes.
-    // For manual changes within the same instance:
     setSubtotalTouched(false)
   }
 
-  // To handle the "prices loaded" update without useEffect:
-  // We can track the previous idCategory and if it changed, and we have new prices, update.
-  // But wait, useQuery 'data' updates asynchronously.
-  // This is one case where useEffect IS often used, or we handle it in 'onSuccess' of the query.
-  // But useQuery v5 doesn't have onSuccess for queries.
-  
-  // Alternative: use a separate state or just accept it's one of the few valid effects, 
-  // OR derive the first price and update state during render (not recommended in React).
-  
-  // Let's keep the price effect if it's strictly necessary for async data, 
-  // but I'll try to minimize them.
-  
   const handleSave = () => {
     if (idCategory === "" || Number(qty) <= 0) return
 
@@ -104,8 +87,6 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
     selectedCategoryName,
     computedSubtotal,
     isPending,
-    
-    // Actions
     handleSave,
     canSave: idCategory !== "" && Number(qty) > 0 && !isPending && !!idSale
   }
