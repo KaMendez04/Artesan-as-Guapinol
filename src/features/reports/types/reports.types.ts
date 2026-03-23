@@ -11,10 +11,27 @@ export interface ChartDataPoint {
   total: number
 }
 
+export interface CategorySale {
+  idCategory: number
+  name: string
+  total: number
+}
+
+export interface ProductSale {
+  idCategory: number
+  categoryName: string
+  unitPrice: number
+  quantity: number
+  total: number
+}
+
 export interface SalesReportSummary {
   totalSales: number
   averageSale: number
   maxSale: number
   saleCount: number
   data: ChartDataPoint[]
+  categorySales: CategorySale[]
+  productSales: ProductSale[]
 }
+
