@@ -64,20 +64,22 @@ export function ProductFormDialog({
     const images = watch("images")
 
     useEffect(() => {
-        if (product && open) {
-            reset({
-                name: product.name ?? "",
-                price: product.price ?? 0,
-                images: product.images || [],
-                state: product.state ?? "active",
-            })
-        } else if (!open) {
-            reset({
-                name: "",
-                price: 0,
-                images: [],
-                state: "active",
-            })
+        if (open) {
+            if (product) {
+                reset({
+                    name: product.name ?? "",
+                    price: product.price ?? 0,
+                    images: product.images || [],
+                    state: product.state ?? "active",
+                })
+            } else {
+                reset({
+                    name: "",
+                    price: 0,
+                    images: [],
+                    state: "active",
+                })
+            }
         }
     }, [product, open, reset])
 

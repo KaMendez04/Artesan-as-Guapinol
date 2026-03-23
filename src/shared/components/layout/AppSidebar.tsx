@@ -1,4 +1,4 @@
-import { Home, ShoppingBag, Store, Settings, Moon, Sun, BarChart3 } from "lucide-react"
+import { Home, ShoppingBag, Store, Settings, Moon, Sun, BarChart3, X } from "lucide-react"
 import { Link } from "react-router"
 import {
   Sidebar,
@@ -8,8 +8,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/shared/components/ui/sidebar"
 import { useTheme } from "@/shared/components/theme-provider"
+import { Button } from "@/shared/components/ui/button"
 
 const navItems = [
   { title: "Inicio", url: "/", icon: Home },
@@ -20,6 +22,7 @@ const navItems = [
 
 export function AppSidebar() {
   const { theme, setTheme } = useTheme()
+  const { setOpenMobile } = useSidebar()
 
   const toggleTheme = () => {
     // ✅ alterna entre light y dark (sin romper system)
@@ -40,8 +43,17 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b px-5 py-4">
+      <SidebarHeader className="border-b px-5 py-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-bold leading-tight">Artesanías Guapinol</h2>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8 rounded-lg md:hidden"
+          onClick={() => setOpenMobile(false)}
+          aria-label="Cerrar menú"
+        >
+          <X className="size-5" />
+        </Button>
       </SidebarHeader>
 
       <SidebarContent className="p-2">
