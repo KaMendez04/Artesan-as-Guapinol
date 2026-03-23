@@ -84,6 +84,10 @@
   --sileo-state-error: oklch(0.637 0.237 25.331);
   --sileo-state-warning: oklch(0.795 0.184 86.047);
   --sileo-state-info: oklch(0.685 0.169 237.323);
+
+  /* Safe Area Insets for Mobile */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .dark {

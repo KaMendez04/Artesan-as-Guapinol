@@ -43,7 +43,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b px-5 py-4 flex flex-row items-center justify-between">
+      <SidebarHeader className="border-b px-5 flex flex-row items-center justify-between pt-[calc(1rem+var(--safe-area-inset-top))] pb-4 lg:pt-4">
         <h2 className="text-lg font-bold leading-tight">Artesanías Guapinol</h2>
         <Button
           variant="ghost"
@@ -71,7 +71,7 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t p-2">
+      <SidebarFooter className="border-t p-2 pb-[calc(0.5rem+var(--safe-area-inset-bottom))] lg:pb-2">
         <SidebarMenu>
          <SidebarMenuItem>
             <SidebarMenuButton
