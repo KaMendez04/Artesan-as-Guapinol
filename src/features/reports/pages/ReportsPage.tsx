@@ -64,7 +64,7 @@ export default function ReportsPage() {
               isLoading={isLoading}
             />
 
-            <div className="grid gap-6 lg:grid-cols-7">
+            <div key={activeTab} className="grid gap-6 lg:grid-cols-7 animate-in fade-in duration-500">
               <SalesChart 
                 data={data?.data || []} 
                 mode={filters.mode} 

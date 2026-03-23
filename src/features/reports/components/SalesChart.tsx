@@ -1,5 +1,6 @@
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
+import { useTheme } from "@/shared/components/theme-provider"
 import type { ChartDataPoint } from "../types/reports.types"
 
 interface SalesChartProps {
@@ -9,6 +10,13 @@ interface SalesChartProps {
 }
 
 export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
+  const { theme } = useTheme()
+  const resolvedTheme = theme === "system" 
+    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : theme
+
+  const primaryColor = resolvedTheme === "dark" ? "#9FE870" : "#708C3E"
+
   const formatCurrency = (value: number) => 
     new Intl.NumberFormat("es-CR", { style: "currency", currency: "CRC", maximumFractionDigits: 0 }).format(value)
 
@@ -32,16 +40,18 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
         <CardTitle className="text-base font-bold text-gray-900 dark:text-white">Tendencia de Ventas</CardTitle>
       </CardHeader>
       <CardContent className="px-0 sm:px-2 pb-2">
-        <div className="h-[200px] sm:h-[280px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[200px] sm:h-[280px] w-full min-w-0">
+          <ResponsiveContainer width="100%" height={280}>
             <AreaChart
               data={chartData}
+              width={500}
+              height={280}
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             >
               <defs>
                 <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#708C3E" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#708C3E" stopOpacity={0}/>
+                  <stop offset="5%" stopColor={primaryColor} stopOpacity={0.2}/>
+                  <stop offset="95%" stopColor={primaryColor} stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-100 dark:text-white/5" />
@@ -71,20 +81,20 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
                   fontSize: "11px",
                   padding: "8px"
                 }}
-                itemStyle={{ color: "#9FE870", padding: 0 }}
+                itemStyle={{ color: primaryColor, padding: 0 }}
                 labelStyle={{ fontWeight: "bold", marginBottom: "4px" }}
-                cursor={{ stroke: "#708C3E", strokeWidth: 1.5, strokeDasharray: "4 4" }}
+                cursor={{ stroke: primaryColor, strokeWidth: 1.5, strokeDasharray: "4 4" }}
                 formatter={(value: any) => [formatCurrency(Number(value || 0)), "Venta"]}
                 labelFormatter={(label) => mode === "month" ? `Día ${label}` : label}
               />
               <Area
                 type="monotone"
                 dataKey="total"
-                stroke="#708C3E"
+                stroke={primaryColor}
                 strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#colorTotal)"
-                activeDot={{ r: 5, strokeWidth: 0, fill: "#9FE870" }}
+                activeDot={{ r: 5, strokeWidth: 0, fill: primaryColor }}
               />
             </AreaChart>
           </ResponsiveContainer>
