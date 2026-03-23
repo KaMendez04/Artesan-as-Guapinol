@@ -15,7 +15,6 @@ export function PlacePicker({ places, value, onChange }: Props) {
 
       <select
         id="place-trigger"
-        role="combobox"
         value={value}
         onChange={(e) => onChange(e.target.value ? Number(e.target.value) : "")}
         className="w-full rounded-2xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-[#708C3E]/30"

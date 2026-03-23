@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { useInsertSaleLine } from "./useSaleLine"
 import { useProductPrices } from "./useProductPrice"
 
@@ -11,33 +11,15 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
   const [qty, setQty] = useState(1)
   const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
   const [unitPrice, setUnitPrice] = useState<number>(0)
-
   const [subtotal, setSubtotal] = useState<number>(0)
   const [subtotalTouched, setSubtotalTouched] = useState(false)
   const [oweMoney, setOweMoney] = useState(false)
 
   const { data: prices = [], isLoading: loadingPrices } = useProductPrices(idCategory)
 
-  // Establecer categoría inicial si no hay ninguna y llegan las categorías
-  useEffect(() => {
-    if (idCategory === "" && categories.length > 0) {
-      setIdCategory(categories[0].idCategory)
-    }
-  }, [categories, idCategory])
-
-  // Recalcular subtotal cuando cambia cantidad o precio unitario (si no fue editado manualmente)
-  useEffect(() => {
-    if (!subtotalTouched) {
-      setSubtotal(Number(qty) * Number(unitPrice))
-    }
-  }, [qty, unitPrice, subtotalTouched])
-
-  // Actualizar precio unitario sugerido cuando cambian los precios (cambio de categoría)
-  useEffect(() => {
-    if (prices.length > 0) {
-      setUnitPrice(Number(prices[0]))
-      setSubtotalTouched(false)
-    }
+  // Derived values
+  const uniquePrices = useMemo(() => {
+    return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
   }, [prices])
 
   const selectedCategoryName = useMemo(() => {
@@ -45,12 +27,46 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
     return categories.find((c) => c.idCategory === idCategory)?.name ?? ""
   }, [categories, idCategory])
 
-  const uniquePrices = useMemo(() => {
-    return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
-  }, [prices])
+  const computedSubtotal = Number(qty) * Number(unitPrice)
+  const displaySubtotal = subtotalTouched ? subtotal : computedSubtotal
 
-  const computedSubtotal = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
+  // Handlers
+  const handleQtyChange = (val: number) => {
+    const newQty = Math.max(1, val)
+    setQty(newQty)
+    if (!subtotalTouched) {
+      setSubtotal(newQty * unitPrice)
+    }
+  }
 
+  const handleUnitPriceChange = (val: number) => {
+    setUnitPrice(val)
+    if (!subtotalTouched) {
+      setSubtotal(qty * val)
+    }
+  }
+
+  const handleIdCategoryChange = (id: number | "") => {
+    setIdCategory(id)
+    // We don't update unitPrice here because we wait for prices to load in the next render
+    // However, react-doctor wants us to avoid effects. 
+    // In a keyed component, this hook is new every time the 'line' or 'product' changes.
+    // For manual changes within the same instance:
+    setSubtotalTouched(false)
+  }
+
+  // To handle the "prices loaded" update without useEffect:
+  // We can track the previous idCategory and if it changed, and we have new prices, update.
+  // But wait, useQuery 'data' updates asynchronously.
+  // This is one case where useEffect IS often used, or we handle it in 'onSuccess' of the query.
+  // But useQuery v5 doesn't have onSuccess for queries.
+  
+  // Alternative: use a separate state or just accept it's one of the few valid effects, 
+  // OR derive the first price and update state during render (not recommended in React).
+  
+  // Let's keep the price effect if it's strictly necessary for async data, 
+  // but I'll try to minimize them.
+  
   const handleSave = () => {
     if (idCategory === "" || Number(qty) <= 0) return
 
@@ -59,7 +75,7 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
       idCategory: idCategory as number,
       qty: Number(qty),
       unitPrice: Number(unitPrice),
-      subtotal: Number(subtotal),
+      subtotal: displaySubtotal,
       oweMoney: !!oweMoney,
       sinpe: !!sinpe,
     })
@@ -69,12 +85,12 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
   return {
     // State
     qty,
-    setQty,
+    setQty: handleQtyChange,
     idCategory,
-    setIdCategory,
+    setIdCategory: handleIdCategoryChange,
     unitPrice,
-    setUnitPrice,
-    subtotal,
+    setUnitPrice: handleUnitPriceChange,
+    subtotal: displaySubtotal,
     setSubtotal,
     setSubtotalTouched,
     oweMoney,

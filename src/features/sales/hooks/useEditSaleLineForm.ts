@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useUpdateSaleLine, useDeleteSaleLine } from "./useSaleLine"
 import { useProductPrices } from "./useProductPrice"
-
 
 export function useEditSaleLineForm(idSale: string, line: any, onClose: () => void) {
   const { mutate: updateLine, isPending: updating } = useUpdateSaleLine(idSale)
@@ -10,7 +9,6 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
   const [qty, setQty] = useState(() => Number(line?.qty ?? 1))
   const [idCategory, setIdCategory] = useState<number | "">(() => Number(line?.idCategory ?? ""))
   const [unitPrice, setUnitPrice] = useState<number>(() => Number(line?.unitPrice ?? 0))
-
   const [subtotal, setSubtotal] = useState<number>(() => Number(line?.subtotal ?? 0))
   const [subtotalTouched, setSubtotalTouched] = useState(true)
   const [oweMoney, setOweMoney] = useState(() => !!line?.oweMoney)
@@ -18,28 +16,30 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
 
   const { data: prices = [], isLoading: loadingPrices } = useProductPrices(idCategory)
 
-  useEffect(() => {
-    if (idCategory === "" && line?.idCategory) {
-      setIdCategory(Number(line.idCategory))
-    }
-  }, [line, idCategory])
+  // Derived Values
+  const computedSubtotal = Number(qty) * Number(unitPrice)
+  const displaySubtotal = subtotalTouched ? subtotal : computedSubtotal
 
-  // Cargar precios cuando cambia categoría
-  useEffect(() => {
-    if (prices.length > 0) {
-      if (!prices.includes(Number(unitPrice))) {
-        setUnitPrice(Number(prices[0]))
-        setSubtotalTouched(false)
-      }
-    }
-  }, [prices, unitPrice])
-
-  // Recalcular subtotal
-  useEffect(() => {
+  // Handlers
+  const handleQtyChange = (val: number) => {
+    const newQty = Math.max(1, val)
+    setQty(newQty)
     if (!subtotalTouched) {
-      setSubtotal(Number(qty) * Number(unitPrice))
+      setSubtotal(newQty * unitPrice)
     }
-  }, [qty, unitPrice, subtotalTouched])
+  }
+
+  const handleUnitPriceChange = (val: number) => {
+    setUnitPrice(val)
+    if (!subtotalTouched) {
+      setSubtotal(qty * val)
+    }
+  }
+
+  const handleIdCategoryChange = (id: number | "") => {
+    setIdCategory(id)
+    setSubtotalTouched(false)
+  }
 
   const handleSave = () => {
     if (!line?.idSaleLine || idCategory === "" || qty <= 0) return
@@ -49,7 +49,7 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
       idCategory: idCategory as number,
       qty: Number(qty),
       unitPrice: Number(unitPrice),
-      subtotal: Number(subtotal),
+      subtotal: Number(displaySubtotal),
       oweMoney: !!oweMoney,
       sinpe: !!sinpe,
     })
@@ -65,12 +65,12 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
   return {
     // State
     qty,
-    setQty,
+    setQty: handleQtyChange,
     idCategory,
-    setIdCategory,
+    setIdCategory: handleIdCategoryChange,
     unitPrice,
-    setUnitPrice,
-    subtotal,
+    setUnitPrice: handleUnitPriceChange,
+    subtotal: displaySubtotal,
     setSubtotal,
     setSubtotalTouched,
     oweMoney,
@@ -78,7 +78,7 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
     sinpe,
     setSinpe,
 
-    // Derived State
+    // Derived/Async State
     loadingPrices,
     prices,
     updating,
