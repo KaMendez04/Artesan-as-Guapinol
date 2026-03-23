@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { Search, ArrowLeft, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
@@ -20,10 +20,7 @@ export default function PublicCatalogPage() {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
     const [search, setSearch] = useState("")
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
-
-    const pid = searchParams.get("pid")
 
     const { data: share, isLoading: isLoadingShare } = useCatalogShareDetail(token || "")
 
@@ -35,6 +32,12 @@ export default function PublicCatalogPage() {
         idCategory: categoryId || undefined,
         state: "active"
     })
+
+    const pid = searchParams.get("pid")
+    const selectedProduct = useMemo(() => {
+        if (!pid || products.length === 0) return null
+        return products.find(p => p.idProduct === Number(pid)) || null
+    }, [pid, products])
 
     const isLoading = isLoadingShare || isLoadingCats || (!!categoryId && isLoadingProducts)
 
@@ -65,16 +68,7 @@ export default function PublicCatalogPage() {
     }, [filteredCategories, currentPage])
 
 
-    useEffect(() => {
-        if (pid && products.length > 0 && !selectedProduct) {
-            const product = products.find(p => p.idProduct === Number(pid))
-            if (product) setSelectedProduct(product)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pid, products])
-
     const handleSelectProduct = (product: Product | null) => {
-        setSelectedProduct(product)
         if (product) {
             searchParams.set("pid", product.idProduct.toString())
         } else {
