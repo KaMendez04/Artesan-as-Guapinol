@@ -61,10 +61,10 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
 
                 {/* Info */}
                 <div className="p-4">
-                    <h3 className="font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                    <h3 className="font-bold text-[#5D4037] dark:text-gray-100 group-hover:text-[#2E7D32] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                         {category.name ?? "Sin nombre"}
                     </h3>
-                    <p className="mt-0.5 text-xs text-[#5D4037]/40">
+                    <p className="mt-0.5 text-xs text-[#5D4037]/40 dark:text-white/40">
                         Artesanías únicas
                     </p>
                 </div>
@@ -114,7 +114,8 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
             <CardContent className="p-3.5">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <p className="truncate font-bold text-[#5D4037] dark:text-[#D7CCC8] group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                        <p className="truncate font-bold text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7]
+ transition-colors duration-300">
                             {category.name ?? "Sin nombre"}
                         </p>
                         <Badge
@@ -133,7 +134,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
+                                className="size-8 shrink-0 rounded-full text-gray-400 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     onShare(category)
@@ -148,7 +149,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-8 shrink-0 rounded-full text-[#5D4037]/40 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
+                                className="size-8 shrink-0 rounded-full text-gray-400 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     onEdit(category)
