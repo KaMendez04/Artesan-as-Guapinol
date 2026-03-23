@@ -10,11 +10,14 @@ import SalesPage from './features/sales/pages/SalesPage'
 import SaleDetailPage from './features/sales/pages/SaleDetailPage'
 import ReportsPage from './features/reports/pages/ReportsPage'
 
+import { OfflineSyncManager } from '@/shared/components/OfflineSyncManager'
+
 function App() {
 
   return (
     <Router>
       <ThemedToaster />
+      <OfflineSyncManager />
       <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />

@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useState } from "react"
 import { X, Check, ChevronDown } from "lucide-react"
-import { listUniquePricesByCategory } from "../services/productPrice.service"
-import { useInsertSaleLine } from "../hooks/useSaleLine"
 import { formatCRC } from "../utils/date"
+import { useAddSaleLineForm } from "../hooks/useAddSaleLineForm"
 
 import { Checkbox } from "@/shared/components/ui/checkbox"
 import {
@@ -22,75 +20,17 @@ type Props = {
 }
 
 export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) {
-  const { mutateAsync: insertLine, isPending } = useInsertSaleLine(idSale)
+  const {
+    qty, setQty,
+    idCategory, setIdCategory,
+    unitPrice, setUnitPrice,
+    subtotal, setSubtotal, setSubtotalTouched,
+    oweMoney, setOweMoney,
+    sinpe, setSinpe,
+    loadingPrices, uniquePrices, selectedCategoryName, computedSubtotal,
+    handleSave, canSave
+  } = useAddSaleLineForm(idSale, categories, onClose)
 
-  const [sinpe, setSinpe] = useState(false)
-  const [qty, setQty] = useState(1)
-  const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
-  const [unitPrice, setUnitPrice] = useState<number>(0)
-
-  const [subtotal, setSubtotal] = useState<number>(0)
-  const [subtotalTouched, setSubtotalTouched] = useState(false)
-
-  const [oweMoney, setOweMoney] = useState(false)
-  const [loadingPrices, setLoadingPrices] = useState(false)
-  const [prices, setPrices] = useState<number[]>([])
-
-  // cargar precios cuando cambia categoría
-  useEffect(() => {
-    if (!open) return
-    if (idCategory === "") return
-
-    ;(async () => {
-      setLoadingPrices(true)
-      try {
-        const list = await listUniquePricesByCategory(idCategory as number)
-        setPrices(list)
-        setUnitPrice(Number(list?.[0] ?? 0))
-        setSubtotalTouched(false)
-      } catch (e) {
-        console.error("Error cargando precios:", e)
-        setPrices([])
-        setUnitPrice(0)
-      } finally {
-        setLoadingPrices(false)
-      }
-    })()
-  }, [open, idCategory])
-
-  useEffect(() => {
-    if (subtotalTouched) return
-    setSubtotal(Number(qty) * Number(unitPrice))
-  }, [qty, unitPrice, subtotalTouched])
-
-  const canSave = !!idSale && idCategory !== "" && Number(qty) > 0 && !isPending
-
-  const computed = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
-
-  const selectedCategoryName = useMemo(() => {
-    if (idCategory === "") return ""
-    return categories.find((c) => c.idCategory === idCategory)?.name ?? ""
-  }, [categories, idCategory])
-
-  const uniquePrices = useMemo(() => {
-    return Array.from(new Set((prices ?? []).map((p) => Number(p)))).sort((a, b) => a - b)
-  }, [prices])
-
-  const handleSave = async () => {
-    if (!canSave) return
-    await insertLine({
-      idSale,
-      idCategory: idCategory as number,
-      qty: Number(qty),
-      unitPrice: Number(unitPrice),
-      subtotal: Number(subtotal),
-      oweMoney: !!oweMoney,
-      sinpe: !!sinpe,
-    })
-    onClose()
-  }
-
-  // ✅ IMPORTANTE: el return condicional VA DESPUÉS de todos los hooks
   if (!open) return null
 
   return (
@@ -276,7 +216,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
             <div className="text-xs text-gray-500 dark:text-white/60">
               Usar calculado:{" "}
               <span className="text-[#708C3E] dark:text-[#9FE870]">
-                {formatCRC(computed)}
+                {formatCRC(computedSubtotal)}
               </span>
             </div>
           </div>
