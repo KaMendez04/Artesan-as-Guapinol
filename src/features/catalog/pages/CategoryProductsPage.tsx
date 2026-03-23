@@ -21,6 +21,7 @@ export default function CategoryProductsPage() {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [isConfirmOpen, setIsConfirmOpen] = useState(false)
     const [productToDelete, setProductToDelete] = useState<Product | null>(null)
+    const [formKey, setFormKey] = useState(0) // Used to force reset "Add" form
 
     const { data: category, isLoading: isLoadingCategory } = useCategory(idCategory)
 
@@ -33,6 +34,7 @@ export default function CategoryProductsPage() {
 
     const handleAdd = () => {
         setSelectedProduct(null)
+        setFormKey(prev => prev + 1)
         setIsDialogOpen(true)
     }
 
@@ -171,6 +173,7 @@ export default function CategoryProductsPage() {
             />
 
             <ProductFormDialog
+                key={selectedProduct ? `edit-${selectedProduct.idProduct}` : `add-${formKey}`}
                 open={isDialogOpen}
                 onOpenChange={setIsDialogOpen}
                 product={selectedProduct}

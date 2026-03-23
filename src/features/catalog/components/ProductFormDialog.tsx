@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -47,13 +47,17 @@ export function ProductFormDialog({
     const {
         register,
         handleSubmit,
-        reset,
         setValue,
         watch,
         formState: { errors },
     } = useForm<ProductFormData>({
         resolver: zodResolver(productSchema),
-        defaultValues: {
+        defaultValues: product ? {
+            name: product.name ?? "",
+            price: product.price ?? 0,
+            images: product.images || [],
+            state: product.state ?? "active",
+        } : {
             name: "",
             price: 0,
             images: [],
@@ -62,26 +66,6 @@ export function ProductFormDialog({
     })
 
     const images = watch("images")
-
-    useEffect(() => {
-        if (open) {
-            if (product) {
-                reset({
-                    name: product.name ?? "",
-                    price: product.price ?? 0,
-                    images: product.images || [],
-                    state: product.state ?? "active",
-                })
-            } else {
-                reset({
-                    name: "",
-                    price: 0,
-                    images: [],
-                    state: "active",
-                })
-            }
-        }
-    }, [product, open, reset])
 
     const onSubmit = async (data: ProductFormData) => {
         try {
