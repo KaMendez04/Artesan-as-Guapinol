@@ -5,7 +5,7 @@ import { useProductPrices } from "./useProductPrice"
 type Category = { idCategory: number; name: string }
 
 export function useAddSaleLineForm(idSale: string, categories: Category[], onClose: () => void) {
-  const { mutateAsync: insertLine, isPending } = useInsertSaleLine(idSale)
+  const { mutate: insertLine, isPending } = useInsertSaleLine(idSale)
 
   const [sinpe, setSinpe] = useState(false)
   const [qty, setQty] = useState(1)
@@ -17,6 +17,13 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
   const [oweMoney, setOweMoney] = useState(false)
 
   const { data: prices = [], isLoading: loadingPrices } = useProductPrices(idCategory)
+
+  // Establecer categoría inicial si no hay ninguna y llegan las categorías
+  useEffect(() => {
+    if (idCategory === "" && categories.length > 0) {
+      setIdCategory(categories[0].idCategory)
+    }
+  }, [categories, idCategory])
 
   // Recalcular subtotal cuando cambia cantidad o precio unitario (si no fue editado manualmente)
   useEffect(() => {
@@ -44,10 +51,10 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
 
   const computedSubtotal = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (idCategory === "" || Number(qty) <= 0) return
 
-    await insertLine({
+    insertLine({
       idSale,
       idCategory: idCategory as number,
       qty: Number(qty),
@@ -84,6 +91,6 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
     
     // Actions
     handleSave,
-    canSave: !!idSale && idCategory !== "" && Number(qty) > 0 && !isPending
+    canSave: idCategory !== "" && Number(qty) > 0 && !isPending && !!idSale
   }
 }

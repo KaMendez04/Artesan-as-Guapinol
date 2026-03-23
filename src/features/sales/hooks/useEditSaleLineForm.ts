@@ -4,8 +4,8 @@ import { useProductPrices } from "./useProductPrice"
 
 
 export function useEditSaleLineForm(idSale: string, line: any, onClose: () => void) {
-  const { mutateAsync: updateLine, isPending: updating } = useUpdateSaleLine(idSale)
-  const { mutateAsync: deleteLine, isPending: deleting } = useDeleteSaleLine(idSale)
+  const { mutate: updateLine, isPending: updating } = useUpdateSaleLine(idSale)
+  const { mutate: deleteLine, isPending: deleting } = useDeleteSaleLine(idSale)
 
   const [qty, setQty] = useState(() => Number(line?.qty ?? 1))
   const [idCategory, setIdCategory] = useState<number | "">(() => Number(line?.idCategory ?? ""))
@@ -17,6 +17,12 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
   const [sinpe, setSinpe] = useState(() => !!line?.sinpe)
 
   const { data: prices = [], isLoading: loadingPrices } = useProductPrices(idCategory)
+
+  useEffect(() => {
+    if (idCategory === "" && line?.idCategory) {
+      setIdCategory(Number(line.idCategory))
+    }
+  }, [line, idCategory])
 
   // Cargar precios cuando cambia categoría
   useEffect(() => {
@@ -35,10 +41,10 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
     }
   }, [qty, unitPrice, subtotalTouched])
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!line?.idSaleLine || idCategory === "" || qty <= 0) return
     
-    await updateLine({
+    updateLine({
       idSaleLine: line.idSaleLine,
       idCategory: idCategory as number,
       qty: Number(qty),
@@ -50,9 +56,9 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
     onClose()
   }
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!line?.idSaleLine) return
-    await deleteLine(line.idSaleLine)
+    deleteLine(line.idSaleLine)
     onClose()
   }
 
@@ -77,7 +83,7 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
     prices,
     updating,
     deleting,
-    canSave: !!line?.idSaleLine && idCategory !== "" && qty > 0 && !updating && !deleting,
+    canSave: idCategory !== "" && Number(qty) > 0 && !updating && !deleting && !!idSale,
 
     // Actions
     handleSave,

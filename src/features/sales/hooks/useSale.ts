@@ -3,6 +3,7 @@ import { createSale, getAllSales, getSaleById, updateSale } from "../services/sa
 import { useNetwork } from "@/shared/hooks/useNetwork"
 import { useOfflineStore } from "@/shared/store/useOfflineStore"
 import { sileo } from "sileo"
+import { useMemo } from "react"
 
 export function useAllSales() {
   const { pendingSales } = useOfflineStore()
@@ -13,34 +14,54 @@ export function useAllSales() {
   })
 
   // Merge pending sales into the list
-  const data = query.data ? [...pendingSales.map(s => ({
-    idSale: s.offlineId,
-    subtotal: s.subtotal,
-    dateSale: s.dateSale,
-    oweMoney: s.oweMoney,
-    idPlace: s.idPlace,
-    isOffline: true // Helpful flag for UI
-  })), ...query.data] : (pendingSales.length > 0 ? pendingSales.map(s => ({
-    idSale: s.offlineId,
-    subtotal: s.subtotal,
-    dateSale: s.dateSale,
-    oweMoney: s.oweMoney,
-    idPlace: s.idPlace,
-    isOffline: true
-  })) : undefined)
+  const mergedSales = useMemo(() => {
+    const remote = query.data ?? []
+    const local = pendingSales.map(s => ({
+      idSale: s.offlineId,
+      subtotal: s.subtotal,
+      dateSale: s.dateSale,
+      oweMoney: s.oweMoney,
+      idPlace: s.idPlace,
+      isOffline: true
+    }))
+    return [...local, ...remote]
+  }, [query.data, pendingSales])
+
+  return {
+    ...query,
+    data: mergedSales
+  }
+}
+
+export function useSale(idSale: string) {
+  const { pendingSales } = useOfflineStore()
+  
+  const query = useQuery({
+    queryKey: ["Sale", "detail", idSale],
+    queryFn: () => getSaleById(idSale),
+    enabled: !!idSale && !pendingSales.some(s => s.offlineId === idSale),
+  })
+
+  const data = useMemo(() => {
+    if (query.data) return query.data
+    const offline = pendingSales.find(s => s.offlineId === idSale)
+    if (offline) {
+      return {
+        idSale: offline.offlineId,
+        idPlace: offline.idPlace,
+        dateSale: offline.dateSale,
+        subtotal: offline.subtotal,
+        oweMoney: offline.oweMoney,
+        isOffline: true
+      }
+    }
+    return undefined
+  }, [query.data, pendingSales, idSale])
 
   return {
     ...query,
     data
   }
-}
-
-export function useSale(idSale: string) {
-  return useQuery({
-    queryKey: ["Sale", "detail", idSale],
-    queryFn: () => getSaleById(idSale),
-    enabled: !!idSale,
-  })
 }
 
 export function useCreateSale() {

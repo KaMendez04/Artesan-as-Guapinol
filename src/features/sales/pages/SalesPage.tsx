@@ -294,12 +294,17 @@ export default function SalesPage() {
                      dark:border-white/10 dark:bg-black/40 dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
         >
           <div className="mt-5 space-y-3">
-            {isLoading ? (
+            {isLoading && sales.length === 0 ? (
               <div className="text-sm text-gray-600 dark:text-white/70">Cargando ventas…</div>
-            ) : error ? (
-              <div className="text-sm text-red-600 dark:text-red-400">Error cargando ventas.</div>
             ) : filteredSales.length === 0 ? (
-              <div className="text-sm text-gray-600 dark:text-white/70">No hay ventas registradas.</div>
+              <div className="space-y-4">
+                {error && (
+                  <div className="text-xs text-red-600 dark:text-red-400 opacity-60">
+                    Nota: No se pudo conectar al servidor. Mostrando solo datos locales.
+                  </div>
+                )}
+                <div className="text-sm text-gray-600 dark:text-white/70">No hay ventas registradas.</div>
+              </div>
             ) : (
               <>
 

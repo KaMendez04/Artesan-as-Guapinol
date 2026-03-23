@@ -63,22 +63,20 @@ export function CreateSaleDialog({ open, onClose, onCreated }: Props) {
     }
   }
 
-  const handleSave = async () => {
-  if (!canSave) return
+  const handleSave = () => {
+    if (!canSave) return
 
-  try {
-    const sale = await createSale({
+    createSale({
       idPlace: placeId as number,
       dateSale: new Date(buildCRZonedISOFromDateValueWithNowTime(dateValue)),
+    }, {
+      onSuccess: (sale) => {
+        onCreated(sale.idSale)
+      }
     })
 
-    onCreated(sale.idSale)
     onClose()
-  } catch (e: any) {
-    console.error("Error creando venta:", e)
-    alert(e?.message ?? "No se pudo crear la venta")
   }
-}
 
   const selectedPlaceName =
     placeId === ""
