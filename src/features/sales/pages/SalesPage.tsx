@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import {
   Calendar,
   ChevronLeft,
@@ -124,22 +124,13 @@ export default function SalesPage() {
   }, [sales, search, placeNameById, placeFilter, periodMode])
 
   const totalPages = Math.max(1, Math.ceil(filteredSales.length / ITEMS_PER_PAGE))
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [search, placeFilter, periodMode])
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages)
-    }
-  }, [currentPage, totalPages])
+  const safePage = Math.min(currentPage, totalPages)
 
   const paginatedSales = useMemo(() => {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    const start = (safePage - 1) * ITEMS_PER_PAGE
     const end = start + ITEMS_PER_PAGE
     return filteredSales.slice(start, end)
-  }, [filteredSales, currentPage])
+  }, [filteredSales, safePage])
 
   const visiblePages = getVisiblePages(currentPage, totalPages)
 
@@ -197,7 +188,7 @@ export default function SalesPage() {
           {showFilters && (
             <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-black/30">
               <div className="grid grid-cols-2 gap-2">
-                <Select value={placeFilter} onValueChange={setPlaceFilter}>
+                <Select value={placeFilter} onValueChange={(v) => { setPlaceFilter(v); setCurrentPage(1) }}>
                   <SelectTrigger
                     className="w-full min-w-0 rounded-xl border border-gray-200 bg-white text-sm text-gray-900
                               focus:ring-2 focus:ring-[#708C3E]/30
@@ -217,9 +208,10 @@ export default function SalesPage() {
 
                 <Select
                   value={periodMode}
-                  onValueChange={(value) =>
+                  onValueChange={(value) => {
                     setPeriodMode(value as "all" | "year" | "month" | "week")
-                  }
+                    setCurrentPage(1)
+                  }}
                 >
                   <SelectTrigger
                     className="w-full min-w-0 rounded-xl border border-gray-200 bg-white text-sm text-gray-900
@@ -243,6 +235,7 @@ export default function SalesPage() {
                   onClick={() => {
                     setPlaceFilter("all")
                     setPeriodMode("all")
+                    setCurrentPage(1)
                   }}
                   className="text-xs text-[#708C3E] hover:underline"
                 >
@@ -261,7 +254,10 @@ export default function SalesPage() {
             />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value)
+                setCurrentPage(1)
+              }}
               placeholder="Buscar..."
               className="
                 w-full rounded-2xl border border-gray-200 bg-white
