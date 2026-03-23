@@ -52,8 +52,8 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                     )}
 
                     {!isActive && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-black/60 backdrop-blur-[2px]">
-                            <Badge className="bg-[#5D4037]/80 dark:bg-zinc-800 text-white font-semibold uppercase tracking-wider text-xs border-0">
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
+                            <Badge className="bg-[#5D4037]/80 text-white font-semibold uppercase tracking-wider text-xs border-0">
                                 No disponible
                             </Badge>
                         </div>
@@ -70,7 +70,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                     {/* Image count badge */}
                     {product.images && product.images.length > 1 && (
-                        <div className="absolute right-2 top-2 rounded-full bg-[#5D4037]/70 dark:bg-black/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                        <div className="absolute right-2 top-2 rounded-full bg-[#5D4037]/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
                             +{product.images.length - 1}
                         </div>
                     )}

@@ -81,7 +81,7 @@ export default function PublicCatalogPage() {
     const showBackButton = categoryId && !share?.category_id
 
     return (
-        <div className="flex min-h-screen flex-col bg-[#FAFAF5]" style={{ fontFamily: "'Inter', sans-serif" }}>
+        <div className="light flex min-h-screen flex-col bg-[#FAFAF5] text-[#5D4037] transition-colors duration-300" style={{ fontFamily: "'Inter', sans-serif" }}>
 
             {/* ═══ HEADER — Logo centered ═══ */}
             <header className="bg-white border-b border-[#E8E5D8]">
@@ -294,9 +294,10 @@ export default function PublicCatalogPage() {
 
             <ProductDetailDialog
                 product={selectedProduct}
-                open={!!selectedProduct}
-                onOpenChange={(open) => !open && handleSelectProduct(null)}
+                isOpen={!!selectedProduct}
+                onOpenChange={() => handleSelectProduct(null)}
                 catalogToken={token}
+                forceLight={true}
             />
         </div>
     )

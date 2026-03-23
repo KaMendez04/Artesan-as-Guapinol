@@ -186,7 +186,7 @@ export default function CategoryProductsPage() {
 
             <ProductDetailDialog
                 product={viewProduct}
-                open={!!viewProduct}
+                isOpen={!!viewProduct}
                 onOpenChange={(open) => !open && setViewProduct(null)}
             />
         </div>
