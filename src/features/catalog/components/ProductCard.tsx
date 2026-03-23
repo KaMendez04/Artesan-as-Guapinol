@@ -1,17 +1,24 @@
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
-import { Pencil, Trash2, Eye } from "lucide-react"
+import { Pencil, Trash2, Eye, MoreVertical } from "lucide-react"
 import type { Product } from "@/features/catalog/types/product.types"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu"
 
 interface ProductCardProps {
     product: Product
     onEdit?: (product: Product) => void
     onDelete?: (product: Product) => void
+    onView?: (product: Product) => void
     onClick?: (product: Product) => void
 }
 
-export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardProps) {
+export function ProductCard({ product, onEdit, onDelete, onView, onClick }: ProductCardProps) {
     const isActive = product.state === "active"
     const isPublicView = !onEdit && !onDelete
 
@@ -71,7 +78,7 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
 
                 {/* Info */}
                 <div className="p-3.5">
-                    <h3 className="truncate text-sm font-bold text-[#5D4037] dark:text-gray-100 group-hover:text-[#2E7D32] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                    <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-bold text-[#5D4037] dark:text-gray-100 group-hover:text-[#2E7D32] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                         {product.name}
                     </h3>
                     <p className="mt-1 text-base font-extrabold text-[#2E7D32] dark:text-[#A5D6A7]">
@@ -104,74 +111,80 @@ export function ProductCard({ product, onEdit, onDelete, onClick }: ProductCardP
                         loading="lazy"
                     />
                 ) : (
-                    <div className="flex h-full w-full items-center justify-center">
-                        <span className="text-4xl font-extrabold text-[#708C3E]/15 dark:text-[#708C3E]/25">
-                            {product.name?.[0]?.toUpperCase()}
-                        </span>
-                    </div>
-                )}
+                        <div className="flex h-full w-full items-center justify-center">
+                            <span className="text-4xl font-extrabold text-[#708C3E]/15 dark:text-[#708C3E]/25">
+                                {product.name?.[0]?.toUpperCase()}
+                            </span>
+                        </div>
+                    )}
 
-                {!isActive && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-[2px]">
-                        <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
-                            Inactivo
-                        </Badge>
-                    </div>
-                )}
+                    {!isActive && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-[2px]">
+                            <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
+                                Inactivo
+                            </Badge>
+                        </div>
+                    )}
 
-                {/* Image count badge */}
-                {product.images && product.images.length > 1 && (
-                    <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 dark:bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
-                        {product.images.length} fotos
-                    </div>
-                )}
-            </div>
+                    {/* Image count badge */}
+                    {product.images && product.images.length > 1 && (
+                        <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 dark:bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                            {product.images.length} fotos
+                        </div>
+                    )}
+                </div>
 
-            {/* Info + Actions */}
-            <div className="flex items-center justify-between p-3.5">
-                <div className="flex min-w-0 flex-col gap-0.5">
-                    <h3 className="truncate font-bold text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300
-">
+                {/* Info Section */}
+                <div className="p-2.5 pb-3">
+                    <h3 className="line-clamp-2 font-bold text-sm leading-tight text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                         {product.name}
                     </h3>
-                    <p className="text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
-                        ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
-                    </p>
-                </div>
 
-                <div className="flex items-center gap-0.5">
-                    {onEdit && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 shrink-0 rounded-full text-gray-400 dark:text-gray-500 hover:bg-[#708C3E]/10
- hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onEdit(product)
-                            }}
-                            aria-label={`Editar ${product.name}`}
-                        >
-                            <Pencil className="size-3.5" />
-                        </Button>
-                    )}
-                    {onDelete && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 shrink-0 rounded-full text-gray-400 dark:text-gray-500 hover:bg-red-500/10
- hover:text-red-500 dark:hover:text-red-400 transition-colors"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                onDelete(product)
-                            }}
-                            aria-label={`Eliminar ${product.name}`}
-                        >
-                            <Trash2 className="size-3.5" />
-                        </Button>
-                    )}
+                    <div className="mt-1 flex items-center justify-between">
+                        <p className="text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
+                            ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
+                        </p>
+
+                        {(onEdit || onDelete) && (
+                            <div onClick={(e) => e.stopPropagation()}>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="size-8 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                                        >
+                                            <MoreVertical className="size-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        {onView && (
+                                            <DropdownMenuItem onClick={() => onView(product)}>
+                                                <Eye className="mr-2 size-4" />
+                                                <span>Ver detalles</span>
+                                            </DropdownMenuItem>
+                                        )}
+                                        {onEdit && (
+                                            <DropdownMenuItem onClick={() => onEdit(product)}>
+                                                <Pencil className="mr-2 size-4" />
+                                                <span>Editar</span>
+                                            </DropdownMenuItem>
+                                        )}
+                                        {onDelete && (
+                                            <DropdownMenuItem
+                                                variant="destructive"
+                                                onClick={() => onDelete(product)}
+                                            >
+                                                <Trash2 className="mr-2 size-4" />
+                                                <span>Eliminar</span>
+                                            </DropdownMenuItem>
+                                        )}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
         </div>
     )
 }

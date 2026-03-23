@@ -133,10 +133,13 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
-    @apply bg-background text-foreground;
   }
+}
+
+/* Ensure Toast notifications (Sileo) respect the Safe Area Top Inset on mobile */
+[class*="sileo-toaster"] {
+  margin-top: var(--safe-area-inset-top) !important;
 }

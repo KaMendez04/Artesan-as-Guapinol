@@ -1,7 +1,13 @@
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { CardContent } from "@/shared/components/ui/card"
-import { Pencil, Share2, ArrowRight } from "lucide-react"
+import { Pencil, Share2, ArrowRight, MoreVertical } from "lucide-react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu"
 import type { Category } from "@/features/catalog/types/category.types"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
 
@@ -110,16 +116,15 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                 )}
             </div>
 
-            {/* Info */}
-            <CardContent className="p-3.5">
-                <div className="flex items-start justify-between gap-2">
+            {/* Info Section */}
+            <CardContent className="p-3">
+                <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <p className="truncate font-bold text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7]
- transition-colors duration-300">
+                        <h3 className="line-clamp-2 font-bold text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
                             {category.name ?? "Sin nombre"}
-                        </p>
+                        </h3>
                         <Badge
-                            className={`mt-1.5 text-[10px] font-semibold border-0 ${
+                            className={`mt-1 text-[10px] font-semibold border-0 ${
                                 isActive
                                     ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
                                     : "bg-[#5D4037]/10 text-[#5D4037]/60 dark:bg-zinc-700 dark:text-zinc-400"
@@ -129,37 +134,39 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                         </Badge>
                     </div>
 
-                    <div className="flex items-center gap-0.5">
-                        {onShare && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-8 shrink-0 rounded-full text-gray-400 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    onShare(category)
-                                }}
-                                aria-label={`Compartir ${category.name}`}
-                            >
-                                <Share2 className="size-3.5" />
-                            </Button>
-                        )}
-
-                        {onEdit && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-8 shrink-0 rounded-full text-gray-400 dark:text-[#D7CCC8]/40 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    onEdit(category)
-                                }}
-                                aria-label={`Editar ${category.name}`}
-                            >
-                                <Pencil className="size-3.5" />
-                            </Button>
-                        )}
-                    </div>
+                    {(onEdit || onShare) && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="size-8 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                                    >
+                                        <MoreVertical className="size-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => onClick?.(category)}>
+                                        <ArrowRight className="mr-2 size-4" />
+                                        <span>Ver productos</span>
+                                    </DropdownMenuItem>
+                                    {onEdit && (
+                                        <DropdownMenuItem onClick={() => onEdit(category)}>
+                                            <Pencil className="mr-2 size-4" />
+                                            <span>Editar</span>
+                                        </DropdownMenuItem>
+                                    )}
+                                    {onShare && (
+                                        <DropdownMenuItem onClick={() => onShare(category)}>
+                                            <Share2 className="mr-2 size-4" />
+                                            <span>Compartir</span>
+                                        </DropdownMenuItem>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    )}
                 </div>
             </CardContent>
         </div>
