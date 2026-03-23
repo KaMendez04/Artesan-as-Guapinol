@@ -9,7 +9,10 @@ export default function AppLayout() {
             <AppSidebar />
             <main className="w-full">
                 {/* Mobile Header */}
-                <header className="flex h-14 items-center justify-between border-b px-4 lg:h-[60px] lg:px-6">
+                <header className="flex items-center justify-between border-b px-4 lg:px-6 
+                                  pt-[var(--safe-area-inset-top)] 
+                                  h-[calc(3.5rem+var(--safe-area-inset-top))] 
+                                  lg:h-[60px] lg:pt-0">
                     <div className="flex items-center gap-2">
                         <SidebarTrigger/>
                     </div>
@@ -22,7 +25,7 @@ export default function AppLayout() {
                 </header>
 
                 {/* Page Content */}
-                <div className="p-4 md:p-6 lg:p-8">
+                <div className="p-4 md:p-6 lg:p-8 pb-[calc(1rem+var(--safe-area-inset-bottom))]">
                     <Outlet />
                 </div>
             </main>

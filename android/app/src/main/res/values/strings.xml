@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Artesanias Guapinol</string>
+    <string name="title_activity_main">Artesanias Guapinol</string>
+    <string name="package_name">com.artesaniasguapinol.app</string>
+    <string name="custom_url_scheme">com.artesaniasguapinol.app</string>
+</resources>
