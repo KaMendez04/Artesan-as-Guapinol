@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -47,13 +47,17 @@ export function ProductFormDialog({
     const {
         register,
         handleSubmit,
-        reset,
         setValue,
         watch,
         formState: { errors },
     } = useForm<ProductFormData>({
         resolver: zodResolver(productSchema),
-        defaultValues: {
+        defaultValues: product ? {
+            name: product.name ?? "",
+            price: product.price ?? 0,
+            images: product.images || [],
+            state: product.state ?? "active",
+        } : {
             name: "",
             price: 0,
             images: [],
@@ -62,24 +66,6 @@ export function ProductFormDialog({
     })
 
     const images = watch("images")
-
-    useEffect(() => {
-        if (product && open) {
-            reset({
-                name: product.name ?? "",
-                price: product.price ?? 0,
-                images: product.images || [],
-                state: product.state ?? "active",
-            })
-        } else if (!open) {
-            reset({
-                name: "",
-                price: 0,
-                images: [],
-                state: "active",
-            })
-        }
-    }, [product, open, reset])
 
     const onSubmit = async (data: ProductFormData) => {
         try {
@@ -106,7 +92,7 @@ export function ProductFormDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-lg font-bold text-[#5D4037] dark:text-[#D7CCC8]">
+                    <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
                         {isEditing ? "Editar producto" : "Nuevo producto"}
                     </DialogTitle>
                     <DialogDescription className="sr-only">
@@ -118,20 +104,21 @@ export function ProductFormDialog({
                     <div className="space-y-4">
                         {/* Images */}
                         <div className="space-y-1.5">
-                            <Label className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Imágenes del producto</Label>
+                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Imágenes del producto</Label>
                             <MultiImageUpload
                                 value={images}
                                 onChange={(urls) => setValue("images", urls)}
+                                maxImages={30}
                             />
                         </div>
 
                         {/* Name */}
                         <div className="space-y-1.5">
-                            <Label htmlFor="name" className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Nombre</Label>
+                            <Label htmlFor="name" className="text-sm font-semibold text-gray-700 dark:text-gray-300">Nombre</Label>
                             <Input
                                 id="name"
                                 placeholder="Ej. Jarra de Barro Grande"
-                                className="rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 text-[#5D4037] dark:text-[#D7CCC8] placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
+                                className="h-11 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20 focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all"
                                 {...register("name")}
                             />
                             {errors.name && (
@@ -141,13 +128,13 @@ export function ProductFormDialog({
 
                         {/* Price */}
                         <div className="space-y-1.5">
-                            <Label htmlFor="price" className="text-sm font-semibold text-[#5D4037] dark:text-[#D7CCC8]">Precio (₡)</Label>
+                            <Label htmlFor="price" className="text-sm font-semibold text-gray-700 dark:text-gray-300">Precio (₡)</Label>
                             <Input
                                 id="price"
                                 type="number"
                                 step="any"
                                 placeholder="0.00"
-                                className="rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 text-[#5D4037] dark:text-[#D7CCC8] placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
+                                className="h-11 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20 focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all"
                                 {...register("price", { valueAsNumber: true })}
                             />
                             {errors.price && (
@@ -162,14 +149,14 @@ export function ProductFormDialog({
                             variant="ghost"
                             onClick={() => onOpenChange(false)}
                             disabled={createProduct.isPending || updateProduct.isPending}
-                            className="rounded-xl text-[#5D4037]/60 dark:text-[#D7CCC8]/60 hover:bg-[#5D4037]/5 dark:hover:bg-zinc-800 hover:text-[#5D4037] dark:hover:text-[#D7CCC8]"
+                            className="rounded-2xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
                         >
                             Cancelar
                         </Button>
                         <Button
                             type="submit"
                             disabled={createProduct.isPending || updateProduct.isPending}
-                            className="rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 disabled:opacity-40"
+                            className="rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-md shadow-[#708C3E]/20 disabled:opacity-40 h-11 px-6"
                         >
                             {createProduct.isPending || updateProduct.isPending
                                 ? "Guardando..."

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link2, Plus, Search, Store } from "lucide-react"
+import { ChevronLeft, Link2, Plus, Search, Store } from "lucide-react"
 import { useNavigate } from "react-router"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
@@ -71,20 +71,27 @@ export default function CatalogPage() {
     }
 
     return (
-        <div className="flex flex-col gap-6">
-            {/* ═══ HEADER ═══ */}
+        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 md:p-0">
             <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-[#5D4037] dark:text-[#D7CCC8]">Catálogo</h1>
-                    <p className="mt-1 text-sm text-[#5D4037]/50 dark:text-[#D7CCC8]/50">
-                        Gestiona tus categorías de productos
-                    </p>
+                <div className="flex justify-start gap-3">
+                    <button
+                        type="button"
+                        onClick={() => navigate("/")}
+                        className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 transition
+                                   dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                        aria-label="Regresar"
+                        title="Regresar"
+                    >
+                        <ChevronLeft />
+                    </button>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Catálogo</h1>
                 </div>
+
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={handleShareLink}
-                    className="gap-1.5 rounded-full border-[#E8E5D8] dark:border-zinc-700 text-[#5D4037] dark:text-[#D7CCC8] hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] hover:border-[#708C3E]/40 transition-colors"
+                    className="gap-1.5 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
                     disabled={isSharing}
                 >
                     <Link2 className="size-4" />
@@ -93,25 +100,26 @@ export default function CatalogPage() {
             </div>
 
             {/* ═══ SEARCH + ADD ═══ */}
-            <div className="flex gap-2">
+            <div className="flex gap-3">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#5D4037]/30 dark:text-[#D7CCC8]/30" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40" size={16} />
                     <Input
                         id="catalog-search"
-                        className="h-10 rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 pl-10 text-sm text-[#5D4037] dark:text-[#D7CCC8] shadow-none placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
+                        className="h-10 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
                         placeholder="Buscar categoría…"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
                 </div>
-                <Button
-                    size="icon"
+                <button
+                    type="button"
                     onClick={handleAdd}
+                    className="rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] text-white p-2.5 transition shrink-0 shadow-sm"
                     aria-label="Agregar categoría"
-                    className="size-10 rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 transition-colors"
+                    title="Agregar categoría"
                 >
                     <Plus className="size-5" />
-                </Button>
+                </button>
             </div>
 
             {/* ═══ GRID ═══ */}
@@ -132,10 +140,10 @@ export default function CatalogPage() {
                     <div className="flex size-16 items-center justify-center rounded-full bg-[#708C3E]/10">
                         <Store className="size-7 text-[#708C3E]" />
                     </div>
-                    <p className="text-base font-semibold text-[#5D4037] dark:text-[#D7CCC8]">
+                    <p className="text-base font-semibold text-gray-900 dark:text-white">
                         {search ? "Sin resultados para tu búsqueda" : "Aún no hay categorías"}
                     </p>
-                    <p className="text-sm text-[#5D4037]/40 dark:text-[#D7CCC8]/40">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                         {search ? "Intentá con otra palabra clave" : "Creá tu primera categoría para empezar"}
                     </p>
                     {!search && (
@@ -159,6 +167,15 @@ export default function CatalogPage() {
                             onClick={(c) => navigate(`/catalogo/${c.idCategory}/productos`)}
                         />
                     ))}
+                </div>
+            )}
+
+            {/* ═══ CATEGORY COUNT ═══ */}
+            {!isLoading && categories.length > 0 && (
+                <div className="mt-4 text-center">
+                    <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                        {categories.length} {categories.length === 1 ? "categoría" : "categorías"} en total
+                    </p>
                 </div>
             )}
 

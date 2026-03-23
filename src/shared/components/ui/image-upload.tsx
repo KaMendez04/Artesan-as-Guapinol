@@ -3,6 +3,7 @@ import { Upload, X, Loader2 } from 'lucide-react';
 import { Button } from './button';
 import { uploadImage } from '@/shared/lib/cloudinary';
 import { sileo } from 'sileo';
+import { ImageCropper } from './image-cropper';
 
 interface ImageUploadProps {
     value?: string | null;
@@ -13,9 +14,10 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange, onUploadStart, onUploadEnd }: ImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
+    const [croppingFile, setCroppingFile] = useState<{ file: File; url: string } | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -24,18 +26,31 @@ export function ImageUpload({ value, onChange, onUploadStart, onUploadEnd }: Ima
             return;
         }
 
+        const reader = new FileReader();
+        reader.onload = () => {
+            setCroppingFile({ file, url: reader.result as string });
+        };
+        reader.readAsDataURL(file);
+        
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    const handleCropComplete = async (croppedBlob: Blob) => {
+        const fileToUpload = new File([croppedBlob], croppingFile?.file.name || 'image.jpg', { type: 'image/jpeg' });
+        
+        setCroppingFile(null);
+        setIsUploading(true);
+        onUploadStart?.();
+
         try {
-            setIsUploading(true);
-            onUploadStart?.();
-            const result = await uploadImage(file);
+            const result = await uploadImage(fileToUpload);
             onChange(result.url);
-            sileo.success({ title: 'Imagen subida'});
+            sileo.success({ title: 'Imagen subida' });
         } catch (error) {
-            sileo.error({ title: 'Error de subida'});
+            sileo.error({ title: 'Error de subida' });
         } finally {
             setIsUploading(false);
             onUploadEnd?.();
-            if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
 
@@ -98,6 +113,14 @@ export function ImageUpload({ value, onChange, onUploadStart, onUploadEnd }: Ima
                 <p className="text-[10px] text-muted-foreground text-center italic">
                     Click en la imagen para cambiarla
                 </p>
+            )}
+
+            {croppingFile && (
+                <ImageCropper
+                    image={croppingFile.url}
+                    onCropComplete={handleCropComplete}
+                    onCancel={() => setCroppingFile(null)}
+                />
             )}
         </div>
     );

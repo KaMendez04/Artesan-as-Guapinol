@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Plus, Search, Package } from "lucide-react"
-import { Button } from "@/shared/components/ui/button"
+import { ChevronLeft, Plus, Search, Package } from "lucide-react"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { ProductCard } from "@/features/catalog/components/ProductCard"
@@ -9,6 +8,7 @@ import { ProductFormDialog } from "@/features/catalog/components/ProductFormDial
 import { useProducts, useDeleteProduct } from "@/features/catalog/hooks/useProduct"
 import { useCategory } from "@/features/catalog/hooks/useCategory"
 import { sileo } from "sileo"
+import { ConfirmModal } from "@/shared/components/ui/confirm-modal"
 import type { Product } from "@/features/catalog/types/product.types"
 
 export default function CategoryProductsPage() {
@@ -19,6 +19,9 @@ export default function CategoryProductsPage() {
     const [search, setSearch] = useState("")
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+    const [productToDelete, setProductToDelete] = useState<Product | null>(null)
+    const [formKey, setFormKey] = useState(0) // Used to force reset "Add" form
 
     const { data: category, isLoading: isLoadingCategory } = useCategory(idCategory)
 
@@ -31,6 +34,7 @@ export default function CategoryProductsPage() {
 
     const handleAdd = () => {
         setSelectedProduct(null)
+        setFormKey(prev => prev + 1)
         setIsDialogOpen(true)
     }
 
@@ -39,64 +43,67 @@ export default function CategoryProductsPage() {
         setIsDialogOpen(true)
     }
 
-    const handleDelete = async (product: Product) => {
-        if (confirm(`¿Estás seguro de eliminar "${product.name}"?`)) {
-            try {
-                await deleteProduct.mutateAsync(product.idProduct)
-                sileo.success({ title: "Producto eliminado" })
-            } catch (error) {
-                sileo.error({ title: "Error al eliminar" })
-            }
+    const handleDeleteClick = (product: Product) => {
+        setProductToDelete(product)
+        setIsConfirmOpen(true)
+    }
+
+    const handleConfirmDelete = async () => {
+        if (!productToDelete) return
+
+        try {
+            await deleteProduct.mutateAsync(productToDelete.idProduct)
+            sileo.success({ title: "Producto eliminado" })
+        } catch (error) {
+            sileo.error({ title: "Error al eliminar" })
+        } finally {
+            setIsConfirmOpen(false)
+            setProductToDelete(null)
         }
     }
 
     const isLoading = isLoadingCategory || isLoadingProducts
 
     return (
-        <div className="flex flex-col gap-6">
-            {/* ═══ BACK + HEADER ═══ */}
-            <div className="flex flex-col gap-4">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-fit gap-2 -ml-2 rounded-full text-[#5D4037]/60 dark:text-[#D7CCC8]/60 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] hover:bg-[#708C3E]/10 transition-colors"
-                    onClick={() => navigate("/catalogo")}
-                >
-                    <ArrowLeft className="size-4" />
-                    Volver al catálogo
-                </Button>
-
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-[#5D4037] dark:text-[#D7CCC8]">
-                            {isLoadingCategory ? <Skeleton className="h-8 w-48 bg-[#E8E5D8]/40 dark:bg-zinc-700/40" /> : category?.name}
-                        </h1>
-                        {!isLoadingCategory && (
-                            <p className="mt-1 text-sm text-[#5D4037]/50 dark:text-[#D7CCC8]/50">
-                                {products.length} {products.length === 1 ? "producto" : "productos"}
-                            </p>
-                        )}
-                    </div>
-                    <Button
-                        onClick={handleAdd}
-                        className="gap-2 rounded-xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm shadow-[#708C3E]/20 transition-colors"
+        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 md:p-0">
+            <div className="flex justify-between">
+                <div className="flex justify-start gap-3">
+                    <button
+                        type="button"
+                        className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 transition
+                                   dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                        onClick={() => navigate("/catalogo")}
+                        aria-label="Volver al catálogo"
+                        title="Volver al catálogo"
                     >
-                        <Plus className="size-4" />
-                        <span className="hidden sm:inline">Nuevo Producto</span>
-                        <span className="sm:hidden">Nuevo</span>
-                    </Button>
+                        <ChevronLeft />
+                    </button>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {isLoadingCategory ? <Skeleton className="h-8 w-48 bg-gray-200 dark:bg-zinc-800" /> : category?.name}
+                    </h1>
                 </div>
             </div>
 
-            {/* ═══ SEARCH ═══ */}
-            <div className="relative max-w-sm">
-                <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#5D4037]/30 dark:text-[#D7CCC8]/30" />
-                <Input
-                    placeholder="Buscar productos..."
-                    className="h-10 rounded-xl border-[#E8E5D8] dark:border-zinc-700 bg-white dark:bg-zinc-800/50 pl-10 text-sm text-[#5D4037] dark:text-[#D7CCC8] shadow-none placeholder:text-[#5D4037]/30 dark:placeholder:text-[#D7CCC8]/30 focus-visible:ring-1 focus-visible:ring-[#708C3E]/50 focus-visible:border-[#708C3E]/50"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+            {/* ═══ SEARCH + ADD ═══ */}
+            <div className="flex gap-3">
+                <div className="relative flex-1 max-w-sm">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40" size={16} />
+                    <Input
+                        placeholder="Buscar productos..."
+                        className="h-10 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+                <button
+                    type="button"
+                    onClick={handleAdd}
+                    className="rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] text-white p-2.5 transition shrink-0 shadow-sm"
+                    aria-label="Nuevo producto"
+                    title="Nuevo producto"
+                >
+                    <Plus className="size-5" />
+                </button>
             </div>
 
             {/* ═══ PRODUCT GRID ═══ */}
@@ -119,7 +126,7 @@ export default function CategoryProductsPage() {
                             key={product.idProduct}
                             product={product}
                             onEdit={handleEdit}
-                            onDelete={handleDelete}
+                            onDelete={() => handleDeleteClick(product)}
                         />
                     ))}
                 </div>
@@ -128,25 +135,45 @@ export default function CategoryProductsPage() {
                     <div className="flex size-16 items-center justify-center rounded-full bg-[#708C3E]/10">
                         <Package className="size-7 text-[#708C3E]" />
                     </div>
-                    <p className="text-base font-semibold text-[#5D4037] dark:text-[#D7CCC8]">
+                    <p className="text-base font-semibold text-gray-900 dark:text-white">
                         {search ? "Sin resultados para tu búsqueda" : "No hay productos en esta categoría"}
                     </p>
-                    <p className="text-sm text-[#5D4037]/40 dark:text-[#D7CCC8]/40">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                         {search ? "Intentá con otra palabra clave" : "Agregá tu primer producto para empezar"}
                     </p>
                     {!search && (
-                        <Button
+                        <button
+                            type="button"
                             onClick={handleAdd}
-                            className="mt-2 gap-1.5 rounded-full bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm"
+                            className="mt-2 flex items-center gap-2 rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] text-white px-4 py-2 transition shadow-sm font-medium"
                         >
                             <Plus className="size-4" />
                             Añadir el primero
-                        </Button>
+                        </button>
                     )}
                 </div>
             )}
 
+            {/* ═══ PRODUCT COUNT ═══ */}
+            {!isLoadingProducts && products.length > 0 && (
+                <div className="mt-4 text-center">
+                    <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                        {products.length} {products.length === 1 ? "producto" : "productos"} en total
+                    </p>
+                </div>
+            )}
+
+            <ConfirmModal
+                open={isConfirmOpen}
+                onOpenChange={setIsConfirmOpen}
+                onConfirm={handleConfirmDelete}
+                title="Eliminar producto"
+                description={`¿Estás seguro de que deseas eliminar "${productToDelete?.name}"? Esta acción no se puede deshacer.`}
+                isLoading={deleteProduct.isPending}
+            />
+
             <ProductFormDialog
+                key={selectedProduct ? `edit-${selectedProduct.idProduct}` : `add-${formKey}`}
                 open={isDialogOpen}
                 onOpenChange={setIsDialogOpen}
                 product={selectedProduct}

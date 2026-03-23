@@ -8,6 +8,7 @@ import PublicCatalogPage from '@/features/catalog/pages/PublicCatalogPage'
 import CategoryProductsPage from '@/features/catalog/pages/CategoryProductsPage'
 import SalesPage from './features/sales/pages/SalesPage'
 import SaleDetailPage from './features/sales/pages/SaleDetailPage'
+import ReportsPage from './features/reports/pages/ReportsPage'
 
 function App() {
 
@@ -15,14 +16,13 @@ function App() {
     <Router>
       <ThemedToaster />
       <Routes>
-        import SaleDetailPage from "./features/sales/pages/SaleDetailPage"
-
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="ventas" element={<SalesPage />} />
         <Route path="ventas/:idSale" element={<SaleDetailPage />} />  {/* ✅ AQUI */}
         <Route path="catalogo" element={<CatalogPage />} />
         <Route path="catalogo/:id/productos" element={<CategoryProductsPage />} />
+        <Route path="reportes" element={<ReportsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
 

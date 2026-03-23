@@ -4,6 +4,7 @@ import { Button } from './button';
 import { uploadImage } from '@/shared/lib/cloudinary';
 import { sileo } from 'sileo';
 import { cn } from '@/shared/utils';
+import { ImageCropper } from './image-cropper';
 
 interface MultiImageUploadProps {
     value?: string[] | null;
@@ -11,14 +12,29 @@ interface MultiImageUploadProps {
     maxImages?: number;
 }
 
-export function MultiImageUpload({ value = [], onChange, maxImages = 5 }: MultiImageUploadProps) {
+export function MultiImageUpload({ value = [], onChange, maxImages = 30 }: MultiImageUploadProps) {
     const [isUploading, setIsUploading] = useState(false);
+    const [croppingFile, setCroppingFile] = useState<{ file: File; url: string } | null>(null);
+    const [filesQueue, setFilesQueue] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Asegurarnos de que urls siempre sea un array
     const urls = Array.isArray(value) ? value : (typeof value === 'string' ? [value] : []);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const processNextFile = (queue: File[]) => {
+        if (queue.length === 0) return;
+
+        const [next, ...rest] = queue;
+        setFilesQueue(rest);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setCroppingFile({ file: next, url: reader.result as string });
+        };
+        reader.readAsDataURL(next);
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
@@ -28,26 +44,29 @@ export function MultiImageUpload({ value = [], onChange, maxImages = 5 }: MultiI
             return;
         }
 
-        const filesToUpload = files.slice(0, remainingSlots);
+        const filesToProcess = files.slice(0, remainingSlots);
+        processNextFile(filesToProcess);
+        
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    const handleCropComplete = async (croppedBlob: Blob) => {
+        const fileToUpload = new File([croppedBlob], croppingFile?.file.name || 'image.jpg', { type: 'image/jpeg' });
+        
+        setCroppingFile(null);
+        setIsUploading(true);
 
         try {
-            setIsUploading(true);
-            const uploadPromises = filesToUpload.map(file => {
-                if (!file.type.startsWith('image/')) {
-                    throw new Error('Archivo no válido');
-                }
-                return uploadImage(file);
-            });
-
-            const results = await Promise.all(uploadPromises);
-            const newUrls = [...urls, ...results.map(r => r.url)];
-            onChange(newUrls);
-            sileo.success({ title: 'Imágenes subidas' });
+            const result = await uploadImage(fileToUpload);
+            onChange([...urls, result.url]);
+            sileo.success({ title: 'Imagen subida' });
         } catch (error) {
-            sileo.error({ title: 'Error de subida', description: 'Ocurrió un problema al subir las imágenes.' });
+            sileo.error({ title: 'Error de subida', description: 'Ocurrió un problema al subir la imagen.' });
         } finally {
             setIsUploading(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
+            if (filesQueue.length > 0) {
+                processNextFile(filesQueue);
+            }
         }
     };
 
@@ -59,9 +78,9 @@ export function MultiImageUpload({ value = [], onChange, maxImages = 5 }: MultiI
 
     return (
         <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
                 {urls.map((url, index) => (
-                    <div key={url} className="relative aspect-square rounded-lg border overflow-hidden group">
+                    <div key={url} className="relative aspect-square rounded-xl border border-gray-100 dark:border-white/10 overflow-hidden group">
                         <img
                             src={url}
                             alt={`Preview ${index + 1}`}
@@ -73,9 +92,9 @@ export function MultiImageUpload({ value = [], onChange, maxImages = 5 }: MultiI
                                 variant="destructive"
                                 size="sm"
                                 onClick={() => handleRemove(index)}
-                                className="h-8 w-8 p-0 rounded-full"
+                                className="h-7 w-7 p-0 rounded-full"
                             >
-                                <X className="h-4 w-4" />
+                                <X className="h-3.5 w-3.5" />
                             </Button>
                         </div>
                     </div>
@@ -84,17 +103,17 @@ export function MultiImageUpload({ value = [], onChange, maxImages = 5 }: MultiI
                 {urls.length < maxImages && (
                     <div
                         className={cn(
-                            "relative aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-primary/50 flex flex-col items-center justify-center gap-2 cursor-pointer bg-muted/50",
+                            "relative aspect-square rounded-xl border-2 border-dashed border-gray-200 dark:border-white/10 transition-all hover:border-[#708C3E]/50 flex flex-col items-center justify-center gap-1.5 cursor-pointer bg-gray-50/50 dark:bg-white/5",
                             isUploading && "pointer-events-none opacity-50"
                         )}
                         onClick={() => fileInputRef.current?.click()}
                     >
                         {isUploading ? (
-                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            <Loader2 className="h-5 w-5 animate-spin text-[#708C3E]" />
                         ) : (
                             <>
-                                <Plus className="h-6 w-6 text-muted-foreground" />
-                                <span className="text-xs font-medium text-muted-foreground">Añadir</span>
+                                <Plus className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                                <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">Añadir</span>
                             </>
                         )}
                     </div>
@@ -111,9 +130,17 @@ export function MultiImageUpload({ value = [], onChange, maxImages = 5 }: MultiI
                 disabled={isUploading}
             />
 
-            <p className="text-[10px] text-muted-foreground italic text-center">
+            <p className="text-[10px] text-gray-400 dark:text-gray-500 italic text-center">
                 Puedes subir hasta {maxImages} imágenes.
             </p>
+
+            {croppingFile && (
+                <ImageCropper
+                    image={croppingFile.url}
+                    onCropComplete={handleCropComplete}
+                    onCancel={() => setCroppingFile(null)}
+                />
+            )}
         </div>
     );
 }
