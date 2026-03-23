@@ -3,6 +3,7 @@ import { ChevronLeft, Link2, Plus, Search, Store, ChevronRight } from "lucide-re
 import { useNavigate } from "react-router-dom"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
+import { cn } from "@/shared/utils"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { CategoryCard } from "@/features/catalog/components/CategoryCard"
@@ -20,8 +21,9 @@ export default function CatalogPage() {
     const [copied, setCopied] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const ITEMS_PER_PAGE = 12
+const EMPTY_ARRAY: any[] = []
 
-    const { data: categories = [], isLoading } = useCategories()
+    const { data: categories = EMPTY_ARRAY, isLoading } = useCategories()
     const { mutateAsync: createShare, isPending: isSharing } = useCreateCatalogShare()
 
     const filtered = categories.filter((c) =>
@@ -139,7 +141,7 @@ export default function CatalogPage() {
             {isLoading ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={i} className="overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700">
+                        <div key={`skeleton-cat-${i}`} className="flex flex-col gap-3 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-white/5 p-4 shadow-sm">
                             <Skeleton className="aspect-[4/3] w-full bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
                             <div className="space-y-2 p-4">
                                 <Skeleton className="h-4 w-3/4 bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
@@ -197,19 +199,20 @@ export default function CatalogPage() {
                     </Button>
 
                     <div className="flex items-center gap-1">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                            <button
-                                key={page}
-                                onClick={() => setCurrentPage(page)}
-                                className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-all ${
-                                    page === currentPage
-                                        ? "bg-[#708C3E] text-white shadow-sm shadow-[#708C3E]/20"
-                                        : "text-gray-500 dark:text-white/50 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7]"
-                                }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                        <button
+                                            key={`page-${page}`}
+                                            onClick={() => setCurrentPage(page)}
+                                            className={cn(
+                                                "size-9 rounded-full text-sm font-bold transition-all",
+                                                currentPage === page
+                                                    ? "bg-[#708C3E] text-white shadow-lg shadow-[#708C3E]/20"
+                                                    : "bg-white dark:bg-zinc-800 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-100 dark:border-white/10"
+                                            )}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
                     </div>
 
                     <Button

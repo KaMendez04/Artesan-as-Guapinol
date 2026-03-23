@@ -26,8 +26,16 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
     if (isPublicView) {
         return (
             <div
+                role="button"
+                tabIndex={0}
                 onClick={() => onClick?.(product)}
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-xl hover:shadow-[#708C3E]/10 hover:ring-[#708C3E]/40 ${!isActive ? "opacity-50 grayscale" : ""
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onClick?.(product)
+                    }
+                }}
+                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-shadow transition-transform duration-300 hover:shadow-xl hover:shadow-[#708C3E]/10 hover:ring-[#708C3E]/40 ${!isActive ? "opacity-50 grayscale" : ""
                     }`}
             >
                 {/* Image */}
@@ -92,8 +100,16 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
     /* ═══ ADMIN VIEW ═══ */
     return (
         <div
+            role="button"
+            tabIndex={0}
             onClick={() => onClick?.(product)}
-            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 cursor-pointer ${
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onClick?.(product)
+                }
+            }}
+            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 cursor-pointer ${
                 !isActive ? "opacity-60" : ""
             }`}
         >

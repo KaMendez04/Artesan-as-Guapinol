@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useReducer, useCallback } from 'react'
 import Cropper from 'react-easy-crop'
 import {
     Dialog,
@@ -19,28 +19,58 @@ interface ImageCropperProps {
     onCancel: () => void
 }
 
+type State = {
+    crop: { x: number; y: number }
+    zoom: number
+    rotation: number
+    croppedAreaPixels: any
+    isProcessing: boolean
+}
+
+type Action =
+    | { type: 'SET_CROP'; payload: { x: number; y: number } }
+    | { type: 'SET_ZOOM'; payload: number }
+    | { type: 'SET_ROTATION'; payload: number }
+    | { type: 'SET_CROPPED_AREA_PIXELS'; payload: any }
+    | { type: 'SET_PROCESSING'; payload: boolean }
+
+function reducer(state: State, action: Action): State {
+    switch (action.type) {
+        case 'SET_CROP': return { ...state, crop: action.payload }
+        case 'SET_ZOOM': return { ...state, zoom: action.payload }
+        case 'SET_ROTATION': return { ...state, rotation: action.payload }
+        case 'SET_CROPPED_AREA_PIXELS': return { ...state, croppedAreaPixels: action.payload }
+        case 'SET_PROCESSING': return { ...state, isProcessing: action.payload }
+        default: return state
+    }
+}
+
 export function ImageCropper({ image, aspect = 1, onCropComplete, onCancel }: ImageCropperProps) {
-    const [crop, setCrop] = useState({ x: 0, y: 0 })
-    const [zoom, setZoom] = useState(1)
-    const [rotation, setRotation] = useState(0)
-    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null)
-    const [isProcessing, setIsProcessing] = useState(false)
+    const [state, dispatch] = useReducer(reducer, {
+        crop: { x: 0, y: 0 },
+        zoom: 1,
+        rotation: 0,
+        croppedAreaPixels: null,
+        isProcessing: false
+    })
+
+    const { crop, zoom, rotation, croppedAreaPixels, isProcessing } = state
 
     const onCropChange = useCallback((crop: { x: number; y: number }) => {
-        setCrop(crop)
+        dispatch({ type: 'SET_CROP', payload: crop })
     }, [])
 
     const onZoomChange = useCallback((zoom: number) => {
-        setZoom(zoom)
+        dispatch({ type: 'SET_ZOOM', payload: zoom })
     }, [])
 
     const onCropCompleteInternal = useCallback((_croppedArea: any, croppedAreaPixels: any) => {
-        setCroppedAreaPixels(croppedAreaPixels)
+        dispatch({ type: 'SET_CROPPED_AREA_PIXELS', payload: croppedAreaPixels })
     }, [])
 
     const handleCrop = async () => {
         try {
-            setIsProcessing(true)
+            dispatch({ type: 'SET_PROCESSING', payload: true })
             const croppedImage = await getCroppedImg(image, croppedAreaPixels, rotation)
             if (croppedImage) {
                 onCropComplete(croppedImage)
@@ -48,7 +78,7 @@ export function ImageCropper({ image, aspect = 1, onCropComplete, onCancel }: Im
         } catch (e) {
             console.error(e)
         } finally {
-            setIsProcessing(false)
+            dispatch({ type: 'SET_PROCESSING', payload: false })
         }
     }
 
@@ -71,7 +101,7 @@ export function ImageCropper({ image, aspect = 1, onCropComplete, onCancel }: Im
                         aspect={aspect}
                         onCropChange={onCropChange}
                         onZoomChange={onZoomChange}
-                        onRotationChange={setRotation}
+                        onRotationChange={(r) => dispatch({ type: 'SET_ROTATION', payload: r })}
                         onCropComplete={onCropCompleteInternal}
                         style={{
                            containerStyle: { background: '#121212' }
@@ -84,17 +114,18 @@ export function ImageCropper({ image, aspect = 1, onCropComplete, onCancel }: Im
                         {/* Zoom Control */}
                         <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Zoom</label>
+                                <label htmlFor="zoom-range" className="text-xs font-bold text-gray-400 uppercase tracking-widest cursor-pointer">Zoom</label>
                                 <span className="text-xs font-mono text-[#708C3E]">{zoom.toFixed(1)}x</span>
                             </div>
                             <input
+                                id="zoom-range"
                                 type="range"
                                 value={zoom}
                                 min={1}
                                 max={3}
                                 step={0.1}
-                                aria-labelledby="Zoom"
-                                onChange={(e) => setZoom(Number(e.target.value))}
+                                aria-label="Zoom"
+                                onChange={(e) => dispatch({ type: 'SET_ZOOM', payload: Number(e.target.value) })}
                                 className="w-full h-1.5 bg-gray-100 dark:bg-white/5 rounded-lg appearance-none cursor-pointer accent-[#708C3E]"
                             />
                         </div>
@@ -108,7 +139,7 @@ export function ImageCropper({ image, aspect = 1, onCropComplete, onCancel }: Im
                             <Button
                                 variant="outline"
                                 size="icon"
-                                onClick={() => setRotation((prev) => (prev + 90) % 360)}
+                                onClick={() => dispatch({ type: 'SET_ROTATION', payload: (rotation + 90) % 360 })}
                                 className="size-10 rounded-xl border-gray-100 dark:border-white/5 bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200"
                             >
                                 <RotateCw className="size-4" />

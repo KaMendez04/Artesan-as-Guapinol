@@ -26,9 +26,17 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
     if (isPublicView) {
         return (
             <div
-                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition-all duration-300 hover:shadow-xl hover:shadow-[#708C3E]/10 hover:ring-[#708C3E]/40 ${!isActive ? "opacity-50 grayscale" : ""
+                role="button"
+                tabIndex={0}
+                className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#E8E5D8] transition duration-300 hover:shadow-xl hover:shadow-[#708C3E]/10 hover:ring-[#708C3E]/40 ${!isActive ? "opacity-50 grayscale" : ""
                     }`}
                 onClick={() => onClick?.(category)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onClick?.(category)
+                    }
+                }}
             >
                 {/* Image */}
                 <div className="relative aspect-[4/3] overflow-hidden bg-[#F5F3EB]">
@@ -55,7 +63,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                     <div className="absolute inset-0 bg-gradient-to-t from-[#2E7D32]/70 via-[#2E7D32]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                     {/* Hover CTA */}
-                    <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between p-4 opacity-0 transition-all duration-300 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100">
+                    <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between p-4 opacity-0 transition duration-300 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100">
                         <span className="text-sm font-semibold text-white drop-shadow-sm">
                             Ver productos
                         </span>
@@ -81,10 +89,18 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
     /* ═══ ADMIN VIEW ═══ */
     return (
         <div
-            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition-all duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 ${
+            role={onClick ? "button" : undefined}
+            tabIndex={onClick ? 0 : undefined}
+            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 ${
                 !isActive ? "opacity-60" : ""
             } ${onClick ? "cursor-pointer" : ""}`}
             onClick={() => onClick?.(category)}
+            onKeyDown={(e) => {
+                if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault()
+                    onClick(category)
+                }
+            }}
         >
             {/* Image */}
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5F3EB] dark:bg-zinc-800">

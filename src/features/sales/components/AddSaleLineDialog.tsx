@@ -55,9 +55,9 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
         <div className="mt-4 space-y-4">
           {/* Cantidad */}
           <div className="space-y-2">
-            <label htmlFor="qty-add" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
+            <label htmlFor="add-qty" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
             <input
-              id="qty-add"
+              id="add-qty"
               type="number"
               min={1}
               value={qty}
@@ -73,14 +73,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Categoría (DropdownMenu) */}
           <div className="space-y-2">
-            <label htmlFor="category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="add-category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Artículo (Categoría)
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <button
-                  id="category-trigger"
+                  id="add-category-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
@@ -143,14 +143,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Precio individual (DropdownMenu) */}
           <div className="space-y-2">
-            <label htmlFor="price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="add-price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Precio individual
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild disabled={loadingPrices}>
                 <button
-                  id="price-trigger"
+                  id="add-price-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 bg-white px-3 py-2 text-sm
@@ -223,11 +223,11 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Subtotal */}
           <div className="space-y-2">
-            <label htmlFor="subtotal-add" className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="add-subtotal" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Subtotal (editable)
             </label>
             <input
-              id="subtotal-add"
+              id="add-subtotal"
               type="number"
               min={0}
               value={subtotal}
@@ -245,7 +245,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <Checkbox
-                id="owe-add"
+                id="add-owe"
                 checked={oweMoney}
                 onCheckedChange={(value) => setOweMoney(!!value)}
                 className="
@@ -258,14 +258,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
                   dark:data-[state=checked]:bg-[#708C3E]
                 "
               />
-              <label htmlFor="owe-add" className="text-sm text-gray-700 dark:text-white/80">
+              <label htmlFor="add-owe" className="text-sm text-gray-700 dark:text-white/80">
                 Fiado
               </label>
             </div>
 
             <div className="flex items-center gap-2">
               <Checkbox
-                id="sinpe-add"
+                id="add-sinpe"
                 checked={sinpe}
                 onCheckedChange={(value) => setSinpe(!!value)}
                 className="
@@ -278,7 +278,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
                   dark:data-[state=checked]:bg-[#708C3E]
                 "
               />
-              <label htmlFor="sinpe-add" className="text-sm text-gray-700 dark:text-white/80">
+              <label htmlFor="add-sinpe" className="text-sm text-gray-700 dark:text-white/80">
                 SINPE
               </label>
             </div>

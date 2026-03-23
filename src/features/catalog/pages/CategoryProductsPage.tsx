@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ChevronLeft, Plus, Search, Package, ChevronRight } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
+import { cn } from "@/shared/utils"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { ProductCard } from "@/features/catalog/components/ProductCard"
@@ -21,6 +22,7 @@ export default function CategoryProductsPage() {
     const [search, setSearch] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const ITEMS_PER_PAGE = 15
+const EMPTY_ARRAY: any[] = []
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [viewProduct, setViewProduct] = useState<Product | null>(null)
@@ -30,7 +32,7 @@ export default function CategoryProductsPage() {
 
     const { data: category, isLoading: isLoadingCategory } = useCategory(idCategory)
 
-    const { data: products = [], isLoading: isLoadingResources } = useProducts({
+    const { data: products = EMPTY_ARRAY, isLoading: isLoadingResources } = useProducts({
         idCategory,
         // search: search || undefined // We will paginate client-side for consistent feel in admin
     })
@@ -128,7 +130,7 @@ export default function CategoryProductsPage() {
             {isLoading ? (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={i} className="overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700">
+                        <div key={`skeleton-prod-${i}`} className="overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700">
                             <Skeleton className="aspect-[4/3] w-full bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
                             <div className="space-y-2 p-4">
                                 <Skeleton className="h-4 w-3/4 bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
@@ -199,13 +201,14 @@ export default function CategoryProductsPage() {
                     <div className="flex items-center gap-1">
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                             <button
-                                key={page}
+                                key={`page-prod-${page}`}
                                 onClick={() => setCurrentPage(page)}
-                                className={`flex size-9 items-center justify-center rounded-full text-sm font-medium transition-all ${
-                                    page === currentPage
-                                        ? "bg-[#708C3E] text-white shadow-sm shadow-[#708C3E]/20"
-                                        : "text-gray-500 dark:text-white/50 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7]"
-                                }`}
+                                className={cn(
+                                    "size-9 rounded-full text-sm font-bold transition-colors",
+                                    currentPage === page
+                                        ? "bg-[#708C3E] text-white shadow-lg shadow-[#708C3E]/20"
+                                        : "bg-white dark:bg-zinc-800 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-100 dark:border-white/10"
+                                )}
                             >
                                 {page}
                             </button>

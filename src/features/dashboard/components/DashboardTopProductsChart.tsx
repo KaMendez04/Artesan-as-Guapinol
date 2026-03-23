@@ -92,7 +92,7 @@ export function DashboardTopProductsChart({ data, isLoading }: DashboardTopProdu
                       fill={COLORS[index % COLORS.length]} 
                       style={{ 
                         filter: activeIndex === index ? 'brightness(1.1) saturate(1.2)' : 'none',
-                        transition: 'all 0.3s ease'
+                        transition: 'filter 0.3s ease, transform 0.3s ease'
                       }}
                     />
                   ))}
