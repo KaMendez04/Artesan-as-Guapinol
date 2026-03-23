@@ -242,6 +242,7 @@ export default function CategoryProductsPage() {
             />
 
             <ProductDetailDialog
+                key={viewProduct?.idProduct || 'none'}
                 product={viewProduct}
                 isOpen={!!viewProduct}
                 onOpenChange={(open) => !open && setViewProduct(null)}
