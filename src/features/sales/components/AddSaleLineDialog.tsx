@@ -35,6 +35,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
   const [loadingPrices, setLoadingPrices] = useState(false)
   const [prices, setPrices] = useState<number[]>([])
 
+  // cargar precios cuando cambia categoría
   useEffect(() => {
     if (!open) return
     if (idCategory === "") return
@@ -61,7 +62,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
     setSubtotal(Number(qty) * Number(unitPrice))
   }, [qty, unitPrice, subtotalTouched])
 
-  const canSave = !!idSale && idCategory !== "" && qty > 0 && !isPending
+  const canSave = !!idSale && idCategory !== "" && Number(qty) > 0 && !isPending
 
   const computed = useMemo(() => Number(qty) * Number(unitPrice), [qty, unitPrice])
 
@@ -112,8 +113,9 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
         <div className="mt-4 space-y-4">
           {/* Cantidad */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
+            <label htmlFor="qty-add" className="text-sm font-medium text-gray-700 dark:text-white/80">Cantidad</label>
             <input
+              id="qty-add"
               type="number"
               min={1}
               value={qty}
@@ -129,13 +131,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Categoría (DropdownMenu) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="category-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Artículo (Categoría)
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <button
+                  id="category-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900
@@ -198,13 +201,14 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Precio individual (DropdownMenu) */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="price-trigger" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Precio individual
             </label>
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild disabled={loadingPrices}>
                 <button
+                  id="price-trigger"
                   type="button"
                   className="w-full group flex items-center justify-between gap-2 rounded-2xl
                              border border-gray-200 bg-white px-3 py-2 text-sm
@@ -277,10 +281,11 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
 
           {/* Subtotal */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-white/80">
+            <label htmlFor="subtotal-add" className="text-sm font-medium text-gray-700 dark:text-white/80">
               Subtotal (editable)
             </label>
             <input
+              id="subtotal-add"
               type="number"
               min={0}
               value={subtotal}
@@ -306,6 +311,7 @@ export function AddSaleLineDialog({ open, onClose, idSale, categories }: Props) 
                 data-[state=checked]:border-[#708C3E]
                 data-[state=checked]:text-white
                 focus-visible:ring-[#708C3E]/30
+                dark:data-[state=checked]:bg-[#708C3E]
               "
             />
             <label className="text-sm text-gray-700 dark:text-white/80">

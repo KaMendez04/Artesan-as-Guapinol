@@ -8,13 +8,14 @@ export type SaleLine = {
   unitPrice: number
   subtotal: number
   oweMoney: boolean
+  sinpe: boolean
   created_at: string
 }
 
 export async function listSaleLines(idSale: string): Promise<SaleLine[]> {
   const { data, error } = await supabase
     .from("SaleLine")
-    .select("idSaleLine, idSale, idCategory, qty, unitPrice, subtotal, oweMoney, created_at")
+    .select("idSaleLine, idSale, idCategory, qty, unitPrice, subtotal, oweMoney, sinpe, created_at")
     .eq("idSale", idSale)
     .order("created_at", { ascending: true })
 
@@ -29,6 +30,7 @@ export async function insertSaleLine(payload: {
   unitPrice: number
   subtotal: number
   oweMoney: boolean
+  sinpe: boolean
 }): Promise<void> {
   const { error } = await supabase.from("SaleLine").insert(payload)
   if (error) throw error
@@ -40,6 +42,7 @@ export async function updateSaleLine(payload: {
   unitPrice?: number
   subtotal?: number
   oweMoney?: boolean
+  sinpe?: boolean
   idCategory?: number
 }): Promise<void> {
   const { idSaleLine, ...rest } = payload
