@@ -15,12 +15,11 @@ export default function ReportsPage() {
 
   return (
     <div className="flex-1 space-y-6 pt-6 pb-20 md:pb-6">
-      <div className="flex px-4 md:px-0 items-center justify-between">
+      <div className="flex px-4 md:px-0 items-center justify-between mb-2">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Reportes de Ventas</h2>
-          <p className="text-muted-foreground">
-            Analiza el rendimiento de tus ventas por periodo.
-          </p>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Reportes de Ventas
+          </h2>
         </div>
       </div>
 
@@ -33,7 +32,6 @@ export default function ReportsPage() {
           totalSales={data?.totalSales || 0}
           averageSale={data?.averageSale || 0}
           maxSale={data?.maxSale || 0}
-          saleCount={data?.saleCount || 0}
           isLoading={isLoading}
         />
 
