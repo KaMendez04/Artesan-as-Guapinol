@@ -136,7 +136,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
             <CardContent className="p-3">
                 <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <h3 className="line-clamp-2 font-bold text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                        <h3 className="line-clamp-2 font-bold text-xs sm:text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300 break-words">
                             {category.name ?? "Sin nombre"}
                         </h3>
                         <Badge

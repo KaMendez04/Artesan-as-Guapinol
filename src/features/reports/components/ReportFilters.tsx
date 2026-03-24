@@ -40,7 +40,7 @@ export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) 
 
   return (
     <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0 
-                    bg-white dark:bg-black/30 backdrop-blur-sm p-3 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
+                    bg-white dark:bg-black/30 backdrop-blur-sm p-2 sm:p-3 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
       <div className="flex items-center justify-center p-1 bg-gray-100/50 dark:bg-white/5 rounded-2xl w-fit self-center md:self-auto">
         <Button 
           variant="ghost"

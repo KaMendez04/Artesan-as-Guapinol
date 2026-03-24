@@ -66,13 +66,13 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
         <CardTitle className="text-lg font-bold text-gray-900 dark:text-white">Ventas por Categoría</CardTitle>
       </CardHeader>
       <CardContent className="p-0 sm:p-6 flex flex-col items-center">
-        <div className="h-[300px] w-full relative min-w-0">
+        <div className="h-[250px] sm:h-[300px] w-full relative min-w-0">
           {!hasData ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-white/20">
               <p className="text-sm">No hay ventas en este periodo</p>
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart width={300} height={300}>
                 <Pie
                   data={chartData}
@@ -80,7 +80,7 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
                   cy="50%"
                   labelLine={false}
                   label={renderCustomizedLabel}
-                  outerRadius={110}
+                  outerRadius={90}
                   fill="#8884d8"
                   dataKey="value"
                   onMouseEnter={onPieEnter}

@@ -83,7 +83,7 @@ const EMPTY_ARRAY: any[] = []
     }
 
     return (
-        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 md:p-0">
+        <div className="flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto w-full px-2 sm:px-4 md:px-0">
             <div className="flex items-center justify-between">
                 <div className="flex justify-start gap-3">
                     <button
@@ -96,7 +96,7 @@ const EMPTY_ARRAY: any[] = []
                     >
                         <ChevronLeft />
                     </button>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Catálogo</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Catálogo</h1>
                 </div>
 
                 <Button
@@ -107,7 +107,7 @@ const EMPTY_ARRAY: any[] = []
                     disabled={isSharing}
                 >
                     <Link2 className="size-4" />
-                    {isSharing ? "Generando..." : (copied ? "¡Copiado!" : "Compartir")}
+                    <span className="hidden sm:inline">{isSharing ? "Generando..." : (copied ? "¡Copiado!" : "Compartir")}</span>
                 </Button>
             </div>
 

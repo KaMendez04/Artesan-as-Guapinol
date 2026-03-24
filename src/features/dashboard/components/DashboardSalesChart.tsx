@@ -31,8 +31,8 @@ export function DashboardSalesChart({ data, isLoading }: DashboardSalesChartProp
         <CardTitle className="text-lg font-bold text-gray-900 dark:text-white">Ventas Mensuales</CardTitle>
       </CardHeader>
       <CardContent className="px-2 sm:px-4 pb-4">
-        <div className="h-[320px] w-full min-w-0">
-          <ResponsiveContainer width="100%" height={320} debounce={100}>
+        <div className="h-[250px] sm:h-[320px] w-full min-w-0">
+          <ResponsiveContainer width="100%" height="100%" debounce={100}>
             <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid 
                 strokeDasharray="3 3" 

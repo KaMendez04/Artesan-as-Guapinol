@@ -41,7 +41,7 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
       </CardHeader>
       <CardContent className="px-0 sm:px-2 pb-2">
         <div className="h-[200px] sm:h-[280px] w-full min-w-0">
-          <ResponsiveContainer width="100%" height={280}>
+          <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={chartData}
               width={500}

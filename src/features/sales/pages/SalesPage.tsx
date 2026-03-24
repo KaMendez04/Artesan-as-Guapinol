@@ -154,7 +154,7 @@ export default function SalesPage() {
 
   return (
     <div className="min-h-screen text-gray-900 dark:bg-[#0b0b0b] dark:text-white">
-      <div className="mx-auto max-w-3xl p-4 md:p-8">
+      <div className="mx-auto max-w-3xl px-2 py-4 sm:p-4 md:p-8">
         <div className="mb-4">
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">

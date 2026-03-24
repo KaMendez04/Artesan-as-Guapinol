@@ -32,7 +32,7 @@ export default function AppLayout() {
                 </header>
 
                 {/* Page Content */}
-                <div className="p-4 md:p-6 lg:p-8 pb-[calc(1rem+var(--safe-area-inset-bottom))]">
+                <div className="px-2 py-4 md:p-6 lg:p-8 pb-[calc(1rem+var(--safe-area-inset-bottom))]">
                     <Outlet />
                 </div>
             </main>

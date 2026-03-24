@@ -17,23 +17,23 @@ export default function ReportsPage() {
   const { data, isLoading, isError } = useSalesReport(filters)
 
   return (
-    <div className="flex-1 space-y-6 pt-6 pb-20 md:pb-6">
-      <div className="flex px-4 md:px-0 items-center justify-between mb-2">
+    <div className="flex-1 space-y-4 sm:space-y-6 pt-6 pb-20 md:pb-6">
+      <div className="flex px-2 sm:px-4 md:px-0 items-center justify-between mb-2">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             Reportes de Ventas
           </h2>
         </div>
       </div>
 
-      <div className="px-4 md:px-0 space-y-4">
+      <div className="px-2 sm:px-4 md:px-0 space-y-4">
         <ReportFilters filters={filters} onFiltersChange={setFilters} />
         
         {/* Tabs / Navbar */}
         <div className="flex items-center p-1 bg-gray-100/50 dark:bg-white/5 rounded-2xl w-fit">
           <button
             onClick={() => setActiveTab("general")}
-            className={`rounded-xl px-6 py-2 text-sm font-medium transition-all duration-300 ${
+            className={`rounded-xl px-3 sm:px-6 py-2 text-sm font-medium transition-all duration-300 ${
               activeTab === "general"
                 ? "bg-white dark:bg-white/10 text-[#708C3E] dark:text-[#9FE870] shadow-sm"
                 : "text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60"
@@ -43,7 +43,7 @@ export default function ReportsPage() {
           </button>
           <button
             onClick={() => setActiveTab("products")}
-            className={`rounded-xl px-6 py-2 text-sm font-medium transition-all duration-300 ${
+            className={`rounded-xl px-3 sm:px-6 py-2 text-sm font-medium transition-all duration-300 ${
               activeTab === "products"
                 ? "bg-white dark:bg-white/10 text-[#708C3E] dark:text-[#9FE870] shadow-sm"
                 : "text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60"
@@ -54,7 +54,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="px-4 md:px-0 space-y-6">
+      <div className="px-2 sm:px-4 md:px-0 space-y-6">
         {activeTab === "general" ? (
           <>
             <SummaryCards 
