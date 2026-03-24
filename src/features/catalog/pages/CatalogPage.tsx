@@ -83,7 +83,7 @@ const EMPTY_ARRAY: any[] = []
     }
 
     return (
-        <div className="flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto w-full px-2 sm:px-4 md:px-0">
+        <div className="flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-0">
             <div className="flex items-center justify-between">
                 <div className="flex justify-start gap-3">
                     <button

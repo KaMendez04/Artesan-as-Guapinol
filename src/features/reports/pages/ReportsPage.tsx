@@ -18,7 +18,7 @@ export default function ReportsPage() {
 
   return (
     <div className="flex-1 space-y-4 sm:space-y-6 pt-6 pb-20 md:pb-6">
-      <div className="flex px-2 sm:px-4 md:px-0 items-center justify-between mb-2">
+      <div className="flex px-3 sm:px-4 md:px-0 items-center justify-between mb-2">
         <div>
           <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             Reportes de Ventas
@@ -26,7 +26,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="px-2 sm:px-4 md:px-0 space-y-4">
+      <div className="px-3 sm:px-4 md:px-0 space-y-4">
         <ReportFilters filters={filters} onFiltersChange={setFilters} />
         
         {/* Tabs / Navbar */}
@@ -54,7 +54,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="px-2 sm:px-4 md:px-0 space-y-6">
+      <div className="px-3 sm:px-4 md:px-0 space-y-6">
         {activeTab === "general" ? (
           <>
             <SummaryCards 
