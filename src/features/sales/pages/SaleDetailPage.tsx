@@ -135,8 +135,8 @@ export default function SaleDetailPage() {
             )}
           </div>
 
-          <div className="mt-5 rounded-3xl border border-gray-200 bg-white p-4 md:p-5 dark:border-white/10 dark:bg-black/30">
-            <div className="grid grid-cols-[auto_1fr_auto_auto] items-center justify-center gap-x-3 gap-y-1 border-b border-gray-200 pb-2 text-xs font-semibold text-gray-500 md:grid-cols-[70px_1fr_120px_92px] md:text-xs dark:border-white/10 dark:text-white/60">
+          <div className="mt-5 rounded-3xl border border-gray-200 bg-white p-4 md:p-5 dark:border-white/10 dark:bg-black/30 overflow-hidden">
+            <div className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-2 gap-y-1 border-b border-gray-200 pb-2 text-xs font-semibold text-gray-500 md:grid-cols-[70px_1fr_120px_92px] md:gap-x-3 md:text-xs dark:border-white/10 dark:text-white/60">
               <div>Cant.</div>
               <div>Artículo</div>
               <div className="text-right">Subtotal</div>
@@ -151,11 +151,11 @@ export default function SaleDetailPage() {
                   {paginatedLines.map((ln) => (
                     <div
                       key={ln.idSaleLine}
-                      className="grid grid-cols-[auto_1fr_auto_auto] items-start gap-x-3 gap-y-1 py-4 md:grid-cols-[70px_1fr_120px_92px] md:gap-3"
+                      className="grid grid-cols-[auto_1fr_auto_auto] items-start gap-x-2 gap-y-1 py-4 md:grid-cols-[70px_1fr_120px_92px] md:gap-3"
                     >
                       <div className="pt-0.5 text-xs font-medium text-gray-700 dark:text-white/80 md:text-sm">{ln.qty}</div>
                       <div className="min-w-0">
-                        <div className="break-words text-xs font-semibold text-gray-900 dark:text-white md:truncate md:text-sm">
+                        <div className="break-words text-xs font-semibold text-gray-900 dark:text-white md:truncate md:text-sm overflow-hidden">
                           {categoryNameById.get(ln.idCategory) ?? `Categoría #${ln.idCategory}`}
                         </div>
                         <div className={["text-xs", ln.oweMoney ? "text-red-600/80 dark:text-red-500/40" : ""].join(" ")}>

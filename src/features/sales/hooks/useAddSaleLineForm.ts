@@ -8,7 +8,7 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
   const { mutate: insertLine, isPending } = useInsertSaleLine(idSale)
 
   const [sinpe, setSinpe] = useState(false)
-  const [qty, setQty] = useState<string>("")
+  const [qty, setQty] = useState<string>("1")
   const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
   const [unitPrice, setUnitPrice] = useState<number>(0)
   const [subtotal, setSubtotal] = useState<string>("")

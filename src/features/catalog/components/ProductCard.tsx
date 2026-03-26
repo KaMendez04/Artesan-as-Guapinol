@@ -148,6 +148,46 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                             {product.images.length} fotos
                         </div>
                     )}
+
+                    {/* Three-dot menu — positioned over the image top-right */}
+                    {(onEdit || onDelete) && (
+                        <div className="absolute right-1 top-1 z-10" onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="size-8 rounded-full bg-white/80 dark:bg-black/60 text-gray-700 dark:text-white backdrop-blur-sm shadow-sm hover:bg-white dark:hover:bg-black/80 transition-colors"
+                                    >
+                                        <MoreVertical className="size-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    {onView && (
+                                        <DropdownMenuItem onClick={() => onView(product)}>
+                                            <Eye className="mr-2 size-4" />
+                                            <span>Ver detalles</span>
+                                        </DropdownMenuItem>
+                                    )}
+                                    {onEdit && (
+                                        <DropdownMenuItem onClick={() => onEdit(product)}>
+                                            <Pencil className="mr-2 size-4" />
+                                            <span>Editar</span>
+                                        </DropdownMenuItem>
+                                    )}
+                                    {onDelete && (
+                                        <DropdownMenuItem
+                                            variant="destructive"
+                                            onClick={() => onDelete(product)}
+                                        >
+                                            <Trash2 className="mr-2 size-4" />
+                                            <span>Eliminar</span>
+                                        </DropdownMenuItem>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    )}
                 </div>
 
                 {/* Info Section */}
@@ -156,50 +196,9 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                         {product.name}
                     </h3>
 
-                    <div className="mt-1 flex items-center justify-between">
-                        <p className="text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
-                            ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
-                        </p>
-
-                        {(onEdit || onDelete) && (
-                            <div onClick={(e) => e.stopPropagation()}>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="min-w-8 min-h-8 shrink-0 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
-                                        >
-                                            <MoreVertical className="size-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        {onView && (
-                                            <DropdownMenuItem onClick={() => onView(product)}>
-                                                <Eye className="mr-2 size-4" />
-                                                <span>Ver detalles</span>
-                                            </DropdownMenuItem>
-                                        )}
-                                        {onEdit && (
-                                            <DropdownMenuItem onClick={() => onEdit(product)}>
-                                                <Pencil className="mr-2 size-4" />
-                                                <span>Editar</span>
-                                            </DropdownMenuItem>
-                                        )}
-                                        {onDelete && (
-                                            <DropdownMenuItem
-                                                variant="destructive"
-                                                onClick={() => onDelete(product)}
-                                            >
-                                                <Trash2 className="mr-2 size-4" />
-                                                <span>Eliminar</span>
-                                            </DropdownMenuItem>
-                                        )}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        )}
-                    </div>
+                    <p className="mt-1 text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
+                        ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
+                    </p>
                 </div>
         </div>
     )

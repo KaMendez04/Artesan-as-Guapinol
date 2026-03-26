@@ -151,7 +151,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                     </div>
 
                     {(onEdit || onShare) && (
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div onClick={(e) => e.stopPropagation()} className="shrink-0">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button
