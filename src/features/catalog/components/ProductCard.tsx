@@ -61,7 +61,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                     {!isActive && (
                         <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-[2px]">
-                            <Badge className="bg-[#5D4037]/80 text-white font-semibold uppercase tracking-wider text-xs border-0">
+                            <Badge className="bg-[#5D4037]/80 text-white font-semibold uppercase tracking-wider text-[0.625rem] border-0">
                                 No disponible
                             </Badge>
                         </div>
@@ -78,7 +78,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                     {/* Image count badge */}
                     {product.images && product.images.length > 1 && (
-                        <div className="absolute right-2 top-2 rounded-full bg-[#5D4037]/70 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                        <div className="absolute right-2 top-2 rounded-full bg-[#5D4037]/70 px-2 py-0.5 text-[0.625rem] font-semibold text-white backdrop-blur-sm">
                             +{product.images.length - 1}
                         </div>
                     )}
@@ -136,7 +136,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                     {!isActive && (
                         <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-[2px]">
-                            <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
+                            <Badge className="bg-[#5D4037]/70 text-white text-[0.625rem] font-semibold uppercase tracking-wider border-0">
                                 Inactivo
                             </Badge>
                         </div>
@@ -144,7 +144,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                     {/* Image count badge */}
                     {product.images && product.images.length > 1 && (
-                        <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 dark:bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+                        <div className="absolute left-2 top-2 rounded-full bg-[#5D4037]/60 dark:bg-black/60 px-2 py-0.5 text-[0.625rem] font-semibold text-white backdrop-blur-sm">
                             {product.images.length} fotos
                         </div>
                     )}
@@ -168,7 +168,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="size-8 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                                            className="min-w-8 min-h-8 shrink-0 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
                                         >
                                             <MoreVertical className="size-4" />
                                         </Button>

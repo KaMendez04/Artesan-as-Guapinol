@@ -74,7 +74,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
               min={1}
               value={qty}
               onChange={(e) => {
-                setQty(Math.max(1, Number(e.target.value || 1)))
+                setQty(e.target.value)
                 setSubtotalTouched(false)
               }}
               className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none
@@ -233,7 +233,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
               min={0}
               value={subtotal}
               onChange={(e) => {
-                setSubtotal(Number(e.target.value || 0))
+                setSubtotal(e.target.value)
                 setSubtotalTouched(true)
               }}
               className="w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none

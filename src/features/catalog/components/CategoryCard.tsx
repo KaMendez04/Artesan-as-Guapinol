@@ -125,7 +125,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
 
                 {!isActive && (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-black/50 backdrop-blur-[2px]">
-                        <Badge className="bg-[#5D4037]/70 text-white text-[10px] font-semibold uppercase tracking-wider border-0">
+                        <Badge className="bg-[#5D4037]/70 text-white text-[0.625rem] font-semibold uppercase tracking-wider border-0">
                             No disponible
                         </Badge>
                     </div>
@@ -140,7 +140,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                             {category.name ?? "Sin nombre"}
                         </h3>
                         <Badge
-                            className={`mt-1 text-[10px] font-semibold border-0 ${
+                            className={`mt-1 text-[0.625rem] font-semibold border-0 ${
                                 isActive
                                     ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
                                     : "bg-[#5D4037]/10 text-[#5D4037]/60 dark:bg-zinc-700 dark:text-zinc-400"
@@ -157,7 +157,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="size-8 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                                        className="min-w-8 min-h-8 shrink-0 rounded-full text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center"
                                     >
                                         <MoreVertical className="size-4" />
                                     </Button>

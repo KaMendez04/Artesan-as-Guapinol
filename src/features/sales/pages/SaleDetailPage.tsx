@@ -88,10 +88,10 @@ export default function SaleDetailPage() {
           <div className="mt-5 rounded-2xl border border-gray-200 bg-white px-4 py-3 dark:border-white/10 dark:bg-black/30">
             <div className="flex items-center justify-between">
               <div className="min-w-0">
-                <div className="text-[11px] text-gray-700 dark:text-white/60">
+                <div className="text-xs text-gray-700 dark:text-white/60">
                   Vendido (subtotal)
                 </div>
-                <div className="text-md font-bold tabular-nums text-gray-900 dark:text-white">
+                <div className="text-md font-bold tabular-nums text-gray-900 dark:text-white whitespace-nowrap">
                   {formatCRC(totals.subtotal)}
                 </div>
               </div>
@@ -113,21 +113,21 @@ export default function SaleDetailPage() {
             {showSummaryDetails && (
               <div className="mt-3 border-t border-gray-100 pt-3 dark:border-white/10">
                 <div className="grid grid-cols-2 gap-y-2 text-sm">
-                  <span className="text-[12px] text-red-400">Deben</span>
-                  <span className="text-right text-[13px] font-medium tabular-nums text-red-400">
+                  <span className="text-xs text-red-400">Deben</span>
+                  <span className="text-right text-xs font-medium tabular-nums text-red-400 whitespace-nowrap">
                     {formatCRC(totals.deben)}
                   </span>
-                  <span className="text-[12px] text-green-800 dark:text-[#708C3E]">Ganancia total</span>
-                  <span className="text-right text-[13px] font-semibold tabular-nums text-green-800 dark:text-[#708C3E]">
+                  <span className="text-xs text-green-800 dark:text-[#708C3E]">Ganancia total</span>
+                  <span className="text-right text-xs font-semibold tabular-nums text-green-800 dark:text-[#708C3E] whitespace-nowrap">
                     {formatCRC(totals.total)}
                   </span>
                   <div className="col-span-2 mt-1 border-t border-gray-100 pt-3 dark:border-white/10" />
-                  <span className="text-[12px] text-gray-700 dark:text-white/75">Efectivo</span>
-                  <span className="text-right text-[13px] font-medium tabular-nums text-gray-900 dark:text-white">
+                  <span className="text-xs text-gray-700 dark:text-white/75">Efectivo</span>
+                  <span className="text-right text-xs font-medium tabular-nums text-gray-900 dark:text-white whitespace-nowrap">
                     {formatCRC(totals.efectivo)}
                   </span>
-                  <span className="text-[12px] text-gray-700 dark:text-white/75">SINPE</span>
-                  <span className="text-right text-[13px] font-medium tabular-nums text-gray-900 dark:text-white">
+                  <span className="text-xs text-gray-700 dark:text-white/75">SINPE</span>
+                  <span className="text-right text-xs font-medium tabular-nums text-gray-900 dark:text-white whitespace-nowrap">
                     {formatCRC(totals.sinpe)}
                   </span>
                 </div>
@@ -136,7 +136,7 @@ export default function SaleDetailPage() {
           </div>
 
           <div className="mt-5 rounded-3xl border border-gray-200 bg-white p-4 md:p-5 dark:border-white/10 dark:bg-black/30">
-            <div className="grid grid-cols-[44px_1fr_88px_44px] items-center justify-center gap-1.5 border-b border-gray-200 pb-2 text-[11px] font-semibold text-gray-500 md:grid-cols-[70px_1fr_120px_92px] md:text-xs dark:border-white/10 dark:text-white/60">
+            <div className="grid grid-cols-[auto_1fr_auto_auto] items-center justify-center gap-x-3 gap-y-1 border-b border-gray-200 pb-2 text-xs font-semibold text-gray-500 md:grid-cols-[70px_1fr_120px_92px] md:text-xs dark:border-white/10 dark:text-white/60">
               <div>Cant.</div>
               <div>Artículo</div>
               <div className="text-right">Subtotal</div>
@@ -151,18 +151,18 @@ export default function SaleDetailPage() {
                   {paginatedLines.map((ln) => (
                     <div
                       key={ln.idSaleLine}
-                      className="grid grid-cols-[44px_1fr_88px_44px] items-start gap-2 py-4 md:grid-cols-[70px_1fr_120px_92px] md:gap-3"
+                      className="grid grid-cols-[auto_1fr_auto_auto] items-start gap-x-3 gap-y-1 py-4 md:grid-cols-[70px_1fr_120px_92px] md:gap-3"
                     >
                       <div className="pt-0.5 text-xs font-medium text-gray-700 dark:text-white/80 md:text-sm">{ln.qty}</div>
                       <div className="min-w-0">
-                        <div className="break-words text-[12px] font-semibold text-gray-900 dark:text-white md:truncate md:text-sm">
+                        <div className="break-words text-xs font-semibold text-gray-900 dark:text-white md:truncate md:text-sm">
                           {categoryNameById.get(ln.idCategory) ?? `Categoría #${ln.idCategory}`}
                         </div>
-                        <div className={["grid grid-cols-[44px_1fr_88px_44px] items-start gap-2 rounded-2xl text-[12px] md:grid-cols-[70px_1fr_120px_92px] md:gap-3", ln.oweMoney ? "text-red-600/80 dark:text-red-500/40" : ""].join(" ")}>
+                        <div className={["text-xs", ln.oweMoney ? "text-red-600/80 dark:text-red-500/40" : ""].join(" ")}>
                           {ln.oweMoney ? "Fiado" : ln.sinpe ? "Pagado · SINPE" : "Pagado · Efectivo"}
                         </div>
                       </div>
-                      <div className="pt-0.5 text-right text-[13px] font-semibold text-gray-900 dark:text-white md:text-sm">
+                      <div className="pt-0.5 text-right text-xs font-semibold text-gray-900 dark:text-white whitespace-nowrap md:text-sm">
                         {formatCRC(Number(ln.subtotal))}
                       </div>
                       <div className="text-right">

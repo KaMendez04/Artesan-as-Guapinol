@@ -6,10 +6,10 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
   const { mutate: updateLine, isPending: updating } = useUpdateSaleLine(idSale)
   const { mutate: deleteLine, isPending: deleting } = useDeleteSaleLine(idSale)
 
-  const [qty, setQty] = useState(() => Number(line?.qty ?? 1))
+  const [qty, setQty] = useState<string>(() => String(line?.qty ?? ""))
   const [idCategory, setIdCategory] = useState<number | "">(() => Number(line?.idCategory ?? ""))
   const [unitPrice, setUnitPrice] = useState<number>(() => Number(line?.unitPrice ?? 0))
-  const [subtotal, setSubtotal] = useState<number>(() => Number(line?.subtotal ?? 0))
+  const [subtotal, setSubtotal] = useState<string>(() => String(line?.subtotal ?? ""))
   const [subtotalTouched, setSubtotalTouched] = useState(true)
   const [oweMoney, setOweMoney] = useState(() => !!line?.oweMoney)
   const [sinpe, setSinpe] = useState(() => !!line?.sinpe)
@@ -17,22 +17,24 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
   const { data: prices = [], isLoading: loadingPrices } = useProductPrices(idCategory)
 
   // Derived Values
-  const computedSubtotal = Number(qty) * Number(unitPrice)
-  const displaySubtotal = subtotalTouched ? subtotal : computedSubtotal
+  const numQty = Number(qty) || 0
+  const computedSubtotal = numQty * Number(unitPrice)
+  const displaySubtotal = subtotalTouched ? (Number(subtotal) || 0) : computedSubtotal
 
   // Handlers
-  const handleQtyChange = (val: number) => {
-    const newQty = Math.max(1, val)
-    setQty(newQty)
+  const handleQtyChange = (val: string) => {
+    setQty(val)
+    const numVal = Math.max(0, Number(val) || 0)
     if (!subtotalTouched) {
-      setSubtotal(newQty * unitPrice)
+      setSubtotal(String(numVal * unitPrice))
     }
   }
 
   const handleUnitPriceChange = (val: number) => {
     setUnitPrice(val)
+    const numQtyLocal = Number(qty) || 0
     if (!subtotalTouched) {
-      setSubtotal(qty * val)
+      setSubtotal(String(numQtyLocal * val))
     }
   }
 
@@ -42,12 +44,12 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
   }
 
   const handleSave = () => {
-    if (!line?.idSaleLine || idCategory === "" || qty <= 0) return
+    if (!line?.idSaleLine || idCategory === "" || numQty <= 0) return
     
     updateLine({
       idSaleLine: line.idSaleLine,
       idCategory: idCategory as number,
-      qty: Number(qty),
+      qty: numQty,
       unitPrice: Number(unitPrice),
       subtotal: Number(displaySubtotal),
       oweMoney: !!oweMoney,
@@ -83,7 +85,7 @@ export function useEditSaleLineForm(idSale: string, line: any, onClose: () => vo
     prices,
     updating,
     deleting,
-    canSave: idCategory !== "" && Number(qty) > 0 && !updating && !deleting && !!idSale,
+    canSave: idCategory !== "" && numQty > 0 && !updating && !deleting && !!idSale,
 
     // Actions
     handleSave,

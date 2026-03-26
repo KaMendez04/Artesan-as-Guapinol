@@ -1,0 +1,5 @@
+/* Ensure WebView / Capacitor respects system font scaling */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}

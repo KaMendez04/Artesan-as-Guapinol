@@ -8,10 +8,10 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
   const { mutate: insertLine, isPending } = useInsertSaleLine(idSale)
 
   const [sinpe, setSinpe] = useState(false)
-  const [qty, setQty] = useState(1)
+  const [qty, setQty] = useState<string>("")
   const [idCategory, setIdCategory] = useState<number | "">(categories?.[0]?.idCategory ?? "")
   const [unitPrice, setUnitPrice] = useState<number>(0)
-  const [subtotal, setSubtotal] = useState<number>(0)
+  const [subtotal, setSubtotal] = useState<string>("")
   const [subtotalTouched, setSubtotalTouched] = useState(false)
   const [oweMoney, setOweMoney] = useState(false)
 
@@ -26,22 +26,24 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
     return categories.find((c) => c.idCategory === idCategory)?.name ?? ""
   }, [categories, idCategory])
 
-  const computedSubtotal = Number(qty) * Number(unitPrice)
-  const displaySubtotal = subtotalTouched ? subtotal : computedSubtotal
+  const numQty = Number(qty) || 0
+  const computedSubtotal = numQty * Number(unitPrice)
+  const displaySubtotal = subtotalTouched ? (Number(subtotal) || 0) : computedSubtotal
 
   // Handlers
-  const handleQtyChange = (val: number) => {
-    const newQty = Math.max(1, val)
-    setQty(newQty)
+  const handleQtyChange = (val: string) => {
+    setQty(val)
+    const numVal = Math.max(0, Number(val) || 0)
     if (!subtotalTouched) {
-      setSubtotal(newQty * unitPrice)
+      setSubtotal(String(numVal * unitPrice))
     }
   }
 
   const handleUnitPriceChange = (val: number) => {
     setUnitPrice(val)
+    const numQtyLocal = Number(qty) || 0
     if (!subtotalTouched) {
-      setSubtotal(qty * val)
+      setSubtotal(String(numQtyLocal * val))
     }
   }
 
@@ -51,12 +53,12 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
   }
 
   const handleSave = () => {
-    if (idCategory === "" || Number(qty) <= 0) return
+    if (idCategory === "" || numQty <= 0) return
 
     insertLine({
       idSale,
       idCategory: idCategory as number,
-      qty: Number(qty),
+      qty: numQty,
       unitPrice: Number(unitPrice),
       subtotal: displaySubtotal,
       oweMoney: !!oweMoney,
@@ -88,6 +90,6 @@ export function useAddSaleLineForm(idSale: string, categories: Category[], onClo
     computedSubtotal,
     isPending,
     handleSave,
-    canSave: idCategory !== "" && Number(qty) > 0 && !isPending && !!idSale
+    canSave: idCategory !== "" && numQty > 0 && !isPending && !!idSale
   }
 }
