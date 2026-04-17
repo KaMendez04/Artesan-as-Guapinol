@@ -1,5 +1,5 @@
 import { Home, ShoppingBag, Store, Settings, Moon, Sun, BarChart3, X } from "lucide-react"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 import {
   Sidebar,
   SidebarContent,
@@ -13,11 +13,12 @@ import {
 import { useTheme } from "@/shared/components/theme-provider"
 import { Button } from "@/shared/components/ui/button"
 
+
 const navItems = [
-  { title: "Inicio", url: "/", icon: Home },
-  { title: "Ventas", url: "/ventas", icon: ShoppingBag },
-  { title: "Catálogo", url: "/catalogo", icon: Store },
-  { title: "Reportes", url: "/reportes", icon: BarChart3 },
+  { title: "Inicio", url: "/app", icon: Home },
+  { title: "Ventas", url: "/app/ventas", icon: ShoppingBag },
+  { title: "Catálogo", url: "/app/catalogo", icon: Store },
+  { title: "Reportes", url: "/app/reportes", icon: BarChart3 },
 ]
 
 export function AppSidebar() {
@@ -92,6 +93,7 @@ export function AppSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
