@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react"
 import { useDashboardStats } from "../hooks/useDashboardStats"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { ShoppingBag, Store } from "lucide-react"
 
@@ -11,10 +11,10 @@ export default function DashboardPage() {
     const { data, isLoading } = useDashboardStats()
 
     return (
-        <div className="flex flex-col gap-6 sm:gap-8 animate-in fade-in duration-500">
+        <div className="flex flex-col gap-6 sm:gap-8">
             {/* Quick Actions — estilo original simplificado */}
             <div className="grid grid-cols-2 gap-4">
-                <Link to="/ventas">
+                <Link to="/app/ventas">
                     <Card className="group hover:bg-accent/10 transition duration-300 hover:shadow-md cursor-pointer border-none bg-white/50 dark:bg-black/20 backdrop-blur-md">
                         <CardContent className="flex flex-col items-center justify-center gap-2 py-5 sm:py-8">
                             <div className="text-gray-400 dark:text-white/40 group-hover:scale-110 transition-transform">
@@ -24,7 +24,7 @@ export default function DashboardPage() {
                         </CardContent>
                     </Card>
                 </Link>
-                <Link to="/catalogo">
+                <Link to="/app/catalogo">
                     <Card className="group hover:bg-accent/10 transition duration-300 hover:shadow-md cursor-pointer border-none bg-white/50 dark:bg-black/20 backdrop-blur-md">
                         <CardContent className="flex flex-col items-center justify-center gap-2 py-5 sm:py-8">
                             <div className="text-gray-400 dark:text-white/40 group-hover:scale-110 transition-transform">

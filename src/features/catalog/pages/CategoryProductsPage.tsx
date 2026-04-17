@@ -89,7 +89,7 @@ const EMPTY_ARRAY: any[] = []
                         type="button"
                         className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 transition
                                    dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
-                        onClick={() => navigate("/catalogo")}
+                        onClick={() => navigate("/app/catalogo")}
                         aria-label="Volver al catálogo"
                         title="Volver al catálogo"
                     >

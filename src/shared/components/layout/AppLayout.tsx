@@ -17,7 +17,6 @@ import { Capacitor } from "@capacitor/core"
 export default function AppLayout() {
   const navigate = useNavigate()
   const [showGoodbye, setShowGoodbye] = useState(false)
-  const [showEntryAnimation, setShowEntryAnimation] = useState(true)
 
   useEffect(() => {
     if (showGoodbye) {
@@ -27,13 +26,6 @@ export default function AppLayout() {
       return () => clearTimeout(timer)
     }
   }, [showGoodbye, navigate])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowEntryAnimation(false)
-    }, 1500)
-    return () => clearTimeout(timer)
-  }, [])
 
   const handleLogout = async () => {
     // Limpiar preferencias de "Recordarme" (mobile y web)
@@ -46,43 +38,6 @@ export default function AppLayout() {
     }
     await supabase.auth.signOut()
     setShowGoodbye(true)
-  }
-
-  if (showEntryAnimation) {
-    return (
-      <div
-        className="min-h-screen flex flex-col items-center justify-center px-6 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/LoginPhoto.webp')" }}
-      >
-        <div className="absolute inset-0 bg-black/70" />
-        <div className="relative z-10 flex flex-col items-center animate-in fade-in duration-500">
-          <div className="relative">
-            <div className="size-28 rounded-full border-4 border-white/30 bg-white shadow-2xl overflow-hidden relative z-10">
-              <img
-                src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg"
-                alt="Arte Guapinol"
-                className="size-full object-contain p-2"
-              />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <style>{`
-                @keyframes expandRing {
-                  0% { transform: scale(0.9); opacity: 0; }
-                  15% { opacity: 0.5; }
-                  100% { transform: scale(2.5); opacity: 0; }
-                }
-                .expand-ring {
-                  animation: expandRing 4s ease-out infinite;
-                }
-              `}</style>
-              <div className="expand-ring absolute size-28 rounded-full border border-white/40" style={{ animationDelay: '0ms' }} />
-              <div className="expand-ring absolute size-28 rounded-full border border-white/30" style={{ animationDelay: '1300ms' }} />
-              <div className="expand-ring absolute size-28 rounded-full border border-white/20" style={{ animationDelay: '2600ms' }} />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   if (showGoodbye) {
@@ -138,7 +93,7 @@ export default function AppLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full animate-in fade-in duration-700">
+      <main className="w-full">
         <header
           className="flex items-center justify-between border-b px-4 lg:px-6
           pt-[var(--safe-area-inset-top)]
@@ -173,7 +128,7 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <div className="px-3 py-4 md:p-6 lg:p-8 pb-[calc(1rem+var(--safe-area-inset-bottom))] animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="px-3 py-4 md:p-6 lg:p-8 pb-[calc(1rem+var(--safe-area-inset-bottom))]">
           <Outlet />
         </div>
       </main>

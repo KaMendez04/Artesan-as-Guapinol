@@ -58,7 +58,7 @@ export default function SaleDetailPage() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => navigate("/ventas")}
+              onClick={() => navigate("/app/ventas")}
               className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 transition hover:bg-gray-50
                          dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
               aria-label="Regresar"

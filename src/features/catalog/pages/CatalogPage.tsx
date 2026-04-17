@@ -88,7 +88,7 @@ const EMPTY_ARRAY: any[] = []
                 <div className="flex justify-start gap-3">
                     <button
                         type="button"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/app")}
                         className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 transition
                                    dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
                         aria-label="Regresar"
@@ -179,7 +179,7 @@ const EMPTY_ARRAY: any[] = []
                             category={category}
                             onEdit={handleEdit}
                             onShare={handleShareCategory}
-                            onClick={(c) => navigate(`/catalogo/${c.idCategory}/productos`)}
+                            onClick={(c) => navigate(`/app/catalogo/${c.idCategory}/productos`)}
                         />
                     ))}
                 </div>

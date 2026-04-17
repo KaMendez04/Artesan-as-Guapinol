@@ -160,9 +160,9 @@ export default function SalesPage() {
             <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/app")}
                 className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 transition hover:bg-gray-50
-                           dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                               dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
                 aria-label="Regresar"
                 title="Regresar"
               >
@@ -252,6 +252,7 @@ export default function SalesPage() {
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40"
               size={16}
             />
+
             <input
               value={search}
               onChange={(e) => {
@@ -287,7 +288,7 @@ export default function SalesPage() {
 
         <div
           className="rounded-3xl border border-gray-200 bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)] md:p-6
-                     dark:border-white/10 dark:bg-black/40 dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+                 dark:border-white/10 dark:bg-black/40 dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
         >
           <div className="mt-5 space-y-3">
             {isLoading && sales.length === 0 ? (
@@ -316,7 +317,7 @@ export default function SalesPage() {
                     <button
                       key={s.idSale}
                       type="button"
-                      onClick={() => navigate(`/ventas/${s.idSale}`)}
+                      onClick={() => navigate(`/app/ventas/${s.idSale}`)}
                       className="
                         w-full rounded-2xl border border-gray-200 bg-white p-4 text-left
                         shadow-sm transition hover:bg-gray-50 hover:shadow-md
@@ -409,7 +410,7 @@ export default function SalesPage() {
           key={createKey}
           open={openCreate}
           onClose={() => setOpenCreate(false)}
-          onCreated={(idSale) => navigate(`/ventas/${idSale}`)}
+          onCreated={(idSale) => navigate(`/app/ventas/${idSale}`)}
         />
       </div>
     </div>
