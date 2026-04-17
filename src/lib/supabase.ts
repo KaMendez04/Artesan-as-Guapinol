@@ -25,14 +25,14 @@ const capacitorStorage: SupportedStorage = {
   },
 }
 
-// 🟢 Storage para web (NO persistente al cerrar navegador)
-const sessionStorageAdapter: SupportedStorage = {
-  getItem: async (key: string) => sessionStorage.getItem(key),
+// 🟢 Storage para web (persistente si rememberMe está activo)
+const localStorageAdapter: SupportedStorage = {
+  getItem: async (key: string) => localStorage.getItem(key),
   setItem: async (key: string, value: string) => {
-    sessionStorage.setItem(key, value)
+    localStorage.setItem(key, value)
   },
   removeItem: async (key: string) => {
-    sessionStorage.removeItem(key)
+    localStorage.removeItem(key)
   },
 }
 
@@ -41,6 +41,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    storage: isNative ? capacitorStorage : sessionStorageAdapter,
+    storage: isNative ? capacitorStorage : localStorageAdapter,
   },
 })

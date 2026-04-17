@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import { useNavigate } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react"
+import { Preferences } from "@capacitor/preferences"
+import { Capacitor } from "@capacitor/core"
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -14,6 +16,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
   const [showLoginAnimation, setShowLoginAnimation] = useState(true)
+  const [isCheckingSession, setIsCheckingSession] = useState(true)
 
   useEffect(() => {
     if (showWelcome) {
@@ -29,6 +32,51 @@ export default function LoginPage() {
       setShowLoginAnimation(false)
     }, 1500)
     return () => clearTimeout(timer)
+  }, [])
+
+  // Cargar email guardado si existe (mobile y web)
+  useEffect(() => {
+    const loadSavedEmail = async () => {
+      let savedEmail: string | null = null
+
+      if (Capacitor.isNativePlatform()) {
+        const result = await Preferences.get({ key: 'savedEmail' })
+        savedEmail = result.value
+      } else {
+        savedEmail = localStorage.getItem('savedEmail')
+      }
+
+      if (savedEmail) {
+        setEmail(savedEmail)
+        setRememberMe(true)
+      }
+    }
+    loadSavedEmail()
+  }, [])
+
+  // Verificar si hay sesión activa con rememberMe para entrar directamente
+  useEffect(() => {
+    const checkAutoLogin = async () => {
+      // Verificar rememberMe
+      let rememberMe: string | null = null
+      if (Capacitor.isNativePlatform()) {
+        const result = await Preferences.get({ key: 'rememberMe' })
+        rememberMe = result.value
+      } else {
+        rememberMe = localStorage.getItem('rememberMe')
+      }
+
+      if (rememberMe) {
+        // Verificar si hay sesión activa
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          // Saltar directamente a bienvenida
+          setShowWelcome(true)
+        }
+      }
+      setIsCheckingSession(false)
+    }
+    checkAutoLogin()
   }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -47,9 +95,29 @@ export default function LoginPage() {
       return
     }
 
+    // Guardar preferencias de "Recordarme" (mobile y web)
+    if (rememberMe) {
+      if (Capacitor.isNativePlatform()) {
+        await Preferences.set({ key: 'rememberMe', value: 'true' })
+        await Preferences.set({ key: 'savedEmail', value: email.trim() })
+      } else {
+        localStorage.setItem('rememberMe', 'true')
+        localStorage.setItem('savedEmail', email.trim())
+      }
+    } else {
+      if (Capacitor.isNativePlatform()) {
+        await Preferences.remove({ key: 'rememberMe' })
+        await Preferences.remove({ key: 'savedEmail' })
+      } else {
+        localStorage.removeItem('rememberMe')
+        localStorage.removeItem('savedEmail')
+      }
+    }
+
     setShowWelcome(true)
   }
 
+  // Bienvenida tiene prioridad si hay sesión activa
   if (showWelcome) {
     return (
       <div
@@ -85,7 +153,9 @@ export default function LoginPage() {
           <h2 className="mt-6 text-3xl font-bold text-white animate-in slide-in-from-bottom-4 duration-700 delay-500">
             ¡Bienvenido!
           </h2>
-          <p className="mt-2 text-lg text-white/80 animate-in slide-in-from-bottom-4 duration-700 delay-700">
+          <p className="mt-2 text-lg text-white/80 animate-in slide-in-from-bottom-4 duration-700 delay-700 text-center">
+            Sistema de Gestión
+            <br />
             Artesanías Guapinol
           </p>
         </div>
@@ -98,6 +168,45 @@ export default function LoginPage() {
     )
   }
 
+  // Mientras verifica sesión, mostrar logo con animación (sin texto)
+  if (isCheckingSession) {
+    return (
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-6 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/LoginPhoto.webp')" }}
+      >
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="relative">
+            <div className="size-28 rounded-full border-4 border-white/30 bg-white shadow-2xl overflow-hidden relative z-10">
+              <img
+                src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg"
+                alt="Arte Guapinol"
+                className="size-full object-contain p-2"
+              />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <style>{`
+                @keyframes expandRing {
+                  0% { transform: scale(0.9); opacity: 0; }
+                  15% { opacity: 0.5; }
+                  100% { transform: scale(2.5); opacity: 0; }
+                }
+                .expand-ring {
+                  animation: expandRing 4s ease-out infinite;
+                }
+              `}</style>
+              <div className="expand-ring absolute size-28 rounded-full border border-white/40" style={{ animationDelay: '0ms' }} />
+              <div className="expand-ring absolute size-28 rounded-full border border-white/30" style={{ animationDelay: '1300ms' }} />
+              <div className="expand-ring absolute size-28 rounded-full border border-white/20" style={{ animationDelay: '2600ms' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Animación de transición antes de mostrar el login
   if (showLoginAnimation) {
     return (
       <div

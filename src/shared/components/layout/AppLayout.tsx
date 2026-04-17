@@ -11,6 +11,8 @@ import {
 } from "@/shared/components/ui/dropdown-menu"
 import { supabase } from "@/lib/supabase"
 import { LogOut } from "lucide-react"
+import { Preferences } from "@capacitor/preferences"
+import { Capacitor } from "@capacitor/core"
 
 export default function AppLayout() {
   const navigate = useNavigate()
@@ -34,6 +36,14 @@ export default function AppLayout() {
   }, [])
 
   const handleLogout = async () => {
+    // Limpiar preferencias de "Recordarme" (mobile y web)
+    if (Capacitor.isNativePlatform()) {
+      await Preferences.remove({ key: 'rememberMe' })
+      await Preferences.remove({ key: 'savedEmail' })
+    } else {
+      localStorage.removeItem('rememberMe')
+      localStorage.removeItem('savedEmail')
+    }
     await supabase.auth.signOut()
     setShowGoodbye(true)
   }
@@ -110,7 +120,9 @@ export default function AppLayout() {
           <h2 className="mt-6 text-3xl font-bold text-white animate-in slide-in-from-bottom-4 duration-700 delay-500">
             ¡Hasta pronto!
           </h2>
-          <p className="mt-2 text-lg text-white/80 animate-in slide-in-from-bottom-4 duration-700 delay-700">
+          <p className="mt-2 text-lg text-white/80 animate-in slide-in-from-bottom-4 duration-700 delay-700 text-center">
+            Sistema de Gestión
+            <br />
             Artesanías Guapinol
           </p>
         </div>
