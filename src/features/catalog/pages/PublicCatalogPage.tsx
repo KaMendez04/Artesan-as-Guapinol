@@ -87,7 +87,7 @@ export default function PublicCatalogPage() {
 
             {/* ═══ HEADER — Catalog banner ═══ */}
             <header className="border-b border-[#E8E5D8] bg-white">
-                <div className="relative h-[140px] overflow-hidden sm:h-[190px] lg:h-[230px]">
+                <div className="relative h-[105px] overflow-hidden sm:h-[145px] lg:h-[180px]">
                     <img
                         src="/catalogo.png"
                         alt="Artesanías Guapinol"
