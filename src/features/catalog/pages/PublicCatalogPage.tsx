@@ -93,7 +93,6 @@ export default function PublicCatalogPage() {
                         alt="Artesanías Guapinol"
                         className="absolute inset-0 size-full object-cover object-center"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-[#FAFAF5]/70" />
                     {categoryId && (
                         <div className="absolute inset-x-0 bottom-0">
                             <div className="mx-auto max-w-5xl px-5 pb-5">
