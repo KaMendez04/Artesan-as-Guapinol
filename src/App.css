@@ -143,3 +143,35 @@
 [class*="sileo-toaster"] {
   margin-top: var(--safe-area-inset-top) !important;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.catalog-clickable-card {
+  transform-origin: center;
+  will-change: transform;
+}
+
+.catalog-card-press {
+  animation: catalog-card-press 240ms ease-out;
+}
+
+@keyframes catalog-card-press {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(0.95) translateY(2px);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

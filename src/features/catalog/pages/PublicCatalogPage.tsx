@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { Search, ArrowLeft, ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/shared/utils"
@@ -24,6 +24,8 @@ export default function PublicCatalogPage() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [search, setSearch] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
+    const [pressedCardId, setPressedCardId] = useState<string | null>(null)
+    const pressTimeoutsRef = useRef<number[]>([])
 
     const { data: share, isLoading: isLoadingShare } = useCatalogShareDetail(token || "")
 
@@ -43,6 +45,17 @@ export default function PublicCatalogPage() {
     }, [pid, products])
 
     const isLoading = isLoadingShare || isLoadingCats || (!!categoryId && isLoadingProducts)
+
+    useEffect(() => {
+        document.documentElement.classList.add("no-scrollbar")
+        document.body.classList.add("no-scrollbar")
+
+        return () => {
+            document.documentElement.classList.remove("no-scrollbar")
+            document.body.classList.remove("no-scrollbar")
+            pressTimeoutsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId))
+        }
+    }, [])
 
     const filteredCategories = categories.filter((c: Category) => {
         const matchesSearch = c.name?.toLowerCase().includes(search.toLowerCase())
@@ -78,6 +91,18 @@ export default function PublicCatalogPage() {
             searchParams.delete("pid")
         }
         setSearchParams(searchParams, { replace: true })
+    }
+
+    const runCardPress = (cardId: string, action: () => void) => {
+        setPressedCardId(cardId)
+        pressTimeoutsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId))
+
+        const actionTimeout = window.setTimeout(action, 110)
+        const resetTimeout = window.setTimeout(() => {
+            setPressedCardId((currentId) => currentId === cardId ? null : currentId)
+        }, 240)
+
+        pressTimeoutsRef.current = [actionTimeout, resetTimeout]
     }
 
     const showBackButton = categoryId && !share?.category_id
@@ -189,11 +214,18 @@ export default function PublicCatalogPage() {
                         <>
                             <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
                                 {paginatedProducts.map((product) => (
-                                    <ProductCard
+                                    <div
                                         key={product.idProduct}
-                                        product={product}
-                                        onClick={(p) => handleSelectProduct(p)}
-                                    />
+                                        className={cn(
+                                            "catalog-clickable-card",
+                                            pressedCardId === `product-${product.idProduct}` && "catalog-card-press"
+                                        )}
+                                    >
+                                        <ProductCard
+                                            product={product}
+                                            onClick={(p) => runCardPress(`product-${p.idProduct}`, () => handleSelectProduct(p))}
+                                        />
+                                    </div>
                                 ))}
                             </div>
 
@@ -270,11 +302,18 @@ export default function PublicCatalogPage() {
                             <>
                                 <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-3">
                                     {paginatedCategories.map((category: Category) => (
-                                        <CategoryCard
+                                        <div
                                             key={category.idCategory}
-                                            category={category}
-                                            onClick={(c: Category) => navigate(`/v/${token}/${c.idCategory}`)}
-                                        />
+                                            className={cn(
+                                                "catalog-clickable-card",
+                                                pressedCardId === `category-${category.idCategory}` && "catalog-card-press"
+                                            )}
+                                        >
+                                            <CategoryCard
+                                                category={category}
+                                                onClick={(c: Category) => runCardPress(`category-${c.idCategory}`, () => navigate(`/v/${token}/${c.idCategory}`))}
+                                            />
+                                        </div>
                                     ))}
                                 </div>
 
