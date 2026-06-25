@@ -87,7 +87,7 @@ export default function PublicCatalogPage() {
 
             {/* ═══ HEADER — Catalog banner ═══ */}
             <header className="border-b border-[#E8E5D8] bg-white">
-                <div className="relative min-h-[190px] overflow-hidden sm:min-h-[260px] lg:min-h-[320px]">
+                <div className="relative h-[140px] overflow-hidden sm:h-[190px] lg:h-[230px]">
                     <img
                         src="/catalogo.png"
                         alt="Artesanías Guapinol"
@@ -96,7 +96,7 @@ export default function PublicCatalogPage() {
                     {categoryId && (
                         <div className="absolute inset-x-0 bottom-0">
                             <div className="mx-auto max-w-5xl px-5 pb-5">
-                                <h1 className="w-fit rounded-2xl bg-white/80 px-4 py-2 text-2xl font-bold text-[#5D4037] shadow-sm backdrop-blur-sm md:text-3xl">
+                                <h1 className="w-fit rounded-2xl bg-white px-4 py-2 text-2xl font-bold text-[#5D4037] md:text-3xl">
                                     {currentCategory?.name || "Nuestros Productos"}
                                 </h1>
                             </div>
@@ -106,7 +106,7 @@ export default function PublicCatalogPage() {
             </header>
 
             {/* ═══ NAV BAR — Back + Search together ═══ */}
-            <div className="sticky top-0 z-10 bg-[#FAFAF5]/90 backdrop-blur-sm border-b border-[#E8E5D8]/50">
+            <div className="sticky top-0 z-10 bg-[#FAFAF5] border-b border-[#E8E5D8]">
                 <div className="mx-auto max-w-5xl px-5 py-3">
                     <div className="flex items-center gap-3">
                         {/* Back button — always accessible */}
@@ -241,12 +241,10 @@ export default function PublicCatalogPage() {
                 ) : (
                     /* ── Categories View ── */
                     <>
-                        <div className="mb-8 flex items-center gap-3">
-                            <div className="h-px flex-1 bg-gradient-to-r from-[#708C3E]/40 to-transparent" />
+                        <div className="mb-8 flex items-center justify-center">
                             <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-[#5D4037]/70">
                                 Categorías
                             </h2>
-                            <div className="h-px flex-1 bg-gradient-to-l from-[#708C3E]/40 to-transparent" />
                         </div>
 
                         {filteredCategories.length === 0 ? (
