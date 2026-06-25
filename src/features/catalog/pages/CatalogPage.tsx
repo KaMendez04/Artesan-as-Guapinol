@@ -1,9 +1,8 @@
 import { useState } from "react"
-import { ChevronLeft, Link2, Plus, Search, Store, ChevronRight } from "lucide-react"
+import { ArrowLeft, Link2, Plus, Search, Store } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { sileo } from "sileo"
 import { Button } from "@/shared/components/ui/button"
-import { cn } from "@/shared/utils"
 import { Input } from "@/shared/components/ui/input"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { CategoryCard } from "@/features/catalog/components/CategoryCard"
@@ -12,6 +11,7 @@ import { useCategories, useCreateCatalogShare } from "@/features/catalog/hooks/u
 import { getGeneralCatalogShare } from "@/features/catalog/services/category.service"
 import { APP_CONFIG } from "@/shared/constants/config"
 import type { Category } from "@/features/catalog/types/category.types"
+import { AppPagination } from "@/shared/components/ui/AppPagination"
 
 export default function CatalogPage() {
     const navigate = useNavigate()
@@ -21,9 +21,9 @@ export default function CatalogPage() {
     const [copied, setCopied] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const ITEMS_PER_PAGE = 12
-const EMPTY_ARRAY: any[] = []
+const EMPTY_CATEGORIES: Category[] = []
 
-    const { data: categories = EMPTY_ARRAY, isLoading } = useCategories()
+    const { data: categories = EMPTY_CATEGORIES, isLoading } = useCategories()
     const { mutateAsync: createShare, isPending: isSharing } = useCreateCatalogShare()
 
     const filtered = categories.filter((c) =>
@@ -83,7 +83,7 @@ const EMPTY_ARRAY: any[] = []
     }
 
     return (
-        <div className="flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-0">
+        <div className="flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
             <div className="flex items-center justify-between">
                 <div className="flex justify-start gap-3">
                     <button
@@ -94,7 +94,7 @@ const EMPTY_ARRAY: any[] = []
                         aria-label="Regresar"
                         title="Regresar"
                     >
-                        <ChevronLeft />
+                        <ArrowLeft className="size-5" />
                     </button>
                     <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Catálogo</h1>
                 </div>
@@ -185,47 +185,12 @@ const EMPTY_ARRAY: any[] = []
                 </div>
             )}
 
-            {/* ═══ PAGINATION ═══ */}
-            {!isLoading && totalPages > 1 && (
-                <div className="mt-8 flex items-center justify-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
-                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                        disabled={currentPage === 1}
-                    >
-                        <ChevronLeft className="size-4" />
-                    </Button>
-
-                    <div className="flex items-center gap-1">
-                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                                        <button
-                                            key={`page-${page}`}
-                                            onClick={() => setCurrentPage(page)}
-                                            className={cn(
-                                                "size-9 rounded-full text-sm font-bold transition-all",
-                                                currentPage === page
-                                                    ? "bg-[#708C3E] text-white shadow-lg shadow-[#708C3E]/20"
-                                                    : "bg-white dark:bg-zinc-800 text-gray-600 dark:text-white/60 hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-100 dark:border-white/10"
-                                            )}
-                                        >
-                                            {page}
-                                        </button>
-                                    ))}
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
-                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                        disabled={currentPage === totalPages}
-                    >
-                        <ChevronRight className="size-4" />
-                    </Button>
-                </div>
-            )}
+            <AppPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                className="mt-8"
+            />
 
             {/* ═══ CATEGORY COUNT ═══ */}
             {!isLoading && categories.length > 0 && (

@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/shared/components/ui/card"
-import { TrendingUp, DollarSign, BarChart3 } from "lucide-react"
+import { Banknote, ShoppingBasket, TrendingUp } from "lucide-react"
 
 interface SummaryCardsProps {
   totalSales: number
@@ -10,42 +10,45 @@ interface SummaryCardsProps {
 
 export function SummaryCards({ totalSales, averageSale, maxSale, isLoading }: SummaryCardsProps) {
   const formatCurrency = (value: number) => 
-    new Intl.NumberFormat("es-CR", { style: "currency", currency: "CRC" }).format(value)
+    new Intl.NumberFormat("es-CR", { style: "currency", currency: "CRC", maximumFractionDigits: 0 }).format(value)
 
   const stats = [
     {
-      title: "Total Vendido",
+      title: "Vendido",
       value: formatCurrency(totalSales),
-      icon: DollarSign,
+      note: "Total del periodo",
+      icon: Banknote,
       color: "text-[#708C3E] dark:text-[#9FE870]",
       bg: "bg-[#708C3E]/10 dark:bg-[#708C3E]/20"
     },
     {
-      title: "Promedio por Venta",
+      title: "Promedio",
       value: formatCurrency(averageSale),
+      note: "Por venta",
       icon: TrendingUp,
-      color: "text-blue-600 dark:text-blue-400",
-      bg: "bg-blue-600/10 dark:bg-blue-600/20"
+      color: "text-[#D99045] dark:text-[#F0A94A]",
+      bg: "bg-[#D99045]/10 dark:bg-[#F0A94A]/15"
     },
     {
-      title: "Venta Máxima",
+      title: "Venta mayor",
       value: formatCurrency(maxSale),
-      icon: BarChart3,
-      color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-purple-600/10 dark:bg-purple-600/20"
+      note: "Mejor venta",
+      icon: ShoppingBasket,
+      color: "text-[#9C543F] dark:text-[#D47A3A]",
+      bg: "bg-[#9C543F]/10 dark:bg-[#D47A3A]/15"
     }
   ]
 
   if (isLoading) {
     return (
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-3 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3">
         {[...Array(3)].map((_, i) => (
-          <Card key={i} className="animate-pulse rounded-2xl border-gray-100 dark:border-white/5 bg-white/50 dark:bg-black/20">
-            <CardContent className="p-4 flex items-center space-x-4">
-              <div className="h-10 w-10 bg-gray-200 dark:bg-white/10 rounded-xl shrink-0" />
-              <div className="space-y-2 flex-1">
-                <div className="h-3 w-16 bg-gray-200 dark:bg-white/10 rounded-full" />
-                <div className="h-5 w-24 bg-gray-200 dark:bg-white/10 rounded-lg" />
+          <Card key={i} className="animate-pulse rounded-2xl border-gray-100 dark:border-white/5 bg-background">
+            <CardContent className="flex items-center justify-center gap-4 p-4">
+              <div className="h-10 w-10 shrink-0 bg-gray-200 dark:bg-white/10 rounded-xl" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="h-3 w-20 bg-gray-200 dark:bg-white/10 rounded-full" />
+                <div className="h-6 w-28 bg-gray-200 dark:bg-white/10 rounded-lg" />
               </div>
             </CardContent>
           </Card>
@@ -55,24 +58,24 @@ export function SummaryCards({ totalSales, averageSale, maxSale, isLoading }: Su
   }
 
   return (
-    <div className="grid gap-3 grid-cols-1 sm:grid-cols-3 lg:grid-cols-3">
+    <div className="grid gap-3 sm:grid-cols-3">
       {stats.map((stat) => (
         <Card 
           key={stat.title} 
-          className="rounded-2xl border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-md
-                     dark:border-white/10 dark:bg-black/30 backdrop-blur-sm overflow-hidden"
+          className="rounded-2xl border-gray-100 bg-background shadow-sm dark:border-white/10 overflow-hidden"
         >
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className={`p-2.5 rounded-xl ${stat.bg} shrink-0`}>
+          <CardContent className="flex items-center justify-center gap-4 p-4">
+            <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${stat.bg}`}>
               <stat.icon className={`h-5 w-5 ${stat.color}`} />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-white/40 mb-0.5">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-gray-500 dark:text-white/45">
                 {stat.title}
               </p>
-              <p className="text-lg sm:text-xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+              <p className="mt-1 truncate text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 {stat.value}
               </p>
+              <p className="mt-1 text-xs text-gray-400 dark:text-white/35">{stat.note}</p>
             </div>
           </CardContent>
         </Card>

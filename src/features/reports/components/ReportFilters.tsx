@@ -39,68 +39,75 @@ export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) 
   }
 
   return (
-    <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0 
-                    bg-white dark:bg-black/30 backdrop-blur-sm p-2 sm:p-3 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
-      <div className="flex items-center justify-center p-1 bg-gray-100/50 dark:bg-white/5 rounded-2xl w-fit self-center md:self-auto">
-        <Button 
-          variant="ghost"
-          size="sm"
-          onClick={() => onFiltersChange({ ...filters, mode: "month" })}
-          className={`rounded-xl px-6 transition-all duration-300 ${
-            filters.mode === "month" 
-              ? "bg-white dark:bg-white/10 text-[#708C3E] dark:text-[#9FE870] shadow-sm" 
-              : "text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60"
-          }`}
-        >
-          Mes
-        </Button>
-        <Button 
-          variant="ghost"
-          size="sm"
-          onClick={() => onFiltersChange({ ...filters, mode: "week" })}
-          className={`rounded-xl px-6 transition-all duration-300 ${
-            filters.mode === "week" 
-              ? "bg-white dark:bg-white/10 text-[#708C3E] dark:text-[#9FE870] shadow-sm" 
-              : "text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60"
-          }`}
-        >
-          Semana
-        </Button>
-      </div>
-
-      <div className="flex items-center justify-between md:justify-end space-x-2">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={handlePrevious}
-          className="rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/40"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-        
-        <div className="flex items-center space-x-2 font-bold text-sm sm:text-base min-w-[140px] sm:min-w-[160px] justify-center capitalize text-gray-900 dark:text-white">
-          <CalendarIcon className="h-4 w-4 text-[#708C3E] dark:text-[#9FE870] shrink-0" />
-          <span className="truncate">
-            {filters.mode === "month" 
-              ? format(filters.date, "MMMM yyyy", { locale: es })
-              : `Semana ${format(filters.date, "w", { locale: es })} - ${format(filters.date, "MMM", { locale: es })}`
-            }
-          </span>
+    <div className="rounded-2xl border border-gray-100 bg-background p-3 shadow-sm dark:border-white/10">
+      <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-white/35">
+            Periodo
+          </p>
+          <div className="mt-1 flex items-center justify-center gap-2 text-base font-bold capitalize text-gray-900 dark:text-white sm:justify-start">
+            <CalendarIcon className="size-4 shrink-0 text-[#708C3E] dark:text-[#A7D878]" />
+            <span className="truncate">
+              {filters.mode === "month"
+                ? format(filters.date, "MMMM yyyy", { locale: es })
+                : `Semana ${format(filters.date, "w", { locale: es })} de ${format(filters.date, "MMMM", { locale: es })}`}
+            </span>
+          </div>
         </div>
 
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={handleNext}
-          disabled={isNextDisabled()}
-          className={`rounded-xl transition-opacity ${
-            isNextDisabled() 
-              ? "opacity-30 cursor-not-allowed" 
-              : "hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/40"
-          }`}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </Button>
+        <div className="flex w-full items-center justify-center gap-2 sm:w-auto sm:justify-end">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handlePrevious}
+            className="rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:text-white/45 dark:hover:bg-white/10 dark:hover:text-white"
+            aria-label="Periodo anterior"
+          >
+            <ChevronLeft className="size-5" />
+          </Button>
+
+          <div className="flex items-center justify-center rounded-2xl bg-gray-100/70 p-1 dark:bg-white/5">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onFiltersChange({ ...filters, mode: "month" })}
+              className={`rounded-xl px-4 transition-all duration-300 ${
+                filters.mode === "month"
+                  ? "bg-background text-[#708C3E] shadow-sm dark:text-[#A7D878]"
+                  : "text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60"
+              }`}
+            >
+              Mes
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onFiltersChange({ ...filters, mode: "week" })}
+              className={`rounded-xl px-4 transition-all duration-300 ${
+                filters.mode === "week"
+                  ? "bg-background text-[#708C3E] shadow-sm dark:text-[#A7D878]"
+                  : "text-gray-500 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/60"
+              }`}
+            >
+              Semana
+            </Button>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleNext}
+            disabled={isNextDisabled()}
+            className={`rounded-xl transition-opacity ${
+              isNextDisabled()
+                ? "cursor-not-allowed opacity-30"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:text-white/45 dark:hover:bg-white/10 dark:hover:text-white"
+            }`}
+            aria-label="Periodo siguiente"
+          >
+            <ChevronRight className="size-5" />
+          </Button>
+        </div>
       </div>
     </div>
   )

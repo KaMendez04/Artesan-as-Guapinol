@@ -1,4 +1,4 @@
-import { Home, ShoppingBag, Store, Settings, Moon, Sun, BarChart3, X } from "lucide-react"
+import { LayoutDashboard, ReceiptText, Layers, TrendingUp, SlidersVertical, MoonStar, SunMedium, X } from "lucide-react"
 import { Link } from "react-router-dom"
 import {
   Sidebar,
@@ -15,10 +15,10 @@ import { Button } from "@/shared/components/ui/button"
 
 
 const navItems = [
-  { title: "Inicio", url: "/app", icon: Home },
-  { title: "Ventas", url: "/app/ventas", icon: ShoppingBag },
-  { title: "Catálogo", url: "/app/catalogo", icon: Store },
-  { title: "Reportes", url: "/app/reportes", icon: BarChart3 },
+  { title: "Inicio", url: "/app", icon: LayoutDashboard },
+  { title: "Ventas", url: "/app/ventas", icon: ReceiptText },
+  { title: "Catálogo", url: "/app/catalogo", icon: Layers },
+  { title: "Reportes", url: "/app/reportes", icon: TrendingUp },
 ]
 
 export function AppSidebar() {
@@ -39,8 +39,8 @@ export function AppSidebar() {
     (theme === "system"
       ? window.matchMedia("(prefers-color-scheme: dark)").matches
       : theme === "dark")
-      ? <Sun className="size-4" />
-      : <Moon className="size-4" />
+      ? <SunMedium className="size-4" />
+      : <MoonStar className="size-4" />
 
   return (
     <Sidebar>
@@ -87,8 +87,8 @@ export function AppSidebar() {
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg" className="gap-3 text-base">
-              <Link to="/ajustes">
-                <Settings className="size-5" />
+              <Link to="/app/ajustes">
+                <SlidersVertical className="size-5" />
                 <span>Ajustes</span>
               </Link>
             </SidebarMenuButton>

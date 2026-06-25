@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import {
+  ArrowLeft,
   Calendar,
-  ChevronLeft,
   MapPin,
   Plus,
   Search,
@@ -11,15 +11,7 @@ import { useNavigate } from "react-router-dom"
 import { useAllSales } from "../hooks/useSale"
 import { usePlaces } from "../hooks/usePlace"
 import { CreateSaleDialog } from "../components/CreateSaleDialog"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination"
+import { AppPagination } from "@/shared/components/ui/AppPagination"
 import {
   Select,
   SelectContent,
@@ -30,21 +22,7 @@ import {
 
 const ITEMS_PER_PAGE = 6
 
-function getVisiblePages(currentPage: number, totalPages: number) {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  }
 
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, "end"] as const
-  }
-
-  if (currentPage >= totalPages - 2) {
-    return ["start", totalPages - 3, totalPages - 2, totalPages - 1, totalPages] as const
-  }
-
-  return ["start", currentPage - 1, currentPage, currentPage + 1, "end"] as const
-}
 
 function startOfWeek(date: Date) {
   const d = new Date(date)
@@ -132,8 +110,6 @@ export default function SalesPage() {
     return filteredSales.slice(start, end)
   }, [filteredSales, safePage])
 
-  const visiblePages = getVisiblePages(currentPage, totalPages)
-
   const activeFilterLabel = useMemo(() => {
     const placeLabel =
       placeFilter === "all"
@@ -153,7 +129,7 @@ export default function SalesPage() {
   }, [placeFilter, periodMode, places])
 
   return (
-    <div className="min-h-screen text-gray-900 dark:bg-[#0b0b0b] dark:text-white">
+    <div className="min-h-screen text-gray-900 dark:text-white animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
       <div className="mx-auto max-w-3xl px-3 py-4 sm:p-4 md:p-8">
         <div className="mb-4">
           <div className="flex items-center justify-between gap-3">
@@ -166,7 +142,7 @@ export default function SalesPage() {
                 aria-label="Regresar"
                 title="Regresar"
               >
-                <ChevronLeft />
+              <ArrowLeft className="size-5" />
               </button>
 
               <h1 className="truncate text-2xl font-bold tracking-tight">Ventas</h1>
@@ -186,7 +162,7 @@ export default function SalesPage() {
           </div>
 
           {showFilters && (
-            <div className="mt-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-black/30">
+            <div className="mt-3 rounded-2xl border border-gray-200 bg-background p-3 shadow-sm dark:border-white/10">
               <div className="grid grid-cols-2 gap-2">
                 <Select value={placeFilter} onValueChange={(v) => { setPlaceFilter(v); setCurrentPage(1) }}>
                   <SelectTrigger
@@ -286,11 +262,8 @@ export default function SalesPage() {
           </button>
         </div>
 
-        <div
-          className="rounded-3xl border border-gray-200 bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)] md:p-6
-                 dark:border-white/10 dark:bg-black/40 dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
-        >
-          <div className="mt-5 space-y-3">
+        <div>
+          <div className="space-y-3">
             {isLoading && sales.length === 0 ? (
               <div className="text-sm text-gray-600 dark:text-white/70">Cargando ventas…</div>
             ) : filteredSales.length === 0 ? (
@@ -339,68 +312,12 @@ export default function SalesPage() {
                   )
                 })}
 
-                {totalPages > 1 && (
-                  <div className="pt-2">
-                    <Pagination>
-                      <PaginationContent>
-                        <PaginationItem>
-                          <PaginationPrevious
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              if (currentPage > 1) setCurrentPage((p) => p - 1)
-                            }}
-                            className={
-                              currentPage === 1
-                                ? "pointer-events-none opacity-50"
-                                : "cursor-pointer"
-                            }
-                          />
-                        </PaginationItem>
-
-                        {visiblePages.map((page, index) => {
-                          if (page === "start" || page === "end") {
-                            return (
-                              <PaginationItem key={`${page}-${index}`}>
-                                <PaginationEllipsis />
-                              </PaginationItem>
-                            )
-                          }
-
-                          return (
-                            <PaginationItem key={page}>
-                              <PaginationLink
-                                href="#"
-                                isActive={currentPage === page}
-                                onClick={(e) => {
-                                  e.preventDefault()
-                                  setCurrentPage(page)
-                                }}
-                              >
-                                {page}
-                              </PaginationLink>
-                            </PaginationItem>
-                          )
-                        })}
-
-                        <PaginationItem>
-                          <PaginationNext
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              if (currentPage < totalPages) setCurrentPage((p) => p + 1)
-                            }}
-                            className={
-                              currentPage === totalPages
-                                ? "pointer-events-none opacity-50"
-                                : "cursor-pointer"
-                            }
-                          />
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
-                  </div>
-                )}
+                <AppPagination
+                  currentPage={safePage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  className="pt-4"
+                />
               </>
             )}
           </div>

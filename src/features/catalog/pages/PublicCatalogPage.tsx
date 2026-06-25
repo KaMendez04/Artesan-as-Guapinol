@@ -15,7 +15,8 @@ import type { Category } from "@/features/catalog/types/category.types"
 
 const PRODUCTS_PER_PAGE = 12
 const CATEGORIES_PER_PAGE = 9
-const EMPTY_ARRAY: any[] = []
+const EMPTY_CATEGORIES: Category[] = []
+const EMPTY_PRODUCTS: Product[] = []
 
 export default function PublicCatalogPage() {
     const { token, id } = useParams()
@@ -28,9 +29,9 @@ export default function PublicCatalogPage() {
 
     const categoryId = id ? Number(id) : share?.category_id
 
-    const { data: categories = EMPTY_ARRAY, isLoading: isLoadingCats } = useCategories({ state: "active" })
+    const { data: categories = EMPTY_CATEGORIES, isLoading: isLoadingCats } = useCategories({ state: "active" })
 
-    const { data: products = EMPTY_ARRAY, isLoading: isLoadingProducts } = useProducts({
+    const { data: products = EMPTY_PRODUCTS, isLoading: isLoadingProducts } = useProducts({
         idCategory: categoryId || undefined,
         state: "active"
     })
@@ -82,24 +83,26 @@ export default function PublicCatalogPage() {
     const showBackButton = categoryId && !share?.category_id
 
     return (
-        <div className="light flex min-h-screen flex-col bg-[#FAFAF5] text-[#5D4037] transition-colors duration-300" style={{ fontFamily: "'Inter', sans-serif" }}>
+        <div className="light flex min-h-screen flex-col bg-[#FAFAF5] text-[#5D4037] transition-colors duration-300 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards" style={{ fontFamily: "'Inter', sans-serif" }}>
 
-            {/* ═══ HEADER — Logo centered ═══ */}
-            <header className="bg-white border-b border-[#E8E5D8]">
-                <div className="mx-auto max-w-5xl px-5 py-6">
-                    <div className="flex flex-col items-center gap-3">
-                        <img
-                            src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg"
-                            alt="Artesanías Guapinol"
-                            className="h-20 w-auto object-contain md:h-24"
-                        />
-
-                        {categoryId && (
-                            <h1 className="text-2xl font-bold text-[#5D4037] md:text-3xl">
-                                {currentCategory?.name || "Nuestros Productos"}
-                            </h1>
-                        )}
-                    </div>
+            {/* ═══ HEADER — Catalog banner ═══ */}
+            <header className="border-b border-[#E8E5D8] bg-white">
+                <div className="relative min-h-[190px] overflow-hidden sm:min-h-[260px] lg:min-h-[320px]">
+                    <img
+                        src="/catalogo.png"
+                        alt="Artesanías Guapinol"
+                        className="absolute inset-0 size-full object-cover object-center"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-[#FAFAF5]/70" />
+                    {categoryId && (
+                        <div className="absolute inset-x-0 bottom-0">
+                            <div className="mx-auto max-w-5xl px-5 pb-5">
+                                <h1 className="w-fit rounded-2xl bg-white/80 px-4 py-2 text-2xl font-bold text-[#5D4037] shadow-sm backdrop-blur-sm md:text-3xl">
+                                    {currentCategory?.name || "Nuestros Productos"}
+                                </h1>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </header>
 

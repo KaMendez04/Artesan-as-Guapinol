@@ -13,10 +13,15 @@ import { supabase } from "@/lib/supabase"
 import { LogOut } from "lucide-react"
 import { Preferences } from "@capacitor/preferences"
 import { Capacitor } from "@capacitor/core"
+import { DEFAULT_AVATAR_URL } from "@/shared/constants/brand"
+import { useProfileStore } from "@/shared/store/useProfileStore"
+import { cn } from "@/shared/utils"
 
 export default function AppLayout() {
   const navigate = useNavigate()
   const [showGoodbye, setShowGoodbye] = useState(false)
+  const avatarUrl = useProfileStore((state) => state.avatarUrl)
+  const resolvedAvatarUrl = avatarUrl ?? DEFAULT_AVATAR_URL
 
   useEffect(() => {
     if (showGoodbye) {
@@ -51,9 +56,9 @@ export default function AppLayout() {
           <div className="relative">
             <div className="size-28 rounded-full border-4 border-white/30 bg-white shadow-2xl overflow-hidden animate-in zoom-in-50 duration-1000 delay-200 relative z-10">
               <img
-                src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg"
+                src={resolvedAvatarUrl}
                 alt="Arte Guapinol"
-                className="size-full object-contain p-2"
+                className={cn("size-full", avatarUrl ? "object-cover" : "object-contain p-2")}
               />
             </div>
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -95,10 +100,10 @@ export default function AppLayout() {
       <AppSidebar />
       <main className="w-full">
         <header
-          className="flex items-center justify-between border-b px-4 lg:px-6
+          className="sticky top-0 z-40 flex items-center justify-between border-b border-border/50 bg-white/70 dark:bg-background/70 backdrop-blur-md px-4 lg:px-6
           pt-[var(--safe-area-inset-top)]
           h-[calc(3.5rem+var(--safe-area-inset-top))]
-          lg:h-[60px] lg:pt-0"
+          lg:h-[60px] lg:pt-0 transition-colors"
         >
           <div className="flex items-center gap-2">
             <SidebarTrigger />
@@ -109,9 +114,9 @@ export default function AppLayout() {
               <DropdownMenuTrigger asChild>
                 <Avatar className="size-10 border border-border/50 shadow-sm bg-white hover:opacity-90 cursor-pointer transition-opacity">
                   <AvatarImage
-                    src="https://res.cloudinary.com/dkwvaxxdw/image/upload/v1771647969/WhatsApp_Image_2026-02-20_at_10.25.08_PM_tunvuh.jpg"
+                    src={resolvedAvatarUrl}
                     alt="Arte Guapinol"
-                    className="object-contain p-1"
+                    className={cn(avatarUrl ? "object-cover" : "object-contain p-1")}
                   />
                   <div className="flex size-full items-center justify-center bg-muted text-xs font-bold text-muted-foreground uppercase">
                     AG

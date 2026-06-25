@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ChevronLeft, Plus, Search, Package, ChevronRight } from "lucide-react"
+import { ArrowLeft, Plus, Search, Package, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import { cn } from "@/shared/utils"
 import { Input } from "@/shared/components/ui/input"
@@ -22,7 +22,7 @@ export default function CategoryProductsPage() {
     const [search, setSearch] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const ITEMS_PER_PAGE = 15
-const EMPTY_ARRAY: any[] = []
+const EMPTY_PRODUCTS: Product[] = []
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
     const [viewProduct, setViewProduct] = useState<Product | null>(null)
@@ -32,7 +32,7 @@ const EMPTY_ARRAY: any[] = []
 
     const { data: category, isLoading: isLoadingCategory } = useCategory(idCategory)
 
-    const { data: products = EMPTY_ARRAY, isLoading: isLoadingResources } = useProducts({
+    const { data: products = EMPTY_PRODUCTS, isLoading: isLoadingResources } = useProducts({
         idCategory,
         // search: search || undefined // We will paginate client-side for consistent feel in admin
     })
@@ -82,7 +82,7 @@ const EMPTY_ARRAY: any[] = []
     const isLoading = isLoadingCategory || isLoadingResources
 
     return (
-        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 md:p-0">
+        <div className="flex flex-col gap-6 max-w-3xl mx-auto w-full p-4 md:p-0 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
             <div className="flex justify-between">
                 <div className="flex justify-start gap-3">
                     <button
@@ -93,7 +93,7 @@ const EMPTY_ARRAY: any[] = []
                         aria-label="Volver al catálogo"
                         title="Volver al catálogo"
                     >
-                        <ChevronLeft />
+                        <ArrowLeft className="size-5" />
                     </button>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                         {isLoadingCategory ? <Skeleton className="h-8 w-48 bg-gray-200 dark:bg-zinc-800" /> : category?.name}

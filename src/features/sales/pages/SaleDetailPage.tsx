@@ -1,32 +1,12 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ChevronLeft, Plus, Pencil, ChevronDown } from "lucide-react"
+import { ArrowLeft, Plus, Pencil, ChevronDown } from "lucide-react"
 import { AddSaleLineDialog } from "../components/AddSaleLineDialog"
 import { EditSaleLineDialog } from "../components/EditSaleLineDialog"
 import { formatCRC } from "../utils/date"
 import { useSaleDetailData } from "../hooks/useSaleDetailData"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/shared/components/ui/pagination"
-
-function getVisiblePages(currentPage: number, totalPages: number) {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  }
-  if (currentPage <= 3) {
-    return [1, 2, 3, 4, "end"] as const
-  }
-  if (currentPage >= totalPages - 2) {
-    return ["start", totalPages - 3, totalPages - 2, totalPages - 1, totalPages] as const
-  }
-  return ["start", currentPage - 1, currentPage, currentPage + 1, "end"] as const
-}
+import type { SaleLine } from "../services/saleLine.service"
+import { AppPagination } from "@/shared/components/ui/AppPagination"
 
 export default function SaleDetailPage() {
   const navigate = useNavigate()
@@ -46,13 +26,11 @@ export default function SaleDetailPage() {
   const [showSummaryDetails, setShowSummaryDetails] = useState(false)
   const [openAdd, setOpenAdd] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
-  const [selectedLine, setSelectedLine] = useState<any>(null)
+  const [selectedLine, setSelectedLine] = useState<SaleLine | null>(null)
   const [addKey, setAddKey] = useState(0)
 
-  const visiblePages = getVisiblePages(currentPage, totalPages)
-
   return (
-    <div className="min-h-screen bg-[#ffffff] text-gray-900 dark:bg-[#0b0b0b] dark:text-white">
+    <div className="min-h-screen bg-background text-gray-900 dark:text-white animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
       <div className="mx-auto max-w-3xl p-4 md:p-8">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -64,7 +42,7 @@ export default function SaleDetailPage() {
               aria-label="Regresar"
               title="Regresar"
             >
-              <ChevronLeft />
+              <ArrowLeft className="size-5" />
             </button>
 
             <h1 className="text-2xl font-bold tracking-tight">{placeName}</h1>
@@ -85,7 +63,7 @@ export default function SaleDetailPage() {
         </div>
 
         <div className="rounded-3xl p-4 md:p-6">
-          <div className="mt-5 rounded-2xl border border-gray-200 bg-white px-4 py-3 dark:border-white/10 dark:bg-black/30">
+          <div className="mt-5 rounded-2xl border border-gray-200 bg-background px-4 py-3 dark:border-white/10">
             <div className="flex items-center justify-between">
               <div className="min-w-0">
                 <div className="text-xs text-gray-700 dark:text-white/60">
@@ -135,9 +113,9 @@ export default function SaleDetailPage() {
             )}
           </div>
 
-          <div className="mt-5 rounded-3xl border border-gray-200 bg-white p-4 md:p-5 dark:border-white/10 dark:bg-black/30 overflow-hidden">
+          <div className="mt-5 rounded-3xl border border-gray-200 bg-background p-4 md:p-5 dark:border-white/10 overflow-hidden">
             <div className="grid grid-cols-[auto_1fr_auto_auto] items-center gap-x-2 gap-y-1 border-b border-gray-200 pb-2 text-xs font-semibold text-gray-500 md:grid-cols-[70px_1fr_120px_92px] md:gap-x-3 md:text-xs dark:border-white/10 dark:text-white/60">
-              <div>Cant.</div>
+              <div>#</div>
               <div>Artículo</div>
               <div className="text-right">Subtotal</div>
               <div className="text-right">Editar</div>
@@ -181,56 +159,16 @@ export default function SaleDetailPage() {
                   ))}
                 </div>
 
-                {totalPages > 1 && (
-                  <div className="pt-4">
-                    <Pagination>
-                      <PaginationContent>
-                        <PaginationItem>
-                          <PaginationPrevious
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              if (currentPage > 1) setCurrentPage((p) => p - 1)
-                            }}
-                            className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                          />
-                        </PaginationItem>
-                        {visiblePages.map((page, index) => {
-                          if (page === "start" || page === "end") {
-                            return <PaginationItem key={`${page}-${index}`}><PaginationEllipsis /></PaginationItem>
-                          }
-                          return (
-                            <PaginationItem key={page}>
-                              <PaginationLink
-                                href="#"
-                                isActive={currentPage === page}
-                                onClick={(e) => {
-                                  e.preventDefault()
-                                  setCurrentPage(page)
-                                }}
-                              >
-                                {page}
-                              </PaginationLink>
-                            </PaginationItem>
-                          )
-                        })}
-                        <PaginationItem>
-                          <PaginationNext
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              if (currentPage < totalPages) setCurrentPage((p) => p + 1)
-                            }}
-                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                          />
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
-                  </div>
-                )}
               </>
             )}
           </div>
+
+          <AppPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            className="mt-4"
+          />
 
           <AddSaleLineDialog
             key={`add-${addKey}`}

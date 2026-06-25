@@ -15,7 +15,13 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
     ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
     : theme
 
-  const primaryColor = resolvedTheme === "dark" ? "#9FE870" : "#708C3E"
+  const isDark = resolvedTheme === "dark"
+  const primaryColor = isDark ? "#A7D878" : "#6FA36A"
+  const textColor = isDark ? "#F5F3EC" : "#2E261F"
+  const mutedTextColor = isDark ? "rgba(245,243,236,0.58)" : "rgba(46,38,31,0.56)"
+  const gridColor = isDark ? "rgba(245,243,236,0.08)" : "rgba(112,140,62,0.12)"
+  const tooltipBackground = isDark ? "rgba(31, 27, 23, 0.96)" : "rgba(255, 252, 246, 0.98)"
+  const tooltipBorder = isDark ? "rgba(245,243,236,0.12)" : "rgba(112,140,62,0.16)"
 
   const formatCurrency = (value: number) => 
     new Intl.NumberFormat("es-CR", { style: "currency", currency: "CRC", maximumFractionDigits: 0 }).format(value)
@@ -25,19 +31,24 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="col-span-1 lg:col-span-4 h-[250px] sm:h-[300px] animate-pulse rounded-2xl border-gray-100 bg-white/50 dark:border-white/5 dark:bg-black/20">
+      <Card className="col-span-1 lg:col-span-4 h-[250px] sm:h-[300px] animate-pulse rounded-2xl border-[#708C3E]/10 bg-background dark:border-white/10">
         <CardHeader className="py-3 px-4">
-          <div className="h-5 w-32 bg-gray-200 dark:bg-white/10 rounded" />
+          <div className="h-5 w-32 bg-[#E7E0D4] dark:bg-white/10 rounded" />
         </CardHeader>
-        <CardContent className="h-[150px] sm:h-[200px] bg-gray-100 dark:bg-white/5 rounded-xl m-4" />
+        <CardContent className="h-[150px] sm:h-[200px] bg-[#F1EBDD] dark:bg-white/5 rounded-xl m-4" />
       </Card>
     )
   }
 
   return (
-    <Card className="col-span-1 lg:col-span-4 transition-all duration-300 hover:shadow-lg rounded-2xl border-gray-100 bg-white dark:border-white/10 dark:bg-black/30 backdrop-blur-sm shadow-sm overflow-hidden">
+    <Card className="col-span-1 lg:col-span-4 transition-all duration-300 hover:shadow-md rounded-2xl border-[#708C3E]/10 bg-background dark:border-white/10 shadow-sm overflow-hidden">
       <CardHeader className="py-3 px-4">
-        <CardTitle className="text-base font-bold text-gray-900 dark:text-white">Tendencia de Ventas</CardTitle>
+        <CardTitle className="text-base font-semibold text-[#2E261F] dark:text-[#F5F3EC]">
+          Ventas por día
+        </CardTitle>
+        <p className="text-xs text-gray-500 dark:text-white/45">
+          Monto vendido en el periodo seleccionado.
+        </p>
       </CardHeader>
       <CardContent className="px-0 sm:px-2 pb-2">
         <div className="h-[200px] sm:h-[280px] w-full min-w-0">
@@ -50,41 +61,38 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
             >
               <defs>
                 <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={primaryColor} stopOpacity={0.2}/>
+                  <stop offset="5%" stopColor={primaryColor} stopOpacity={0.18}/>
                   <stop offset="95%" stopColor={primaryColor} stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-gray-100 dark:text-white/5" />
+              <CartesianGrid strokeDasharray="4 6" vertical={false} stroke={gridColor} />
               <XAxis 
                 dataKey="label" 
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: "currentColor" }}
-                className="text-gray-400 dark:text-white/40"
+                tick={{ fontSize: 11, fill: mutedTextColor }}
                 dy={5}
               />
               <YAxis 
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: "currentColor" }}
-                className="text-gray-400 dark:text-white/40"
+                tick={{ fontSize: 11, fill: mutedTextColor }}
                 tickFormatter={(value) => `₡${value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value}`}
               />
               <Tooltip 
                 contentStyle={{ 
                   borderRadius: "12px", 
-                  border: "1px solid rgba(255,255,255,0.1)", 
-                  backgroundColor: "rgba(0,0,0,0.85)",
-                  backdropFilter: "blur(8px)",
-                  boxShadow: "0 8px 16px -4px rgb(0 0 0 / 0.4)",
-                  color: "#fff",
+                  border: `1px solid ${tooltipBorder}`,
+                  backgroundColor: tooltipBackground,
+                  boxShadow: "0 12px 30px -18px rgb(46 38 31 / 0.45)",
+                  color: textColor,
                   fontSize: "11px",
                   padding: "8px"
                 }}
-                itemStyle={{ color: primaryColor, padding: 0 }}
-                labelStyle={{ fontWeight: "bold", marginBottom: "4px" }}
+                itemStyle={{ color: primaryColor, padding: 0, fontWeight: 700 }}
+                labelStyle={{ color: mutedTextColor, fontWeight: 600, marginBottom: "4px" }}
                 cursor={{ stroke: primaryColor, strokeWidth: 1.5, strokeDasharray: "4 4" }}
-                formatter={(value: any) => [formatCurrency(Number(value || 0)), "Venta"]}
+                formatter={(value: unknown) => [formatCurrency(Number(value || 0)), "Venta"]}
                 labelFormatter={(label) => mode === "month" ? `Día ${label}` : label}
               />
               <Area
