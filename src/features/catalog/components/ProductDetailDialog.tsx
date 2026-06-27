@@ -13,6 +13,7 @@ import { cn } from "@/shared/utils";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { APP_CONFIG } from "@/shared/constants/config";
+import { useStorePhone, formatWhatsappPhone } from "@/features/settings/hooks/useStorePhone";
 
 interface ProductDetailDialogProps {
     product: Product | null;
@@ -25,6 +26,7 @@ interface ProductDetailDialogProps {
 export function ProductDetailDialog({ product, isOpen, onOpenChange, catalogToken, forceLight }: ProductDetailDialogProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isImageLoading, setIsImageLoading] = useState(true);
+    const { data: rawPhone } = useStorePhone();
 
     // Pre-load all images when the dialog is open
     useEffect(() => {
@@ -52,7 +54,7 @@ export function ProductDetailDialog({ product, isOpen, onOpenChange, catalogToke
     };
 
     const handleWhatsAppOrder = () => {
-        const phone = "+50683862234";
+        const phone = formatWhatsappPhone(rawPhone);
         const currentImageUrl = images[currentImageIndex];
 
         const shareUrl = `${APP_CONFIG.PROD_URL}/v/${catalogToken || ''}?pid=${product.idProduct}`;
@@ -200,33 +202,12 @@ Foto: ${currentImageUrl}`;
                                 </h3>
                                 <div className="mt-3 flex items-baseline gap-1">
                                     <span className={cn("text-sm font-medium text-[#5D4037]/60", !forceLight && "dark:text-zinc-400")}>₡</span>
-                                    <span className={cn("text-3xl font-extrabold text-[#2E7D32]", !forceLight && "dark:text-[#708C3E]")}>
+                                    <span className={cn("text-3xl font-extrabold text-[#708C3E]", !forceLight && "dark:text-[#A7D878]")}>
                                         {product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="flex items-center gap-3">
-                                <div className={cn("h-px flex-1 bg-gradient-to-r from-[#708C3E]/30 to-transparent", !forceLight && "dark:from-[#708C3E]/20")} />
-                                <div className="h-1.5 w-1.5 rounded-full bg-[#708C3E]" />
-                                <div className={cn("h-px flex-1 bg-gradient-to-l from-[#708C3E]/30 to-transparent", !forceLight && "dark:from-[#708C3E]/20")} />
-                            </div>
-
-                            {/* Description */}
-                            <div className="space-y-2">
-                                <p className={cn("text-sm leading-relaxed text-[#5D4037]/60", !forceLight && "dark:text-zinc-400")}>
-                                    Esta pieza es una artesanía de Guapinol, hecha a mano con dedicación y arte costarricense. Cada producto es único e irrepetible.
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    <span className={cn(
-                                        "inline-flex items-center rounded-full bg-[#708C3E]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[#2E7D32]",
-                                        !forceLight && "dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
-                                    )}>
-                                        🌿 Hecho a mano
-                                    </span>
-                                </div>
-                            </div>
                         </div>
 
                         {/* CTA */}
@@ -234,8 +215,8 @@ Foto: ${currentImageUrl}`;
                             <Button
                                 onClick={handleWhatsAppOrder}
                                 className={cn(
-                                    "w-full h-13 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-bold gap-2.5 text-base shadow-lg shadow-[#2E7D32]/25 active:scale-[0.98] transition-all duration-200 rounded-xl",
-                                    !forceLight && "dark:bg-[#708C3E] dark:hover:bg-[#5E7634] dark:shadow-black/20"
+                                    "w-full h-13 bg-[#708C3E] hover:bg-[#5E7634] text-white font-bold gap-2.5 text-base shadow-lg shadow-[#708C3E]/25 active:scale-[0.98] transition-all duration-200 rounded-xl",
+                                    !forceLight && "dark:bg-[#6FA36A] dark:hover:bg-[#5E7634] dark:shadow-black/20"
                                 )}
                             >
                                 <MessageCircle className="h-5 w-5 fill-current" />

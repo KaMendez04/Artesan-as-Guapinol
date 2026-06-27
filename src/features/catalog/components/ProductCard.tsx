@@ -1,6 +1,6 @@
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
-import { Pencil, Trash2, Eye, MoreVertical } from "lucide-react"
+import { Pencil, Trash2, Eye, MoreVertical, ToggleLeft, ToggleRight } from "lucide-react"
 import type { Product } from "@/features/catalog/types/product.types"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
 import {
@@ -15,10 +15,11 @@ interface ProductCardProps {
     onEdit?: (product: Product) => void
     onDelete?: (product: Product) => void
     onView?: (product: Product) => void
+    onToggleState?: (product: Product) => void
     onClick?: (product: Product) => void
 }
 
-export function ProductCard({ product, onEdit, onDelete, onView, onClick }: ProductCardProps) {
+export function ProductCard({ product, onEdit, onDelete, onView, onToggleState, onClick }: ProductCardProps) {
     const isActive = product.state === "active"
     const isPublicView = !onEdit && !onDelete
 
@@ -69,9 +70,9 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                     {/* Quick view icon on hover */}
                     {isActive && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-[#2E7D32]/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="absolute inset-0 flex items-center justify-center bg-[#6FA36A]/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                             <div className="flex size-12 items-center justify-center rounded-full bg-white/90 shadow-lg transition-transform duration-300 scale-75 group-hover:scale-100">
-                                <Eye className="size-5 text-[#2E7D32]" />
+                                <Eye className="size-5 text-[#6FA36A]" />
                             </div>
                         </div>
                     )}
@@ -86,10 +87,10 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                 {/* Info */}
                 <div className="p-3.5 text-center">
-                    <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                    <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-bold text-[#5D4037] group-hover:text-[#6FA36A] transition-colors duration-300">
                         {product.name}
                     </h3>
-                    <p className="mt-1 text-base font-extrabold text-[#2E7D32]">
+                    <p className="mt-1 text-base font-extrabold text-[#6FA36A]">
                         ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                     </p>
                 </div>
@@ -109,7 +110,7 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                     onClick?.(product)
                 }
             }}
-            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 cursor-pointer ${
+            className={`group relative overflow-hidden rounded-2xl bg-white/60 dark:bg-white/5 border border-border/50 backdrop-blur-sm transition duration-300 hover:shadow-lg hover:bg-white/80 dark:hover:bg-white/10 cursor-pointer ${
                 !isActive ? "opacity-60" : ""
             }`}
         >
@@ -175,6 +176,14 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
                                             <span>Editar</span>
                                         </DropdownMenuItem>
                                     )}
+                                    {onToggleState && (
+                                        <DropdownMenuItem onClick={() => onToggleState(product)}>
+                                            {isActive
+                                                ? <><ToggleLeft className="mr-2 size-4" /><span>Desactivar</span></>
+                                                : <><ToggleRight className="mr-2 size-4 text-[#708C3E]" /><span className="text-[#708C3E] font-medium">Activar</span></>
+                                            }
+                                        </DropdownMenuItem>
+                                    )}
                                     {onDelete && (
                                         <DropdownMenuItem
                                             variant="destructive"
@@ -192,11 +201,11 @@ export function ProductCard({ product, onEdit, onDelete, onView, onClick }: Prod
 
                 {/* Info Section */}
                 <div className="p-2.5 pb-3">
-                    <h3 className="line-clamp-2 font-bold text-sm leading-tight text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300">
+                    <h3 className="line-clamp-2 font-bold text-sm leading-tight text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A7D878] transition-colors duration-300">
                         {product.name}
                     </h3>
 
-                    <p className="mt-1 text-sm font-extrabold text-[#708C3E] dark:text-[#A5D6A7]">
+                    <p className="mt-1 text-sm font-extrabold text-[#708C3E] dark:text-[#A7D878]">
                         ₡{product.price?.toLocaleString("es-CR", { minimumFractionDigits: 2 })}
                     </p>
                 </div>

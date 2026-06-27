@@ -137,8 +137,7 @@ export default function SalesPage() {
               <button
                 type="button"
                 onClick={() => navigate("/app")}
-                className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 transition hover:bg-gray-50
-                               dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-gray-700 dark:text-white transition hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm"
                 aria-label="Regresar"
                 title="Regresar"
               >
@@ -151,8 +150,7 @@ export default function SalesPage() {
             <button
               type="button"
               onClick={() => setShowFilters((v) => !v)}
-              className="inline-flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50
-                         dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+              className="inline-flex items-center gap-2 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-medium text-gray-700 dark:text-white transition hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm"
               aria-expanded={showFilters}
               title="Mostrar filtros"
             >
@@ -162,13 +160,12 @@ export default function SalesPage() {
           </div>
 
           {showFilters && (
-            <div className="mt-3 rounded-2xl border border-gray-200 bg-background p-3 shadow-sm dark:border-white/10">
+            <div className="mt-3 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-3">
               <div className="grid grid-cols-2 gap-2">
                 <Select value={placeFilter} onValueChange={(v) => { setPlaceFilter(v); setCurrentPage(1) }}>
                   <SelectTrigger
-                    className="w-full min-w-0 rounded-xl border border-gray-200 bg-white text-sm text-gray-900
-                              focus:ring-2 focus:ring-[#708C3E]/30
-                              dark:border-white/10 dark:bg-black/40 dark:text-white"
+                    className="w-full min-w-0 rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 text-sm text-gray-900
+                              focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
                   >
                     <SelectValue placeholder="Lugar" />
                   </SelectTrigger>
@@ -190,9 +187,8 @@ export default function SalesPage() {
                   }}
                 >
                   <SelectTrigger
-                    className="w-full min-w-0 rounded-xl border border-gray-200 bg-white text-sm text-gray-900
-                              focus:ring-2 focus:ring-[#708C3E]/30
-                              dark:border-white/10 dark:bg-black/40 dark:text-white"
+                    className="w-full min-w-0 rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 text-sm text-gray-900
+                              focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
                   >
                     <SelectValue placeholder="Período" />
                   </SelectTrigger>
@@ -225,7 +221,7 @@ export default function SalesPage() {
         <div className="mb-4 flex items-center gap-3">
           <div className="relative flex-1">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none text-gray-400 dark:text-white/40"
               size={16}
             />
 
@@ -237,10 +233,10 @@ export default function SalesPage() {
               }}
               placeholder="Buscar..."
               className="
-                w-full rounded-2xl border border-gray-200 bg-white
-                py-2 pl-9 pr-3 text-sm text-gray-900 outline-none
+                w-full rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5
+                py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none
                 focus:ring-2 focus:ring-[#708C3E]/30
-                dark:border-white/10 dark:bg-black/40 dark:text-white
+                placeholder:text-gray-400 dark:placeholder:text-white/20
               "
             />
           </div>
@@ -292,9 +288,9 @@ export default function SalesPage() {
                       type="button"
                       onClick={() => navigate(`/app/ventas/${s.idSale}`)}
                       className="
-                        w-full rounded-2xl border border-gray-200 bg-white p-4 text-left
-                        shadow-sm transition hover:bg-gray-50 hover:shadow-md
-                        dark:border-white/10 dark:bg-black/30 dark:hover:bg-black/40
+                        w-full rounded-2xl border border-border/50 bg-white/60 p-4 text-left
+                        transition hover:bg-white/80 hover:shadow-lg backdrop-blur-md
+                        dark:bg-white/5 dark:hover:bg-white/10
                       "
                     >
                       <div className="space-y-2">

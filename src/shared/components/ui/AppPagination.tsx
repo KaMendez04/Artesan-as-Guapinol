@@ -30,7 +30,7 @@ export function AppPagination({ currentPage, totalPages, onPageChange, className
       <Button
         variant="outline"
         size="icon"
-        className="size-10 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30 transition-all"
+        className="size-10 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A7D878] disabled:opacity-30 transition-all"
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
         aria-label="Página anterior"
@@ -71,7 +71,7 @@ export function AppPagination({ currentPage, totalPages, onPageChange, className
       <Button
         variant="outline"
         size="icon"
-        className="size-10 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30 transition-all"
+        className="size-10 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A7D878] disabled:opacity-30 transition-all"
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
         aria-label="Página siguiente"

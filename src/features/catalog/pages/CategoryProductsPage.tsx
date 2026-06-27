@@ -8,7 +8,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton"
 import { ProductCard } from "@/features/catalog/components/ProductCard"
 import { ProductFormDialog } from "@/features/catalog/components/ProductFormDialog"
 import { ProductDetailDialog } from "@/features/catalog/components/ProductDetailDialog"
-import { useProducts, useDeleteProduct } from "@/features/catalog/hooks/useProduct"
+import { useProducts, useDeleteProduct, useUpdateProduct } from "@/features/catalog/hooks/useProduct"
 import { useCategory } from "@/features/catalog/hooks/useCategory"
 import { sileo } from "sileo"
 import { ConfirmModal } from "@/shared/components/ui/confirm-modal"
@@ -37,7 +37,7 @@ const EMPTY_PRODUCTS: Product[] = []
         // search: search || undefined // We will paginate client-side for consistent feel in admin
     })
 
-    const filteredProducts = products.filter(p => 
+    const filteredProducts = products.filter(p =>
         p.name?.toLowerCase().includes(search.toLowerCase())
     )
 
@@ -48,6 +48,17 @@ const EMPTY_PRODUCTS: Product[] = []
     )
 
     const deleteProduct = useDeleteProduct()
+    const updateProduct = useUpdateProduct()
+
+    const handleToggleState = async (product: Product) => {
+        const newState = product.state === "active" ? "inactive" : "active"
+        try {
+            await updateProduct.mutateAsync({ id: product.idProduct, dto: { state: newState } })
+            sileo.success({ title: newState === "active" ? "Producto activado" : "Producto desactivado" })
+        } catch {
+            sileo.error({ title: "Error al cambiar el estado" })
+        }
+    }
 
     const handleAdd = () => {
         setSelectedProduct(null)
@@ -87,8 +98,7 @@ const EMPTY_PRODUCTS: Product[] = []
                 <div className="flex justify-start gap-3">
                     <button
                         type="button"
-                        className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 transition
-                                   dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                        className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-gray-700 dark:text-white hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm transition"
                         onClick={() => navigate("/app/catalogo")}
                         aria-label="Volver al catálogo"
                         title="Volver al catálogo"
@@ -104,10 +114,10 @@ const EMPTY_PRODUCTS: Product[] = []
             {/* ═══ SEARCH + ADD ═══ */}
             <div className="flex gap-3">
                 <div className="relative flex-1 max-w-sm">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40" size={16} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none text-gray-400 dark:text-white/40" size={16} />
                     <Input
                         placeholder="Buscar productos..."
-                        className="h-10 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
+                        className="h-10 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
                         value={search}
                         onChange={(e) => {
                             setSearch(e.target.value)
@@ -147,6 +157,7 @@ const EMPTY_PRODUCTS: Product[] = []
                             product={product}
                             onClick={handleEdit}
                             onEdit={handleEdit}
+                            onToggleState={handleToggleState}
                             onDelete={() => handleDeleteClick(product)}
                             onView={setViewProduct}
                         />
@@ -191,7 +202,7 @@ const EMPTY_PRODUCTS: Product[] = []
                     <Button
                         variant="outline"
                         size="icon"
-                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
+                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A7D878] disabled:opacity-30"
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                         disabled={currentPage === 1}
                     >
@@ -218,7 +229,7 @@ const EMPTY_PRODUCTS: Product[] = []
                     <Button
                         variant="outline"
                         size="icon"
-                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] disabled:opacity-30"
+                        className="size-9 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A7D878] disabled:opacity-30"
                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                         disabled={currentPage === totalPages}
                     >

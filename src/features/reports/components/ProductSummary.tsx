@@ -17,7 +17,7 @@ export function ProductSummary({ data, isLoading }: ProductSummaryProps) {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="h-[86px] animate-pulse rounded-2xl border-gray-100 bg-background dark:border-white/10" />
+          <Card key={i} className="h-[86px] animate-pulse rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md dark:border-white/10" />
         ))}
       </div>
     )
@@ -33,7 +33,7 @@ export function ProductSummary({ data, isLoading }: ProductSummaryProps) {
   const totalAmount = data.reduce((acc, product) => acc + product.total, 0)
 
   return (
-    <Card className="rounded-2xl border-gray-100 bg-background shadow-sm dark:border-white/10">
+    <Card className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md shadow-sm dark:border-white/10">
       <CardContent className="p-4 sm:p-5">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -68,7 +68,7 @@ export function ProductSummary({ data, isLoading }: ProductSummaryProps) {
                 return (
                   <div
                     key={`${prod.idCategory}-${prod.unitPrice}-${position}`}
-                    className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-background p-3 transition hover:bg-gray-50 dark:border-white/10 dark:hover:bg-white/5"
+                    className="flex items-center gap-3 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-sm p-3 transition hover:bg-white/80 dark:hover:bg-white/10"
                   >
                     <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-sm font-bold text-gray-500 dark:bg-white/5 dark:text-white/55">
                       {position}

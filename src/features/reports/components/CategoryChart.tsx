@@ -51,7 +51,7 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="col-span-1 lg:col-span-3 rounded-2xl border border-[#708C3E]/10 bg-background dark:border-white/10 shadow-sm h-[350px] flex items-center justify-center">
+      <Card className="col-span-1 lg:col-span-3 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md h-[350px] flex items-center justify-center">
         <div className="animate-pulse text-[#708C3E] dark:text-[#B8D99A] font-medium">Cargando gráfico...</div>
       </Card>
     )
@@ -68,7 +68,7 @@ export function CategoryChart({ data, isLoading }: CategoryChartProps) {
   }
 
   return (
-    <Card className="col-span-1 lg:col-span-3 rounded-2xl border border-[#708C3E]/10 bg-background dark:border-white/10 shadow-sm overflow-hidden min-h-[420px]">
+    <Card className="col-span-1 lg:col-span-3 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md overflow-hidden min-h-[420px]">
       <CardHeader className="pb-0">
         <CardTitle className="text-base font-semibold text-[#2E261F] dark:text-[#F5F3EC]">
           Categorías que más venden

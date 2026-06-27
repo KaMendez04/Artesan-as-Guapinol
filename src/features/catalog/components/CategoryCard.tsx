@@ -60,7 +60,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
                     )}
 
                     {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#2E7D32]/70 via-[#2E7D32]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#6FA36A]/70 via-[#6FA36A]/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                     {/* Hover CTA */}
                     <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between p-4 opacity-0 transition duration-300 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100">
@@ -75,7 +75,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
 
                 {/* Info */}
                 <div className="p-4 text-center">
-                    <h3 className="font-bold text-[#5D4037] group-hover:text-[#2E7D32] transition-colors duration-300">
+                    <h3 className="font-bold text-[#5D4037] group-hover:text-[#6FA36A] transition-colors duration-300">
                         {category.name ?? "Sin nombre"}
                     </h3>
                     <p className="mt-0.5 text-xs font-medium text-[#5D4037]/60">
@@ -91,7 +91,7 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
         <div
             role={onClick ? "button" : undefined}
             tabIndex={onClick ? 0 : undefined}
-            className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 shadow-sm ring-1 ring-[#E8E5D8] dark:ring-zinc-700 transition duration-300 hover:shadow-lg hover:shadow-[#5D4037]/5 dark:hover:shadow-black/20 hover:ring-[#708C3E]/40 ${
+            className={`group relative overflow-hidden rounded-2xl bg-white/60 dark:bg-white/5 border border-border/50 backdrop-blur-sm transition duration-300 hover:shadow-lg hover:bg-white/80 dark:hover:bg-white/10 ${
                 !isActive ? "opacity-60" : ""
             } ${onClick ? "cursor-pointer" : ""}`}
             onClick={() => onClick?.(category)}
@@ -136,13 +136,13 @@ export function CategoryCard({ category, onEdit, onShare, onClick }: CategoryCar
             <CardContent className="p-3">
                 <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <h3 className="line-clamp-2 font-bold text-xs sm:text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A5D6A7] transition-colors duration-300 break-words">
+                        <h3 className="line-clamp-2 font-bold text-xs sm:text-sm text-gray-900 dark:text-gray-100 group-hover:text-[#708C3E] dark:group-hover:text-[#A7D878] transition-colors duration-300 break-words">
                             {category.name ?? "Sin nombre"}
                         </h3>
                         <Badge
                             className={`mt-1 text-[0.625rem] font-semibold border-0 ${
                                 isActive
-                                    ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
+                                    ? "bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A7D878]"
                                     : "bg-[#5D4037]/10 text-[#5D4037]/60 dark:bg-zinc-700 dark:text-zinc-400"
                             }`}
                         >

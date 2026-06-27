@@ -327,7 +327,7 @@ export function EditSaleLineDialog({ open, onClose, idSale, categories, line }: 
                 type="button"
                 onClick={handleDelete}
                 disabled={deleting}
-                className="rounded-2xl bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-medium py-2.5 transition"
+                className="rounded-2xl bg-destructive hover:bg-destructive/85 disabled:opacity-60 text-white font-medium py-2.5 transition"
               >
                 Sí, aceptar
               </button>

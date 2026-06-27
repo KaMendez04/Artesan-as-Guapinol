@@ -139,7 +139,7 @@ export default function PublicCatalogPage() {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="shrink-0 gap-1.5 rounded-full border-[#E8E5D8] text-[#5D4037]/70 hover:bg-white hover:text-[#2E7D32] hover:border-[#708C3E]/40"
+                                className="shrink-0 gap-1.5 rounded-full border-[#E8E5D8] text-[#5D4037]/70 hover:bg-white hover:text-[#6FA36A] hover:border-[#708C3E]/40"
                                 onClick={() => navigate(`/v/${token}`)}
                             >
                                 <ArrowLeft className="size-4" />
@@ -203,7 +203,7 @@ export default function PublicCatalogPage() {
                             {search && (
                                 <Button
                                     variant="outline"
-                                    className="mt-5 rounded-full border-[#708C3E]/30 text-[#2E7D32] hover:bg-[#708C3E]/5"
+                                    className="mt-5 rounded-full border-[#708C3E]/30 text-[#6FA36A] hover:bg-[#708C3E]/5"
                                     onClick={() => setSearch("")}
                             >
                                 Limpiar búsqueda
@@ -235,7 +235,7 @@ export default function PublicCatalogPage() {
                                     <Button
                                         variant="outline"
                                         size="icon"
-                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
+                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#6FA36A] hover:border-[#708C3E]/40 disabled:opacity-30"
                                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                         disabled={currentPage === 1}
                                     >
@@ -260,7 +260,7 @@ export default function PublicCatalogPage() {
                                     <Button
                                         variant="outline"
                                         size="icon"
-                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
+                                        className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#6FA36A] hover:border-[#708C3E]/40 disabled:opacity-30"
                                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                         disabled={currentPage === totalPages}
                                     >
@@ -291,7 +291,7 @@ export default function PublicCatalogPage() {
                                 {search && (
                                     <Button
                                         variant="outline"
-                                        className="mt-5 rounded-full border-[#708C3E]/30 text-[#2E7D32] hover:bg-[#708C3E]/5"
+                                        className="mt-5 rounded-full border-[#708C3E]/30 text-[#6FA36A] hover:bg-[#708C3E]/5"
                                         onClick={() => setSearch("")}
                                     >
                                         Limpiar búsqueda
@@ -323,7 +323,7 @@ export default function PublicCatalogPage() {
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
+                                            className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#6FA36A] hover:border-[#708C3E]/40 disabled:opacity-30"
                                             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                             disabled={currentPage === 1}
                                         >
@@ -348,7 +348,7 @@ export default function PublicCatalogPage() {
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#2E7D32] hover:border-[#708C3E]/40 disabled:opacity-30"
+                                            className="size-9 rounded-full border-[#E8E5D8] text-[#5D4037]/60 hover:text-[#6FA36A] hover:border-[#708C3E]/40 disabled:opacity-30"
                                             onClick={() => setCurrentPage(p => Math.min(totalPagesCats, p + 1))}
                                             disabled={currentPage === totalPagesCats}
                                         >

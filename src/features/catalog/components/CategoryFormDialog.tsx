@@ -120,7 +120,7 @@ export function CategoryFormDialog({ open, onClose, category }: CategoryFormDial
                                     onClick={() => setState(s)}
                                     className={`flex-1 rounded-2xl border py-2.5 text-sm font-semibold transition-all duration-200 ${state === s
                                         ? s === "active"
-                                            ? "border-[#708C3E] bg-[#708C3E]/10 text-[#708C3E] ring-1 ring-[#708C3E]/30 dark:bg-[#708C3E]/20 dark:text-[#A5D6A7]"
+                                            ? "border-[#708C3E] bg-[#708C3E]/10 text-[#708C3E] ring-1 ring-[#708C3E]/30 dark:bg-[#708C3E]/20 dark:text-[#A7D878]"
                                             : "border-gray-300 bg-gray-100 text-gray-600 dark:border-zinc-600 dark:bg-zinc-700/50 dark:text-gray-300"
                                         : "border-gray-200 bg-white text-gray-400 hover:bg-gray-50 dark:border-white/10 dark:bg-black/30 dark:text-gray-500 dark:hover:bg-black/40"
                                         }`}

@@ -83,7 +83,7 @@
   --sileo-state-success: oklch(0.576 0.135 131.5); /* #708C3E */
   --sileo-state-error: oklch(0.637 0.237 25.331);
   --sileo-state-warning: oklch(0.795 0.184 86.047);
-  --sileo-state-info: oklch(0.685 0.169 237.323);
+  --sileo-state-info: #CF7534;
 
   /* Safe Area Insets for Mobile */
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
@@ -127,7 +127,7 @@
   --sileo-state-success: oklch(0.65 0.14 131.5); /* lighter #708C3E for dark bg */
   --sileo-state-error: oklch(0.704 0.191 22.216);
   --sileo-state-warning: oklch(0.828 0.189 84.429);
-  --sileo-state-info: oklch(0.72 0.15 237.323);
+  --sileo-state-info: #F0A94A;
 }
 
 @layer base {

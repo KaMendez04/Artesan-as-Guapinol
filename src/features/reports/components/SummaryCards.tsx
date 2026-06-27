@@ -43,7 +43,7 @@ export function SummaryCards({ totalSales, averageSale, maxSale, isLoading }: Su
     return (
       <div className="grid gap-3 sm:grid-cols-3">
         {[...Array(3)].map((_, i) => (
-          <Card key={i} className="animate-pulse rounded-2xl border-gray-100 dark:border-white/5 bg-background">
+          <Card key={i} className="animate-pulse rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md">
             <CardContent className="flex items-center justify-center gap-4 p-4">
               <div className="h-10 w-10 shrink-0 bg-gray-200 dark:bg-white/10 rounded-xl" />
               <div className="min-w-0 flex-1 space-y-2">
@@ -62,7 +62,7 @@ export function SummaryCards({ totalSales, averageSale, maxSale, isLoading }: Su
       {stats.map((stat) => (
         <Card 
           key={stat.title} 
-          className="rounded-2xl border-gray-100 bg-background shadow-sm dark:border-white/10 overflow-hidden"
+          className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md overflow-hidden"
         >
           <CardContent className="flex items-center justify-center gap-4 p-4">
             <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${stat.bg}`}>

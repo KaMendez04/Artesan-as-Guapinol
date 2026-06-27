@@ -31,7 +31,7 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="col-span-1 lg:col-span-4 h-[250px] sm:h-[300px] animate-pulse rounded-2xl border-[#708C3E]/10 bg-background dark:border-white/10">
+      <Card className="col-span-1 lg:col-span-4 h-[250px] sm:h-[300px] animate-pulse rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md">
         <CardHeader className="py-3 px-4">
           <div className="h-5 w-32 bg-[#E7E0D4] dark:bg-white/10 rounded" />
         </CardHeader>
@@ -41,7 +41,7 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
   }
 
   return (
-    <Card className="col-span-1 lg:col-span-4 transition-all duration-300 hover:shadow-md rounded-2xl border-[#708C3E]/10 bg-background dark:border-white/10 shadow-sm overflow-hidden">
+    <Card className="col-span-1 lg:col-span-4 transition-all duration-300 hover:shadow-md rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md shadow-sm overflow-hidden">
       <CardHeader className="py-3 px-4">
         <CardTitle className="text-base font-semibold text-[#2E261F] dark:text-[#F5F3EC]">
           Ventas por día

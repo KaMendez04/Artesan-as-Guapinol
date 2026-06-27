@@ -25,7 +25,7 @@ export default function ReportsPage() {
         <button
           type="button"
           onClick={() => navigate("/app")}
-          className="rounded-2xl border border-gray-200 bg-background px-3 py-2 text-gray-700 transition hover:bg-gray-50 dark:border-white/10 dark:text-white dark:hover:bg-white/5"
+          className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-gray-700 dark:text-white hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm transition"
           aria-label="Regresar"
           title="Regresar"
         >

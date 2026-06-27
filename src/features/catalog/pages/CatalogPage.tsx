@@ -60,7 +60,7 @@ const EMPTY_CATEGORIES: Category[] = []
             }
             const url = `${APP_CONFIG.PROD_URL}/v/${share.id}`
             await navigator.clipboard.writeText(url)
-            sileo.info({ title: "Enlace copiado" })
+            sileo.success({ title: "Enlace copiado" })
             setCopied(true)
             setTimeout(() => setCopied(false), 2000)
         } catch {
@@ -76,7 +76,7 @@ const EMPTY_CATEGORIES: Category[] = []
             })
             const url = `${APP_CONFIG.PROD_URL}/v/${share.id}`
             await navigator.clipboard.writeText(url)
-            sileo.info({ title: "Enlace de categoría copiado" })
+            sileo.success({ title: "Enlace de categoría copiado" })
         } catch {
             sileo.error({ title: "Error", description: "No se pudo generar el enlace de la categoría" })
         }
@@ -89,21 +89,20 @@ const EMPTY_CATEGORIES: Category[] = []
                     <button
                         type="button"
                         onClick={() => navigate("/app")}
-                        className="rounded-2xl border border-gray-200 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 transition
-                                   dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/40"
+                        className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-gray-700 dark:text-white hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm transition"
                         aria-label="Regresar"
                         title="Regresar"
                     >
                         <ArrowLeft className="size-5" />
                     </button>
-                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Catálogo</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Catálogo</h1>
                 </div>
 
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={handleShareLink}
-                    className="gap-1.5 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A5D6A7] transition-colors"
+                    className="gap-1.5 rounded-full border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-[#708C3E]/10 hover:text-[#708C3E] dark:hover:text-[#A7D878] transition-colors"
                     disabled={isSharing}
                 >
                     <Link2 className="size-4" />
@@ -114,10 +113,10 @@ const EMPTY_CATEGORIES: Category[] = []
             {/* ═══ SEARCH + ADD ═══ */}
             <div className="flex gap-3">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/40" size={16} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none text-gray-400 dark:text-white/40" size={16} />
                     <Input
                         id="catalog-search"
-                        className="h-10 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
+                        className="h-10 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
                         placeholder="Buscar categoría…"
                         value={search}
                         onChange={(e) => {

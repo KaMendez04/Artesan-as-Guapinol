@@ -39,7 +39,7 @@ export function ReportFilters({ filters, onFiltersChange }: ReportFiltersProps) 
   }
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-background p-3 shadow-sm dark:border-white/10">
+    <div className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-3">
       <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-white/35">

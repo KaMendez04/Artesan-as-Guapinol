@@ -23,11 +23,15 @@ export default function SettingsPage() {
   const avatarUrl = useProfileStore((state) => state.avatarUrl)
   const setAvatarUrl = useProfileStore((state) => state.setAvatarUrl)
   const resetAvatarUrl = useProfileStore((state) => state.resetAvatarUrl)
+  const whatsappPhone = useProfileStore((state) => state.whatsappPhone)
+  const setWhatsappPhone = useProfileStore((state) => state.setWhatsappPhone)
 
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isCreatingUser, setIsCreatingUser] = useState(false)
+  const [whatsappInput, setWhatsappInput] = useState(whatsappPhone)
+  const [isSavingPhone, setIsSavingPhone] = useState(false)
   const [activeTab, setActiveTab] = useState<"users" | "passwords">("users")
 
   const resolvedAvatarUrl = avatarUrl ?? DEFAULT_AVATAR_URL
@@ -55,6 +59,28 @@ export default function SettingsPage() {
         title: "No se pudo cargar",
         description: error instanceof Error ? error.message : "Intenta con otra imagen.",
       })
+    }
+  }
+
+  const handleSaveWhatsApp = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const phone = whatsappInput.trim().replace(/\D/g, "")
+    if (!phone) {
+      sileo.error({ title: "Número inválido" })
+      return
+    }
+    setIsSavingPhone(true)
+    try {
+      setWhatsappPhone(phone)
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from("profiles").update({ whatsapp_phone: phone }).eq("id", user.id)
+      }
+      sileo.success({ title: "Número guardado" })
+    } catch {
+      sileo.error({ title: "No se pudo guardar en el servidor" })
+    } finally {
+      setIsSavingPhone(false)
     }
   }
 
@@ -122,7 +148,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="rounded-2xl border border-gray-200 bg-background px-3 py-2 text-gray-700 transition hover:bg-gray-50 dark:border-white/10 dark:text-white dark:hover:bg-white/5"
+          className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 py-2 text-gray-700 transition hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
           aria-label="Regresar"
           title="Regresar"
         >
@@ -159,10 +185,10 @@ export default function SettingsPage() {
 
       {activeTab === "users" ? (
         <>
-          <section className="rounded-2xl border border-gray-200 bg-background p-4 dark:border-white/10 sm:p-5">
+          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4 sm:p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
-                <div className="size-20 overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm dark:border-white/10">
+                <div className="size-20 overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm">
                   <img
                     src={resolvedAvatarUrl}
                     alt="Foto de perfil"
@@ -201,7 +227,7 @@ export default function SettingsPage() {
                     sileo.info({ title: "Foto restaurada" })
                   }}
                   disabled={!hasCustomAvatar}
-                  className="inline-flex items-center justify-center rounded-2xl border border-gray-200 bg-background px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-40 dark:border-white/10 dark:text-white dark:hover:bg-white/5"
+                  className="inline-flex items-center justify-center rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-40 dark:text-white dark:hover:bg-white/5"
                   aria-label="Restaurar logo"
                   title="Restaurar logo"
                 >
@@ -211,7 +237,29 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-gray-200 bg-background p-4 dark:border-white/10 sm:p-5">
+          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-white/35">Número de WhatsApp del catálogo</p>
+            <form className="flex items-center gap-2" onSubmit={handleSaveWhatsApp}>
+              <span className="text-sm text-gray-400 dark:text-white/35">+506</span>
+              <input
+                value={whatsappInput}
+                onChange={(e) => setWhatsappInput(e.target.value.replace(/\D/g, ""))}
+                placeholder="84131678"
+                maxLength={8}
+                inputMode="numeric"
+                className="h-9 flex-1 rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
+              />
+              <button
+                type="submit"
+                disabled={isSavingPhone}
+                className="h-9 rounded-xl bg-[#708C3E] px-3 text-sm font-semibold text-white transition hover:bg-[#5f7634] disabled:opacity-60"
+              >
+                {isSavingPhone ? "..." : "Guardar"}
+              </button>
+            </form>
+          </section>
+
+          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4 sm:p-5">
             <div className="mb-4 flex items-center gap-3">
               <div className="flex size-10 items-center justify-center rounded-xl bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A7D878]">
                 <Users className="size-5" />
@@ -227,7 +275,7 @@ export default function SettingsPage() {
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
                 placeholder="Nombre completo"
-                className="h-11 rounded-2xl border border-gray-200 bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:border-white/10 dark:text-white"
+                className="h-11 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
               />
 
               <div className="grid gap-3 sm:grid-cols-2">
@@ -236,14 +284,14 @@ export default function SettingsPage() {
                   onChange={(event) => setEmail(event.target.value)}
                   type="email"
                   placeholder="Correo"
-                  className="h-11 rounded-2xl border border-gray-200 bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:border-white/10 dark:text-white"
+                  className="h-11 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
                 />
                 <input
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   type="password"
                   placeholder="Contraseña"
-                  className="h-11 rounded-2xl border border-gray-200 bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:border-white/10 dark:text-white"
+                  className="h-11 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
                 />
               </div>
 
@@ -263,7 +311,7 @@ export default function SettingsPage() {
         </>
       ) : (
         <section className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-dashed border-gray-200 bg-background p-4 dark:border-white/10 sm:p-5">
+          <div className="rounded-2xl border border-dashed border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4 sm:p-5">
             <Mail className="size-5 text-gray-400 dark:text-white/40" />
             <h2 className="mt-3 text-base font-semibold">Cambio de correo</h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-white/55">
@@ -271,7 +319,7 @@ export default function SettingsPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-dashed border-gray-200 bg-background p-4 dark:border-white/10 sm:p-5">
+          <div className="rounded-2xl border border-dashed border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4 sm:p-5">
             <LockKeyhole className="size-5 text-gray-400 dark:text-white/40" />
             <h2 className="mt-3 text-base font-semibold">Cambio de contraseña</h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-white/55">
