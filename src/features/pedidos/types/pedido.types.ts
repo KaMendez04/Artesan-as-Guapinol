@@ -1,4 +1,4 @@
-export type PedidoEstado = "pendiente" | "en_proceso" | "terminado" | "entregado" | "cancelado"
+export type PedidoEstado = "en_proceso" | "terminado" | "entregado" | "cancelado"
 
 export interface Pedido {
     id_pedido: string
@@ -9,7 +9,6 @@ export interface Pedido {
     estado: PedidoEstado
     nombre_cliente: string | null
     precio_estimado: number | null
-    notas: string | null
 }
 
 export interface CreatePedidoDto {
@@ -19,7 +18,6 @@ export interface CreatePedidoDto {
     estado?: PedidoEstado
     nombre_cliente?: string | null
     precio_estimado?: number | null
-    notas?: string | null
 }
 
 export interface UpdatePedidoDto {
@@ -29,7 +27,6 @@ export interface UpdatePedidoDto {
     estado?: PedidoEstado
     nombre_cliente?: string | null
     precio_estimado?: number | null
-    notas?: string | null
 }
 
 export interface PedidoFilters {

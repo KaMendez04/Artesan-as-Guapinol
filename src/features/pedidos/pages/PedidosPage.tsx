@@ -192,27 +192,23 @@ export default function PedidosPage() {
                             {estadoKeys.map((s) => {
                                 const count = pedidos.filter((p) => p.estado === s).length
                                 const isActive = estadoFilter === s
-                                const activeColor =
-                                    s === "pendiente"  ? "border-[#E9A03B] bg-[#E9A03B] text-white" :
-                                    s === "en_proceso" ? "border-[#CF7534] bg-[#CF7534] text-white" :
-                                    s === "terminado"  ? "border-[#6FA36A] bg-[#6FA36A] text-white" :
-                                    s === "entregado"  ? "border-[#708C3E] bg-[#708C3E] text-white" :
-                                                         "border-gray-400 bg-gray-400 text-white"
+                                const colors =
+                                    s === "pendiente"  ? { idle: "border-[#E9A03B]/40 bg-[#E9A03B]/15 text-[#E9A03B]",        active: "border-[#E9A03B] bg-[#E9A03B] text-white" } :
+                                    s === "en_proceso" ? { idle: "border-[#CF7534]/40 bg-[#CF7534]/15 text-[#CF7534]",        active: "border-[#CF7534] bg-[#CF7534] text-white" } :
+                                    s === "terminado"  ? { idle: "border-[#6FA36A]/40 bg-[#6FA36A]/15 text-[#6FA36A]",        active: "border-[#6FA36A] bg-[#6FA36A] text-white" } :
+                                    s === "entregado"  ? { idle: "border-[#708C3E]/40 bg-[#708C3E]/15 text-[#708C3E]",        active: "border-[#708C3E] bg-[#708C3E] text-white" } :
+                                                         { idle: "border-gray-300 bg-gray-100 text-gray-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-400", active: "border-gray-400 bg-gray-400 text-white" }
                                 return (
                                     <button
                                         key={s}
                                         type="button"
                                         onClick={() => handleFilterChange(s)}
-                                        className={`rounded-xl border px-3 py-1.5 text-xs font-semibold transition flex items-center gap-1.5 ${
-                                            isActive
-                                                ? activeColor
-                                                : "border-border/50 bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-white/80 dark:hover:bg-white/10"
-                                        }`}
+                                        className={`rounded-xl border px-3 py-1.5 text-xs font-semibold transition flex items-center gap-1.5 ${isActive ? colors.active : colors.idle}`}
                                     >
                                         {estadoConfig[s].label}
                                         {count > 0 && (
                                             <span className={`rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold ${
-                                                isActive ? "bg-white/25" : "bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400"
+                                                isActive ? "bg-white/25 text-white" : "bg-white/60 dark:bg-black/20"
                                             }`}>
                                                 {count}
                                             </span>

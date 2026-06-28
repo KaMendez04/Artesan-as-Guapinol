@@ -16,7 +16,6 @@ import {
     schedulePedidoNotifications,
     cancelPedidoNotifications,
 } from "@/features/pedidos/services/pedido-notifications"
-import { estadoConfig } from "./PedidoStatusBadge"
 import type { Pedido, PedidoEstado } from "@/features/pedidos/types/pedido.types"
 
 interface PedidoFormDialogProps {
@@ -35,8 +34,7 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
     const [precioEstimado, setPrecioEstimado] = useState<string>(
         pedido?.precio_estimado != null ? String(pedido.precio_estimado) : ""
     )
-    const [estado, setEstado] = useState<PedidoEstado>(pedido?.estado ?? "pendiente")
-    const [notas, setNotas] = useState(pedido?.notas ?? "")
+    const [estado, setEstado] = useState<PedidoEstado>(pedido?.estado ?? "en_proceso")
 
     const { mutate: create, isPending: creating } = useCreatePedido()
     const { mutate: update, isPending: updating } = useUpdatePedido()
@@ -54,7 +52,6 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
             fecha_entrega: fechaEntrega || null,
             precio_estimado: precioEstimado ? Number(precioEstimado) : null,
             estado,
-            notas: notas.trim() || null,
         }
 
         if (isEditing && pedido) {
@@ -92,8 +89,6 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
             })
         }
     }
-
-    const estadoKeys = Object.keys(estadoConfig) as PedidoEstado[]
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -188,47 +183,6 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
                                 className="h-auto py-2.5 rounded-2xl border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 pl-7 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20 focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all"
                             />
                         </div>
-                    </div>
-
-                    {/* Estado */}
-                    <div className="flex flex-col gap-1.5">
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Estado</span>
-                        <div className="flex flex-wrap gap-2">
-                            {estadoKeys.map((s) => (
-                                <button
-                                    key={s}
-                                    type="button"
-                                    onClick={() => setEstado(s)}
-                                    className={`shrink-0 rounded-2xl border py-2 px-3 text-xs font-semibold transition-all duration-200 ${
-                                        estado === s
-                                            ? s === "pendiente"  ? "border-amber-400 bg-amber-50 text-amber-700 ring-1 ring-amber-300 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-600"
-                                            : s === "en_proceso" ? "border-blue-400 bg-blue-50 text-blue-700 ring-1 ring-blue-300 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-600"
-                                            : s === "terminado"  ? "border-emerald-400 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-300 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-600"
-                                            : s === "entregado"  ? "border-[#708C3E] bg-[#708C3E]/10 text-[#708C3E] ring-1 ring-[#708C3E]/30 dark:bg-[#708C3E]/20 dark:text-[#A7D878]"
-                                            : "border-gray-300 bg-gray-100 text-gray-500 ring-1 ring-gray-200 dark:bg-zinc-700/50 dark:text-zinc-400 dark:border-zinc-600"
-                                            : "border-gray-200 bg-white text-gray-400 hover:bg-gray-50 dark:border-white/10 dark:bg-black/30 dark:text-gray-500 dark:hover:bg-black/40"
-                                    }`}
-                                >
-                                    {estadoConfig[s].label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Notas internas */}
-                    <div className="flex flex-col gap-1.5">
-                        <div className="flex items-baseline justify-between">
-                            <label htmlFor="ped-notas" className="text-sm font-semibold text-gray-700 dark:text-gray-300">Notas</label>
-                            <span className="text-xs text-gray-400">opcional</span>
-                        </div>
-                        <textarea
-                            id="ped-notas"
-                            value={notas}
-                            onChange={(e) => setNotas(e.target.value)}
-                            placeholder="Detalles adicionales…"
-                            rows={2}
-                            className="w-full resize-none rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 px-3 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20 outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all"
-                        />
                     </div>
 
                     <DialogFooter className="gap-2 pt-2">

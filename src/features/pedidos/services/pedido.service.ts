@@ -7,7 +7,7 @@ import type {
 } from "@/features/pedidos/types/pedido.types"
 
 const TABLE = "Pedidos" as const
-const SELECT = "id_pedido, created_at, descripcion, imagen_referencia, fecha_entrega, estado, nombre_cliente, precio_estimado, notas"
+const SELECT = "id_pedido, created_at, descripcion, imagen_referencia, fecha_entrega, estado, nombre_cliente, precio_estimado"
 
 export async function getPedidos(filters?: PedidoFilters): Promise<Pedido[]> {
     let query = supabase
@@ -48,10 +48,9 @@ export async function createPedido(dto: CreatePedidoDto): Promise<Pedido> {
             descripcion: dto.descripcion,
             imagen_referencia: dto.imagen_referencia ?? null,
             fecha_entrega: dto.fecha_entrega ?? null,
-            estado: dto.estado ?? "pendiente",
+            estado: dto.estado ?? "en_proceso",
             nombre_cliente: dto.nombre_cliente ?? null,
             precio_estimado: dto.precio_estimado ?? null,
-            notas: dto.notas ?? null,
         }])
         .select(SELECT)
         .single()

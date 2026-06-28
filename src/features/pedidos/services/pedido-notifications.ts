@@ -2,10 +2,9 @@ import { Capacitor } from "@capacitor/core"
 import { LocalNotifications } from "@capacitor/local-notifications"
 import type { Pedido, PedidoEstado } from "@/features/pedidos/types/pedido.types"
 
-const ACTIVE_STATES: PedidoEstado[] = ["pendiente", "en_proceso", "terminado"]
+const ACTIVE_STATES: PedidoEstado[] = ["en_proceso", "terminado"]
 
-// Notifs por pedido: d0=día entrega, d1=1 día antes, d2=2 días antes, d3=3 días antes, pend=recordatorio pendiente
-const SLOTS = ["d0", "d1", "d2", "d3", "pend"] as const
+const SLOTS = ["d0", "d1", "d2", "d3"] as const
 
 function hashStr(str: string): number {
     let h = 0
@@ -84,26 +83,6 @@ export async function schedulePedidoNotifications(pedido: Pedido): Promise<void>
                     schedule: { at, allowWhileIdle: true },
                 })
             }
-        }
-    }
-
-    // ── Recordatorio de pendiente (4 días después de created_at) ─────────
-    if (pedido.estado === "pendiente") {
-        const createdAt = new Date(pedido.created_at)
-        const remindAt = new Date(createdAt)
-        remindAt.setDate(remindAt.getDate() + 4)
-        remindAt.setHours(8, 0, 0, 0)
-        if (remindAt > now) {
-            toSchedule.push({
-                id: notifId(pedido.id_pedido, "pend"),
-                title: `Pedido pendiente sin comenzar${clienteStr}`,
-                body: desc,
-                channelId: "pedidos",
-                smallIcon: "ic_stat_notify",
-                iconColor: "#708C3E",
-                extra: { id_pedido: pedido.id_pedido },
-                schedule: { at: remindAt, allowWhileIdle: true },
-            })
         }
     }
 

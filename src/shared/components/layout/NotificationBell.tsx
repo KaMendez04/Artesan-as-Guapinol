@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Bell, ClipboardList, ArrowRight, X } from "lucide-react"
+import { Bell, ClipboardList, ArrowRight, X, Trash2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { differenceInCalendarDays } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover"
@@ -22,7 +22,6 @@ function getUrgency(p: Pedido): Urgency | null {
         if (days <= 1) return "high"
         if (days <= 5) return "medium"
     }
-    if (p.estado === "pendiente") return "medium"
     return null
 }
 
@@ -54,11 +53,7 @@ export function NotificationBell() {
     const highCount = alerts.filter((x) => x.urgency === "high").length
     const totalCount = alerts.length
 
-    const badgeColor = highCount > 0
-        ? "bg-[#CF7534]"
-        : totalCount > 0
-        ? "bg-[#E9A03B]"
-        : null
+    const badgeColor = totalCount > 0 ? "bg-gray-400 dark:bg-gray-500" : null
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -89,16 +84,17 @@ export function NotificationBell() {
                     <div className="flex items-center gap-2">
                         <Bell className="size-4 text-[#708C3E]" />
                         <span className="text-sm font-bold text-gray-900 dark:text-white">
-                            Pedidos pendientes
+                            Pedidos
                         </span>
                     </div>
                     {alerts.length > 0 && (
                         <button
                             type="button"
                             onClick={handleDismissAll}
-                            className="text-xs font-semibold text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                            aria-label="Limpiar todo"
                         >
-                            Limpiar todo
+                            <Trash2 className="size-4" />
                         </button>
                     )}
                 </div>
@@ -138,9 +134,6 @@ export function NotificationBell() {
                                     key={pedido.id_pedido}
                                     className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item"
                                 >
-                                    {/* Urgency dot */}
-                                    <span className={`mt-1.5 size-2 rounded-full shrink-0 ${urgency === "high" ? "bg-[#CF7534]" : "bg-[#E9A03B]"}`} />
-
                                     <div
                                         className="min-w-0 flex-1 cursor-pointer"
                                         onClick={() => {
@@ -149,21 +142,16 @@ export function NotificationBell() {
                                         }}
                                     >
                                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 line-clamp-1">
-                                            {pedido.descripcion}
+                                            {pedido.nombre_cliente ?? pedido.descripcion}
                                         </p>
-                                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                             <PedidoStatusBadge estado={pedido.estado} />
                                             {dueLine && (
-                                                <span className={`text-[0.65rem] font-semibold ${urgency === "high" ? "text-[#CF7534]" : "text-[#E9A03B]"}`}>
+                                                <span className="text-[0.65rem] font-semibold text-gray-400 dark:text-gray-500">
                                                     {dueLine}
                                                 </span>
                                             )}
                                         </div>
-                                        {pedido.nombre_cliente && (
-                                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">
-                                                {pedido.nombre_cliente}
-                                            </p>
-                                        )}
                                     </div>
 
                                     <button
@@ -190,7 +178,7 @@ export function NotificationBell() {
                         }}
                         className="flex w-full items-center justify-center gap-1.5 text-sm font-semibold text-[#708C3E] hover:text-[#5E7634] transition-colors py-1"
                     >
-                        Ver todos los pedidos
+                        Ver todos
                         <ArrowRight className="size-4" />
                     </button>
                 </div>

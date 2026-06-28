@@ -6,7 +6,7 @@ import {
     DialogTitle,
 } from "@/shared/components/ui/dialog"
 import { ConfirmModal } from "@/shared/components/ui/confirm-modal"
-import { Banknote, Calendar, FileText, Pencil, Trash2, User, X } from "lucide-react"
+import { Banknote, Calendar, Pencil, Trash2, User, X } from "lucide-react"
 import { PedidoStatusBadge } from "./PedidoStatusBadge"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
 import { format } from "date-fns"
@@ -149,21 +149,6 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
                                     </div>
                                 </div>
                             )}
-                        </div>
-                    )}
-
-                    {/* Notas */}
-                    {pedido.notas && (
-                        <div className="flex flex-col gap-1.5">
-                            <div className="flex items-center gap-1.5">
-                                <FileText className="size-3.5 text-gray-400" />
-                                <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">Notas</p>
-                            </div>
-                            <div className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-4 py-3">
-                                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-                                    {pedido.notas}
-                                </p>
-                            </div>
                         </div>
                     )}
 
