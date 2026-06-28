@@ -1,112 +1,129 @@
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis,
+  CartesianGrid, Tooltip,
+} from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { useTheme } from "@/shared/components/theme-provider"
-import type { ChartDataPoint } from "../types/reports.types"
+import type { FlowChartPoint } from "../types/reports.types"
 
 interface SalesChartProps {
-  data: ChartDataPoint[]
+  data: FlowChartPoint[]
   mode: "week" | "month"
   isLoading?: boolean
 }
 
+const fmt = (v: number) =>
+  new Intl.NumberFormat("es-CR", { style: "currency", currency: "CRC", maximumFractionDigits: 0 }).format(v)
+
 export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
   const { theme } = useTheme()
-  const resolvedTheme = theme === "system" 
-    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    : theme
+  const isDark = theme === "system"
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : theme === "dark"
 
-  const isDark = resolvedTheme === "dark"
-  const primaryColor = isDark ? "#A7D878" : "#6FA36A"
-  const textColor = isDark ? "#F5F3EC" : "#2E261F"
-  const mutedTextColor = isDark ? "rgba(245,243,236,0.58)" : "rgba(46,38,31,0.56)"
-  const gridColor = isDark ? "rgba(245,243,236,0.08)" : "rgba(112,140,62,0.12)"
-  const tooltipBackground = isDark ? "rgba(31, 27, 23, 0.96)" : "rgba(255, 252, 246, 0.98)"
+  const incomeColor  = isDark ? "#A7D878" : "#6FA36A"
+  const expenseColor = isDark ? "#F0A94A" : "#E9A03B"
+  const gridColor    = isDark ? "rgba(245,243,236,0.08)" : "rgba(112,140,62,0.12)"
+  const tickColor    = isDark ? "rgba(245,243,236,0.45)" : "rgba(46,38,31,0.45)"
+  const tooltipBg    = isDark ? "rgba(31,27,23,0.96)" : "rgba(255,252,246,0.98)"
   const tooltipBorder = isDark ? "rgba(245,243,236,0.12)" : "rgba(112,140,62,0.16)"
-
-  const formatCurrency = (value: number) => 
-    new Intl.NumberFormat("es-CR", { style: "currency", currency: "CRC", maximumFractionDigits: 0 }).format(value)
-
-  const filteredData = data.filter(d => d.total > 0)
-  const chartData = filteredData.length > 0 ? filteredData : data.slice(-7) // Fallback to last 7 if empty
+  const tooltipText  = isDark ? "#F5F3EC" : "#2E261F"
 
   if (isLoading) {
     return (
-      <Card className="col-span-1 lg:col-span-4 h-[250px] sm:h-[300px] animate-pulse rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md">
+      <Card className="h-[260px] animate-pulse rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md">
         <CardHeader className="py-3 px-4">
-          <div className="h-5 w-32 bg-[#E7E0D4] dark:bg-white/10 rounded" />
+          <div className="h-4 w-28 rounded bg-gray-200 dark:bg-white/10" />
         </CardHeader>
-        <CardContent className="h-[150px] sm:h-[200px] bg-[#F1EBDD] dark:bg-white/5 rounded-xl m-4" />
+        <CardContent className="m-4 h-[160px] rounded-xl bg-gray-100 dark:bg-white/5" />
       </Card>
     )
   }
 
+  const hasData = data.some(d => d.income > 0 || d.expenses > 0)
+
   return (
-    <Card className="col-span-1 lg:col-span-4 transition-all duration-300 hover:shadow-md rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md shadow-sm overflow-hidden">
-      <CardHeader className="py-3 px-4">
-        <CardTitle className="text-base font-semibold text-[#2E261F] dark:text-[#F5F3EC]">
-          Ventas por día
+    <Card className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md overflow-hidden">
+      <CardHeader className="px-4 py-3">
+        <CardTitle className="text-sm font-semibold text-gray-900 dark:text-white">
+          {mode === "week" ? "Esta semana" : "Este mes"}
         </CardTitle>
-        <p className="text-xs text-gray-500 dark:text-white/45">
-          Monto vendido en el periodo seleccionado.
-        </p>
-      </CardHeader>
-      <CardContent className="px-0 sm:px-2 pb-2">
-        <div className="h-[200px] sm:h-[280px] w-full min-w-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={chartData}
-              width={500}
-              height={280}
-              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={primaryColor} stopOpacity={0.18}/>
-                  <stop offset="95%" stopColor={primaryColor} stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="4 6" vertical={false} stroke={gridColor} />
-              <XAxis 
-                dataKey="label" 
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 11, fill: mutedTextColor }}
-                dy={5}
-              />
-              <YAxis 
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 11, fill: mutedTextColor }}
-                tickFormatter={(value) => `₡${value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value}`}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  borderRadius: "12px", 
-                  border: `1px solid ${tooltipBorder}`,
-                  backgroundColor: tooltipBackground,
-                  boxShadow: "0 12px 30px -18px rgb(46 38 31 / 0.45)",
-                  color: textColor,
-                  fontSize: "11px",
-                  padding: "8px"
-                }}
-                itemStyle={{ color: primaryColor, padding: 0, fontWeight: 700 }}
-                labelStyle={{ color: mutedTextColor, fontWeight: 600, marginBottom: "4px" }}
-                cursor={{ stroke: primaryColor, strokeWidth: 1.5, strokeDasharray: "4 4" }}
-                formatter={(value: unknown) => [formatCurrency(Number(value || 0)), "Venta"]}
-                labelFormatter={(label) => mode === "month" ? `Día ${label}` : label}
-              />
-              <Area
-                type="monotone"
-                dataKey="total"
-                stroke={primaryColor}
-                strokeWidth={2.5}
-                fillOpacity={1}
-                fill="url(#colorTotal)"
-                activeDot={{ r: 5, strokeWidth: 0, fill: primaryColor }}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+        <div className="flex items-center gap-4 mt-1">
+          <span className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-white/45">
+            <span className="inline-block size-2.5 rounded-full" style={{ background: incomeColor }} />
+            Ingresos
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-white/45">
+            <span className="inline-block size-2.5 rounded-full" style={{ background: expenseColor }} />
+            Egresos
+          </span>
         </div>
+      </CardHeader>
+
+      <CardContent className="px-0 pb-3">
+        {!hasData ? (
+          <div className="flex h-[180px] items-center justify-center text-sm text-gray-400 dark:text-white/30">
+            Sin datos en este periodo
+          </div>
+        ) : (
+          <div className="h-[200px] sm:h-[240px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data}
+                margin={{ top: 8, right: 12, left: -16, bottom: 0 }}
+                barCategoryGap={mode === "week" ? "30%" : "20%"}
+                barGap={2}
+              >
+                <CartesianGrid strokeDasharray="4 6" vertical={false} stroke={gridColor} />
+                <XAxis
+                  dataKey="label"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fill: tickColor }}
+                  dy={5}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 10, fill: tickColor }}
+                  tickFormatter={v => v >= 1000 ? `₡${(v / 1000).toFixed(0)}k` : `₡${v}`}
+                  width={48}
+                />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: `1px solid ${tooltipBorder}`,
+                    backgroundColor: tooltipBg,
+                    color: tooltipText,
+                    fontSize: "12px",
+                    padding: "8px 12px",
+                  }}
+                  labelStyle={{ color: tickColor, fontWeight: 600, marginBottom: 4 }}
+                  formatter={(value: unknown, name: string) => [
+                    fmt(Number(value || 0)),
+                    name === "income" ? "Ingresos" : "Egresos",
+                  ]}
+                  labelFormatter={label =>
+                    mode === "month" ? label : label
+                  }
+                  cursor={{ fill: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)" }}
+                />
+                <Bar
+                  dataKey="income"
+                  fill={incomeColor}
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={mode === "week" ? 28 : 18}
+                />
+                <Bar
+                  dataKey="expenses"
+                  fill={expenseColor}
+                  radius={[4, 4, 0, 0]}
+                  maxBarSize={mode === "week" ? 28 : 18}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

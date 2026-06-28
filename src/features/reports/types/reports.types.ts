@@ -5,10 +5,11 @@ export interface ReportFilters {
   date: Date
 }
 
-export interface ChartDataPoint {
-  label: string // Day name or day number
+export interface FlowChartPoint {
+  label: string
   fullDate: string
-  total: number
+  income: number
+  expenses: number
 }
 
 export interface CategorySale {
@@ -25,13 +26,13 @@ export interface ProductSale {
   total: number
 }
 
-export interface SalesReportSummary {
-  totalSales: number
+export interface FlowReportSummary {
+  totalIncome: number
+  totalExpenses: number
+  balance: number
   averageSale: number
-  maxSale: number
   saleCount: number
-  data: ChartDataPoint[]
+  chartData: FlowChartPoint[]
   categorySales: CategorySale[]
   productSales: ProductSale[]
 }
-
