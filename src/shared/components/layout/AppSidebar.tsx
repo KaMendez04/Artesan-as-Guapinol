@@ -1,4 +1,4 @@
-import { LayoutDashboard, ReceiptText, Layers, TrendingUp, SlidersVertical, MoonStar, SunMedium, X } from "lucide-react"
+import { LayoutDashboard, ReceiptText, Layers, TrendingUp, SlidersVertical, MoonStar, SunMedium, X, ClipboardList } from "lucide-react"
 import { Link } from "react-router-dom"
 import {
   Sidebar,
@@ -18,6 +18,7 @@ const navItems = [
   { title: "Inicio", url: "/app", icon: LayoutDashboard },
   { title: "Ventas", url: "/app/ventas", icon: ReceiptText },
   { title: "Catálogo", url: "/app/catalogo", icon: Layers },
+  { title: "Pedidos", url: "/app/pedidos", icon: ClipboardList },
   { title: "Reportes", url: "/app/reportes", icon: TrendingUp },
 ]
 

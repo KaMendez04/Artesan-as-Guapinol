@@ -16,6 +16,7 @@ import { Capacitor } from "@capacitor/core"
 import { DEFAULT_AVATAR_URL } from "@/shared/constants/brand"
 import { useProfileStore } from "@/shared/store/useProfileStore"
 import { cn } from "@/shared/utils"
+import { NotificationBell } from "./NotificationBell"
 
 export default function AppLayout() {
   const navigate = useNavigate()
@@ -109,7 +110,8 @@ export default function AppLayout() {
             <SidebarTrigger />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <NotificationBell />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="size-10 border border-border/50 shadow-sm bg-white hover:opacity-90 cursor-pointer transition-opacity">

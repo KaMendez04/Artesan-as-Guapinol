@@ -10,14 +10,17 @@ import SalesPage from "./features/sales/pages/SalesPage"
 import SaleDetailPage from "./features/sales/pages/SaleDetailPage"
 import ReportsPage from "./features/reports/pages/ReportsPage"
 import SettingsPage from "./features/settings/pages/SettingsPage"
+import PedidosPage from "./features/pedidos/pages/PedidosPage"
 import { OfflineSyncManager } from "@/shared/components/OfflineSyncManager"
 import LoginPage from "./features/login/LoginPage"
 import { HardwareBackButton } from "@/shared/components/HardwareBackButton"
+import { NotificationHandler } from "@/shared/components/NotificationHandler"
 
 function App() {
   return (
     <Router>
       <HardwareBackButton />
+      <NotificationHandler />
       <ThemedToaster />
       <OfflineSyncManager />
 
@@ -36,6 +39,7 @@ function App() {
           <Route path="catalogo" element={<CatalogPage />} />
           <Route path="catalogo/:id/productos" element={<CategoryProductsPage />} />
           <Route path="reportes" element={<ReportsPage />} />
+          <Route path="pedidos" element={<PedidosPage />} />
           <Route path="ajustes" element={<SettingsPage />} />
         </Route>
 
