@@ -50,7 +50,6 @@ export function NotificationBell() {
         })
     }
 
-    const highCount = alerts.filter((x) => x.urgency === "high").length
     const totalCount = alerts.length
 
     const badgeColor = totalCount > 0 ? "bg-gray-400 dark:bg-gray-500" : null
@@ -114,7 +113,7 @@ export function NotificationBell() {
                     </div>
                 ) : (
                     <ul className="max-h-72 overflow-y-auto divide-y divide-gray-50 dark:divide-white/5">
-                        {alerts.slice(0, 6).map(({ pedido, urgency }) => {
+                        {alerts.slice(0, 6).map(({ pedido }) => {
                             const daysLeft = pedido.fecha_entrega
                                 ? differenceInCalendarDays(
                                     new Date(pedido.fecha_entrega + "T00:00:00"),

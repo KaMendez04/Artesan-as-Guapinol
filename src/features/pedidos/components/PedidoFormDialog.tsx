@@ -34,7 +34,7 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
     const [precioEstimado, setPrecioEstimado] = useState<string>(
         pedido?.precio_estimado != null ? String(pedido.precio_estimado) : ""
     )
-    const [estado, setEstado] = useState<PedidoEstado>(pedido?.estado ?? "en_proceso")
+    const [estado] = useState<PedidoEstado>(pedido?.estado ?? "en_proceso")
 
     const { mutate: create, isPending: creating } = useCreatePedido()
     const { mutate: update, isPending: updating } = useUpdatePedido()

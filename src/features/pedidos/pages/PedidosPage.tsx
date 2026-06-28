@@ -193,7 +193,6 @@ export default function PedidosPage() {
                                 const count = pedidos.filter((p) => p.estado === s).length
                                 const isActive = estadoFilter === s
                                 const colors =
-                                    s === "pendiente"  ? { idle: "border-[#E9A03B]/40 bg-[#E9A03B]/15 text-[#E9A03B]",        active: "border-[#E9A03B] bg-[#E9A03B] text-white" } :
                                     s === "en_proceso" ? { idle: "border-[#CF7534]/40 bg-[#CF7534]/15 text-[#CF7534]",        active: "border-[#CF7534] bg-[#CF7534] text-white" } :
                                     s === "terminado"  ? { idle: "border-[#6FA36A]/40 bg-[#6FA36A]/15 text-[#6FA36A]",        active: "border-[#6FA36A] bg-[#6FA36A] text-white" } :
                                     s === "entregado"  ? { idle: "border-[#708C3E]/40 bg-[#708C3E]/15 text-[#708C3E]",        active: "border-[#708C3E] bg-[#708C3E] text-white" } :
