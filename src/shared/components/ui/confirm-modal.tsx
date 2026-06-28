@@ -52,25 +52,25 @@ export function ConfirmModal({
                 <DialogFooter className="flex flex-row gap-3 sm:justify-center mt-4">
                     <Button
                         type="button"
+                        variant={variant === "destructive" ? "destructive" : "default"}
+                        onClick={onConfirm}
+                        disabled={isLoading}
+                        className={`flex-1 rounded-2xl h-11 font-semibold transition-all ${
+                            variant !== "destructive"
+                                ? "bg-[#708C3E] hover:bg-[#5E7634] text-white"
+                                : "bg-red-600 hover:bg-red-700 text-white"
+                        }`}
+                    >
+                        {isLoading ? "Procesando..." : confirmText}
+                    </Button>
+                    <Button
+                        type="button"
                         variant="ghost"
                         onClick={() => onOpenChange(false)}
                         disabled={isLoading}
                         className="flex-1 rounded-2xl h-11 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium transition-all"
                     >
                         {cancelText}
-                    </Button>
-                    <Button
-                        type="button"
-                        variant={variant === "destructive" ? "destructive" : "default"}
-                        onClick={onConfirm}
-                        disabled={isLoading}
-                        className={`flex-1 rounded-2xl h-11 font-semibold transition-all ${
-                            variant !== "destructive" 
-                                ? "bg-[#708C3E] hover:bg-[#5E7634] text-white" 
-                                : "bg-red-600 hover:bg-red-700 text-white"
-                        }`}
-                    >
-                        {isLoading ? "Procesando..." : confirmText}
                     </Button>
                 </DialogFooter>
             </DialogContent>

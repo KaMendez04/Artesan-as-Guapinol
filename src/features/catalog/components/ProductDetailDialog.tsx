@@ -191,7 +191,7 @@ Foto: ${currentImageUrl}`;
 
                     {/* ── Product Info ── */}
                     <div className={cn(
-                        "w-full md:w-2/5 p-6 flex flex-col justify-between bg-white",
+                        "w-full md:w-2/5 p-6 flex flex-col justify-between md:justify-center md:gap-8 bg-white",
                         !forceLight && "dark:bg-zinc-950"
                     )}>
                         <div className="space-y-5">
@@ -211,7 +211,7 @@ Foto: ${currentImageUrl}`;
                         </div>
 
                         {/* CTA */}
-                        <div className="mt-8 space-y-3">
+                        <div className="mt-8 space-y-3 md:mt-0">
                             <Button
                                 onClick={handleWhatsAppOrder}
                                 className={cn(

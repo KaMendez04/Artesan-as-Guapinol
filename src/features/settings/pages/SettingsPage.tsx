@@ -143,7 +143,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-5 text-gray-900 dark:text-white animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 overflow-x-hidden text-gray-900 dark:text-white animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -185,26 +185,19 @@ export default function SettingsPage() {
 
       {activeTab === "users" ? (
         <>
-          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4 sm:p-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-4">
-                <div className="size-20 overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm">
-                  <img
-                    src={resolvedAvatarUrl}
-                    alt="Foto de perfil"
-                    className="size-full object-cover"
-                  />
+          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="size-12 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm">
+                  <img src={resolvedAvatarUrl} alt="Foto de perfil" className="size-full object-cover" />
                 </div>
-
                 <div className="min-w-0">
-                  <h2 className="text-base font-semibold">Foto de perfil</h2>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-white/55">
-                    Se muestra en la esquina superior derecha.
-                  </p>
+                  <p className="truncate text-sm font-semibold">Foto de perfil</p>
+                  <p className="truncate text-xs text-gray-500 dark:text-white/50">Esquina superior derecha</p>
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex shrink-0 gap-2">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -215,23 +208,19 @@ export default function SettingsPage() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#708C3E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f7634]"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#708C3E] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#5f7634]"
                 >
-                  <Camera className="size-4" />
+                  <Camera className="size-3.5" />
                   Cambiar
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    resetAvatarUrl()
-                    sileo.info({ title: "Foto restaurada" })
-                  }}
+                  onClick={() => { resetAvatarUrl(); sileo.info({ title: "Foto restaurada" }) }}
                   disabled={!hasCustomAvatar}
-                  className="inline-flex items-center justify-center rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-40 dark:text-white dark:hover:bg-white/5"
+                  className="inline-flex items-center justify-center rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 p-2 text-gray-700 dark:text-white transition hover:bg-white/80 disabled:opacity-40"
                   aria-label="Restaurar logo"
-                  title="Restaurar logo"
                 >
-                  <RotateCcw className="size-4" />
+                  <RotateCcw className="size-3.5" />
                 </button>
               </div>
             </div>
@@ -239,35 +228,30 @@ export default function SettingsPage() {
 
           <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-white/35">Número de WhatsApp del catálogo</p>
-            <form className="flex items-center gap-2" onSubmit={handleSaveWhatsApp}>
-              <span className="text-sm text-gray-400 dark:text-white/35">+506</span>
+            <form className="flex flex-wrap items-center gap-2" onSubmit={handleSaveWhatsApp}>
               <input
                 value={whatsappInput}
                 onChange={(e) => setWhatsappInput(e.target.value.replace(/\D/g, ""))}
                 placeholder="84131678"
                 maxLength={8}
                 inputMode="numeric"
-                className="h-9 flex-1 rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
+                className="h-9 min-w-0 flex-1 rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
+                style={{ minWidth: "140px" }}
               />
               <button
                 type="submit"
                 disabled={isSavingPhone}
-                className="h-9 rounded-xl bg-[#708C3E] px-3 text-sm font-semibold text-white transition hover:bg-[#5f7634] disabled:opacity-60"
+                className="h-9 shrink-0 rounded-xl bg-[#708C3E] px-3 text-sm font-semibold text-white transition hover:bg-[#5f7634] disabled:opacity-60"
               >
                 {isSavingPhone ? "..." : "Guardar"}
               </button>
             </form>
           </section>
 
-          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4 sm:p-5">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-[#708C3E]/10 text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A7D878]">
-                <Users className="size-5" />
-              </div>
-              <div>
-                <h2 className="text-base font-semibold">Crear usuario</h2>
-                <p className="text-sm text-gray-500 dark:text-white/55">Crea accesos para el equipo.</p>
-              </div>
+          <section className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <Users className="size-4 shrink-0 text-[#708C3E] dark:text-[#A7D878]" />
+              <p className="text-sm font-semibold">Crear usuario</p>
             </div>
 
             <form className="grid gap-3" onSubmit={handleCreateUser}>
@@ -275,31 +259,29 @@ export default function SettingsPage() {
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
                 placeholder="Nombre completo"
-                className="h-11 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
+                className="h-10 w-full rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
               />
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <input
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  type="email"
-                  placeholder="Correo"
-                  className="h-11 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
-                />
-                <input
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  type="password"
-                  placeholder="Contraseña"
-                  className="h-11 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
-                />
-              </div>
+              <input
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                type="email"
+                placeholder="Correo"
+                className="h-10 w-full rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
+              />
+              <input
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                type="password"
+                placeholder="Contraseña"
+                className="h-10 w-full rounded-xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 text-sm outline-none focus:ring-2 focus:ring-[#708C3E]/30 dark:text-white"
+              />
 
-              <div className="flex justify-end">
+              <div className="flex flex-wrap justify-end gap-2">
                 <button
                   type="submit"
                   disabled={isCreatingUser}
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#708C3E] px-5 text-sm font-semibold text-white transition hover:bg-[#5f7634] disabled:opacity-60"
+                  className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#708C3E] px-5 text-sm font-semibold text-white transition hover:bg-[#5f7634] disabled:opacity-60 sm:w-auto"
                 >
                   <UserPlus className="size-4" />
                   {isCreatingUser ? "Creando..." : "Crear usuario"}

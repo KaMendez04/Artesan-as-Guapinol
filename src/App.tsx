@@ -10,6 +10,7 @@ import SalesPage from "./features/sales/pages/SalesPage"
 import SaleDetailPage from "./features/sales/pages/SaleDetailPage"
 import ReportsPage from "./features/reports/pages/ReportsPage"
 import SettingsPage from "./features/settings/pages/SettingsPage"
+import PurchasesPage from "./features/purchases/pages/PurchasesPage"
 import PedidosPage from "./features/pedidos/pages/PedidosPage"
 import { OfflineSyncManager } from "@/shared/components/OfflineSyncManager"
 import LoginPage from "./features/login/LoginPage"
@@ -39,6 +40,7 @@ function App() {
           <Route path="catalogo" element={<CatalogPage />} />
           <Route path="catalogo/:id/productos" element={<CategoryProductsPage />} />
           <Route path="reportes" element={<ReportsPage />} />
+          <Route path="compras" element={<PurchasesPage />} />
           <Route path="pedidos" element={<PedidosPage />} />
           <Route path="ajustes" element={<SettingsPage />} />
         </Route>

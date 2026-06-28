@@ -41,6 +41,29 @@ export interface Database {
           updated_at?: string
         }
       }
+      Compras: {
+        Row: {
+          id: string
+          monto: number
+          fecha: string
+          tienda: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          monto: number
+          fecha: string
+          tienda: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          monto?: number
+          fecha?: string
+          tienda?: string
+          created_at?: string
+        }
+      }
       products: {
         Row: {
           id: string
