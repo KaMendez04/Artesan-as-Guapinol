@@ -99,8 +99,8 @@ export function SalesChart({ data, mode, isLoading }: SalesChartProps) {
                     padding: "8px 12px",
                   }}
                   labelStyle={{ color: tickColor, fontWeight: 600, marginBottom: 4 }}
-                  formatter={(value: unknown, name: string) => [
-                    fmt(Number(value || 0)),
+                  formatter={(value, name) => [
+                    fmt(Number(value ?? 0)),
                     name === "income" ? "Ingresos" : "Egresos",
                   ]}
                   labelFormatter={label =>
