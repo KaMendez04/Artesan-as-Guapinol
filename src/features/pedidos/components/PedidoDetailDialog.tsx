@@ -2,13 +2,11 @@ import { useState } from "react"
 import {
     Dialog,
     DialogContent,
-    DialogHeader,
-    DialogTitle,
     DialogDescription,
+    DialogTitle,
 } from "@/shared/components/ui/dialog"
-import { Button } from "@/shared/components/ui/button"
 import { ConfirmModal } from "@/shared/components/ui/confirm-modal"
-import { Calendar, User, DollarSign, Pencil, FileText, Trash2 } from "lucide-react"
+import { Banknote, Calendar, FileText, Pencil, Trash2, User, X } from "lucide-react"
 import { PedidoStatusBadge } from "./PedidoStatusBadge"
 import { isCloudinaryUrl } from "@/shared/lib/cloudinary"
 import { format } from "date-fns"
@@ -57,12 +55,15 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-            <DialogContent className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 max-h-[90vh] overflow-y-auto p-0">
+            <DialogContent
+                className="sm:max-w-md border-0 rounded-2xl shadow-2xl bg-white dark:bg-zinc-900 max-h-[90vh] overflow-y-auto p-0"
+                showCloseButton={false}
+            >
                 <DialogDescription className="sr-only">
                     Detalles del pedido: {pedido.descripcion}
                 </DialogDescription>
 
-                {/* Image */}
+                {/* Image + top-right actions */}
                 <div className="relative w-full aspect-video bg-[#F5F3EB] dark:bg-zinc-800 overflow-hidden rounded-t-2xl">
                     {imageUrl ? (
                         <img
@@ -77,27 +78,46 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
                             </span>
                         </div>
                     )}
+
+                    {/* Top-right: trash + close */}
+                    <div className="absolute right-3 top-3 flex items-center gap-1.5">
+                        <button
+                            type="button"
+                            onClick={() => setShowDeleteConfirm(true)}
+                            disabled={isDeleting}
+                            className="flex size-8 items-center justify-center rounded-xl bg-black/30 text-white backdrop-blur-sm transition hover:bg-red-500/80 disabled:opacity-40"
+                            aria-label="Eliminar pedido"
+                        >
+                            <Trash2 className="size-4" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="flex size-8 items-center justify-center rounded-xl bg-black/30 text-white backdrop-blur-sm transition hover:bg-black/50"
+                            aria-label="Cerrar"
+                        >
+                            <X className="size-4" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-4 p-5">
-                    <DialogHeader className="gap-2 text-left">
-                        {/* Status + date */}
-                        <div className="flex items-center justify-between gap-2">
-                            <PedidoStatusBadge estado={pedido.estado} className="text-xs px-3 py-1" />
-                            <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0">
-                                {format(new Date(pedido.created_at), "dd MMM", { locale: es })}
-                            </span>
-                        </div>
+                    {/* Status + date */}
+                    <div className="flex items-center justify-between gap-2">
+                        <PedidoStatusBadge estado={pedido.estado} className="text-xs px-3 py-1" />
+                        <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0">
+                            {format(new Date(pedido.created_at), "dd MMM", { locale: es })}
+                        </span>
+                    </div>
 
-                        {/* Descripcion */}
-                        <DialogTitle className="text-lg font-bold text-gray-900 dark:text-white text-left leading-snug">
-                            {pedido.descripcion}
-                        </DialogTitle>
-                    </DialogHeader>
+                    {/* Titulo */}
+                    <DialogTitle className="text-lg font-bold text-gray-900 dark:text-white leading-snug -mt-1">
+                        {pedido.descripcion}
+                    </DialogTitle>
 
                     {/* Meta info */}
                     {(pedido.nombre_cliente || pedido.fecha_entrega || pedido.precio_estimado != null) && (
-                        <div className="flex flex-col gap-2.5 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 px-4 py-3">
+                        <div className="flex flex-col gap-2.5 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-4 py-3">
                             {pedido.nombre_cliente && (
                                 <div className="flex items-center gap-2.5">
                                     <User className="size-4 text-gray-400 shrink-0" />
@@ -111,7 +131,7 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
                                 <div className="flex items-center gap-2.5">
                                     <Calendar className="size-4 text-gray-400 shrink-0" />
                                     <div>
-                                        <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">Fecha de entrega</p>
+                                        <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">Entrega</p>
                                         <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                                             {format(new Date(pedido.fecha_entrega + "T00:00:00"), "EEEE dd 'de' MMMM", { locale: es })}
                                         </p>
@@ -120,7 +140,7 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
                             )}
                             {pedido.precio_estimado != null && (
                                 <div className="flex items-center gap-2.5">
-                                    <DollarSign className="size-4 text-gray-400 shrink-0" />
+                                    <Banknote className="size-4 text-gray-400 shrink-0" />
                                     <div>
                                         <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">Precio estimado</p>
                                         <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -139,7 +159,7 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
                                 <FileText className="size-3.5 text-gray-400" />
                                 <p className="text-[0.65rem] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">Notas</p>
                             </div>
-                            <div className="rounded-2xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 px-4 py-3">
+                            <div className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-4 py-3">
                                 <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
                                     {pedido.notas}
                                 </p>
@@ -147,41 +167,25 @@ export function PedidoDetailDialog({ open, onClose, pedido, onEdit }: PedidoDeta
                         </div>
                     )}
 
-                    <div className="flex items-center justify-between gap-2 pt-1">
-                        <Button
-                            type="button"
-                            onClick={() => setShowDeleteConfirm(true)}
-                            disabled={isDeleting}
-                            className="rounded-2xl border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/25 gap-1.5 font-semibold"
-                            variant="ghost"
-                        >
-                            <Trash2 className="size-4" />
-                            Eliminar
-                        </Button>
-
-                        <div className="flex gap-2">
-                            <Button
+                    {/* Botones: primaria izquierda, secundaria derecha */}
+                    <div className="flex gap-2 pt-1">
+                        {onEdit && (
+                            <button
                                 type="button"
-                                variant="ghost"
-                                onClick={onClose}
-                                className="rounded-2xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                                onClick={() => { onClose(); onEdit(pedido) }}
+                                className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] px-4 py-2.5 text-sm font-semibold text-white transition"
                             >
-                                Cerrar
-                            </Button>
-                            {onEdit && (
-                                <Button
-                                    type="button"
-                                    onClick={() => {
-                                        onClose()
-                                        onEdit(pedido)
-                                    }}
-                                    className="rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-md shadow-[#708C3E]/20 gap-2"
-                                >
-                                    <Pencil className="size-4" />
-                                    Editar
-                                </Button>
-                            )}
-                        </div>
+                                <Pencil className="size-4" />
+                                Editar
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="flex-1 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-4 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 transition hover:bg-white/80 dark:hover:bg-white/10"
+                        >
+                            Cerrar
+                        </button>
                     </div>
                 </div>
             </DialogContent>

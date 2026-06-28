@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Button } from "@/shared/components/ui/button"
 import {
     MoreVertical, Pencil, Trash2, Calendar, User,
-    DollarSign, ChevronDown, Check, Loader2,
+    ChevronDown, Check, Loader2,
 } from "lucide-react"
 import {
     DropdownMenu,
@@ -25,11 +25,11 @@ import { sileo } from "sileo"
 import type { Pedido, PedidoEstado } from "@/features/pedidos/types/pedido.types"
 
 const estadoBtnStyle: Record<PedidoEstado, { idle: string; active: string }> = {
-    pendiente:  { idle: "border-amber-200   text-amber-700  dark:text-amber-400  hover:bg-amber-50  dark:hover:bg-amber-900/20",  active: "bg-amber-100  border-amber-400  text-amber-700  dark:bg-amber-900/30  dark:text-amber-400  dark:border-amber-600" },
-    en_proceso: { idle: "border-blue-200    text-blue-700   dark:text-blue-400   hover:bg-blue-50   dark:hover:bg-blue-900/20",   active: "bg-blue-100   border-blue-400   text-blue-700   dark:bg-blue-900/30   dark:text-blue-400   dark:border-blue-600" },
-    terminado:  { idle: "border-emerald-200 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20", active: "bg-emerald-100 border-emerald-400 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-600" },
-    entregado:  { idle: "border-[#708C3E]/30 text-[#708C3E] dark:text-[#A7D878] hover:bg-[#708C3E]/10 dark:hover:bg-[#708C3E]/20", active: "bg-[#708C3E]/10 border-[#708C3E] text-[#708C3E] dark:bg-[#708C3E]/20 dark:text-[#A7D878]" },
-    cancelado:  { idle: "border-gray-200    text-gray-500   dark:text-zinc-400   hover:bg-gray-50   dark:hover:bg-zinc-800",       active: "bg-gray-100   border-gray-400   text-gray-500   dark:bg-zinc-800      dark:text-zinc-300   dark:border-zinc-500" },
+    pendiente:  { idle: "border-[#E9A03B]/30 text-[#E9A03B] dark:text-[#F0A94A] hover:bg-[#E9A03B]/10 dark:hover:bg-[#F0A94A]/10",   active: "bg-[#E9A03B]/15 border-[#E9A03B] text-[#E9A03B] dark:bg-[#F0A94A]/15 dark:text-[#F0A94A] dark:border-[#F0A94A]/50" },
+    en_proceso: { idle: "border-[#CF7534]/30 text-[#CF7534] dark:text-[#D47A3A] hover:bg-[#CF7534]/10 dark:hover:bg-[#D47A3A]/10",   active: "bg-[#CF7534]/15 border-[#CF7534] text-[#CF7534] dark:bg-[#D47A3A]/15 dark:text-[#D47A3A] dark:border-[#D47A3A]/50" },
+    terminado:  { idle: "border-[#6FA36A]/30 text-[#6FA36A] dark:text-[#8FBF8C] hover:bg-[#6FA36A]/10 dark:hover:bg-[#8FBF8C]/10",   active: "bg-[#6FA36A]/15 border-[#6FA36A] text-[#6FA36A] dark:bg-[#8FBF8C]/15 dark:text-[#8FBF8C] dark:border-[#8FBF8C]/50" },
+    entregado:  { idle: "border-[#708C3E]/30 text-[#708C3E] dark:text-[#A7D878] hover:bg-[#708C3E]/10 dark:hover:bg-[#708C3E]/20",   active: "bg-[#708C3E]/15 border-[#708C3E] text-[#708C3E] dark:bg-[#708C3E]/25 dark:text-[#A7D878]" },
+    cancelado:  { idle: "border-gray-200    text-gray-500   dark:text-zinc-400   hover:bg-gray-50   dark:hover:bg-zinc-800",          active: "bg-gray-100   border-gray-400   text-gray-500   dark:bg-zinc-800      dark:text-zinc-300   dark:border-zinc-500" },
 }
 
 interface PedidoCardProps {
@@ -216,25 +216,13 @@ export function PedidoCard({ pedido, onView, onEdit, onDelete }: PedidoCardProps
                     </PopoverContent>
                 </Popover>
 
-                {/* Meta: date + price */}
-                {(pedido.fecha_entrega || pedido.precio_estimado != null) && (
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                        {pedido.fecha_entrega && (
-                            <div className="flex items-center gap-1">
-                                <Calendar className="size-3 text-gray-400 shrink-0" />
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    {format(new Date(pedido.fecha_entrega + "T00:00:00"), "dd MMM yyyy", { locale: es })}
-                                </span>
-                            </div>
-                        )}
-                        {pedido.precio_estimado != null && (
-                            <div className="flex items-center gap-1">
-                                <DollarSign className="size-3 text-gray-400 shrink-0" />
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    ₡{pedido.precio_estimado.toLocaleString("es-CR")}
-                                </span>
-                            </div>
-                        )}
+                {/* Fecha de entrega */}
+                {pedido.fecha_entrega && (
+                    <div className="flex items-center gap-1">
+                        <Calendar className="size-3 text-gray-400 shrink-0" />
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {format(new Date(pedido.fecha_entrega + "T00:00:00"), "dd MMM yyyy", { locale: es })}
+                        </span>
                     </div>
                 )}
             </div>

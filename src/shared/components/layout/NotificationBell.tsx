@@ -55,9 +55,9 @@ export function NotificationBell() {
     const totalCount = alerts.length
 
     const badgeColor = highCount > 0
-        ? "bg-red-500"
+        ? "bg-[#CF7534]"
         : totalCount > 0
-        ? "bg-amber-400"
+        ? "bg-[#E9A03B]"
         : null
 
     return (
@@ -139,7 +139,7 @@ export function NotificationBell() {
                                     className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group/item"
                                 >
                                     {/* Urgency dot */}
-                                    <span className={`mt-1.5 size-2 rounded-full shrink-0 ${urgency === "high" ? "bg-red-500" : "bg-amber-400"}`} />
+                                    <span className={`mt-1.5 size-2 rounded-full shrink-0 ${urgency === "high" ? "bg-[#CF7534]" : "bg-[#E9A03B]"}`} />
 
                                     <div
                                         className="min-w-0 flex-1 cursor-pointer"
@@ -154,7 +154,7 @@ export function NotificationBell() {
                                         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                                             <PedidoStatusBadge estado={pedido.estado} />
                                             {dueLine && (
-                                                <span className={`text-[0.65rem] font-semibold ${urgency === "high" ? "text-red-500" : "text-amber-500"}`}>
+                                                <span className={`text-[0.65rem] font-semibold ${urgency === "high" ? "text-[#CF7534]" : "text-[#E9A03B]"}`}>
                                                     {dueLine}
                                                 </span>
                                             )}

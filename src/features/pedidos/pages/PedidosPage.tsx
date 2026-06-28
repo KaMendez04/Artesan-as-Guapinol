@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react"
-import { ArrowLeft, ClipboardList, Plus, Search } from "lucide-react"
+import { ArrowLeft, ClipboardList, Plus, Search, SlidersHorizontal } from "lucide-react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { sileo } from "sileo"
-import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
-import { Skeleton } from "@/shared/components/ui/skeleton"
 import { ConfirmModal } from "@/shared/components/ui/confirm-modal"
 import { AppPagination } from "@/shared/components/ui/AppPagination"
 import { PedidoCard } from "@/features/pedidos/components/PedidoCard"
@@ -27,12 +24,15 @@ const ITEMS_PER_PAGE = 12
 
 type EstadoFilter = PedidoEstado | "todos"
 
+const estadoKeys = Object.keys(estadoConfig) as PedidoEstado[]
+
 export default function PedidosPage() {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const [search, setSearch] = useState("")
     const [estadoFilter, setEstadoFilter] = useState<EstadoFilter>("todos")
+    const [showFilters, setShowFilters] = useState(false)
     const [viewingPedido, setViewingPedido] = useState<Pedido | null>(null)
     const [dialogOpen, setDialogOpen] = useState(false)
     const [editingPedido, setEditingPedido] = useState<Pedido | null>(null)
@@ -139,43 +139,120 @@ export default function PedidosPage() {
         setCurrentPage(1)
     }
 
-    const estadoKeys = Object.keys(estadoConfig) as PedidoEstado[]
+    const activeFilterLabel =
+        estadoFilter === "todos"
+            ? "Todos"
+            : estadoConfig[estadoFilter as PedidoEstado]?.label ?? "Filtro"
 
     return (
-        <div className="flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-4 max-w-3xl mx-auto w-full px-3 py-4 sm:px-4 sm:py-4 md:px-0 md:py-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards">
+
+            {/* Header + filtro */}
+            <div className="mb-0">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={() => navigate("/app")}
+                            className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-gray-700 dark:text-white hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm transition"
+                            aria-label="Regresar"
+                        >
+                            <ArrowLeft className="size-5" />
+                        </button>
+                        <h1 className="truncate text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            Pedidos
+                        </h1>
+                    </div>
+
                     <button
                         type="button"
-                        onClick={() => navigate("/app")}
-                        className="rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-gray-700 dark:text-white hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm transition"
-                        aria-label="Regresar"
-                        title="Regresar"
+                        onClick={() => setShowFilters((v) => !v)}
+                        className="inline-flex items-center gap-2 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 px-3 py-2 text-xs font-medium text-gray-700 dark:text-white transition hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm"
+                        aria-expanded={showFilters}
                     >
-                        <ArrowLeft className="size-5" />
+                        <SlidersHorizontal size={15} />
+                        <span className="hidden sm:inline">{activeFilterLabel}</span>
                     </button>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Pedidos</h1>
                 </div>
-                <button
-                    type="button"
-                    onClick={handleTestNotification}
-                    className="rounded-2xl border border-dashed border-gray-300 dark:border-white/10 px-3 py-1.5 text-xs font-semibold text-gray-400 dark:text-gray-500 hover:border-[#708C3E] hover:text-[#708C3E] transition-colors"
-                >
-                    Probar notif
-                </button>
+
+                {showFilters && (
+                    <div className="mt-3 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md p-3 space-y-3">
+                        <div className="flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                onClick={() => handleFilterChange("todos")}
+                                className={`rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${
+                                    estadoFilter === "todos"
+                                        ? "border-[#708C3E] bg-[#708C3E] text-white"
+                                        : "border-border/50 bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-white/80 dark:hover:bg-white/10"
+                                }`}
+                            >
+                                Todos
+                            </button>
+                            {estadoKeys.map((s) => {
+                                const count = pedidos.filter((p) => p.estado === s).length
+                                const isActive = estadoFilter === s
+                                const activeColor =
+                                    s === "pendiente"  ? "border-[#E9A03B] bg-[#E9A03B] text-white" :
+                                    s === "en_proceso" ? "border-[#CF7534] bg-[#CF7534] text-white" :
+                                    s === "terminado"  ? "border-[#6FA36A] bg-[#6FA36A] text-white" :
+                                    s === "entregado"  ? "border-[#708C3E] bg-[#708C3E] text-white" :
+                                                         "border-gray-400 bg-gray-400 text-white"
+                                return (
+                                    <button
+                                        key={s}
+                                        type="button"
+                                        onClick={() => handleFilterChange(s)}
+                                        className={`rounded-xl border px-3 py-1.5 text-xs font-semibold transition flex items-center gap-1.5 ${
+                                            isActive
+                                                ? activeColor
+                                                : "border-border/50 bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-white/80 dark:hover:bg-white/10"
+                                        }`}
+                                    >
+                                        {estadoConfig[s].label}
+                                        {count > 0 && (
+                                            <span className={`rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold ${
+                                                isActive ? "bg-white/25" : "bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400"
+                                            }`}>
+                                                {count}
+                                            </span>
+                                        )}
+                                    </button>
+                                )
+                            })}
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <button
+                                type="button"
+                                onClick={() => { handleFilterChange("todos"); setShowFilters(false) }}
+                                className="text-xs text-[#708C3E] hover:underline"
+                            >
+                                Limpiar filtros
+                            </button>
+                            {Capacitor.isNativePlatform() && (
+                                <button
+                                    type="button"
+                                    onClick={handleTestNotification}
+                                    className="text-xs text-gray-400 dark:text-white/30 hover:text-[#708C3E] transition"
+                                >
+                                    Probar notificación
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* Search + Add */}
+            {/* Búsqueda + nuevo */}
             <div className="flex gap-3">
                 <div className="relative flex-1">
                     <Search
                         className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none text-gray-400 dark:text-white/40"
                         size={16}
                     />
-                    <Input
-                        id="pedidos-search"
-                        className="h-10 rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all placeholder:text-gray-400 dark:placeholder:text-white/20"
+                    <input
+                        className="w-full rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 py-2 pl-9 pr-3 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[#708C3E]/30 placeholder:text-gray-400 dark:placeholder:text-white/20"
                         placeholder="Buscar pedido o cliente…"
                         value={search}
                         onChange={(e) => {
@@ -187,52 +264,12 @@ export default function PedidosPage() {
                 <button
                     type="button"
                     onClick={handleAdd}
-                    className="rounded-2xl bg-[#708C3E] hover:bg-[#5E7634] text-white p-2.5 transition shrink-0 shadow-sm"
+                    className="shrink-0 rounded-2xl bg-[#708C3E] p-2.5 text-white transition hover:bg-[#5f7634]"
                     aria-label="Agregar pedido"
                     title="Agregar pedido"
                 >
                     <Plus className="size-5" />
                 </button>
-            </div>
-
-            {/* Estado filter chips */}
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-                <button
-                    type="button"
-                    onClick={() => handleFilterChange("todos")}
-                    className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all ${
-                        estadoFilter === "todos"
-                            ? "border-[#708C3E] bg-[#708C3E] text-white"
-                            : "border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-white/80 dark:hover:bg-white/10"
-                    }`}
-                >
-                    Todos
-                </button>
-                {estadoKeys.map((s) => (
-                    <button
-                        key={s}
-                        type="button"
-                        onClick={() => handleFilterChange(s)}
-                        className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all ${
-                            estadoFilter === s
-                                ? s === "pendiente"  ? "border-amber-500 bg-amber-500 text-white"
-                                : s === "en_proceso" ? "border-blue-500 bg-blue-500 text-white"
-                                : s === "terminado"  ? "border-emerald-600 bg-emerald-600 text-white"
-                                : s === "entregado"  ? "border-[#708C3E] bg-[#708C3E] text-white"
-                                : "border-gray-400 bg-gray-400 text-white"
-                                : "border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-white/80 dark:hover:bg-white/10"
-                        }`}
-                    >
-                        {estadoConfig[s].label}
-                        {pedidos.filter((p) => p.estado === s).length > 0 && (
-                            <span className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[0.55rem] font-bold ${
-                                estadoFilter === s ? "bg-white/20" : "bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400"
-                            }`}>
-                                {pedidos.filter((p) => p.estado === s).length}
-                            </span>
-                        )}
-                    </button>
-                ))}
             </div>
 
             {/* Grid */}
@@ -241,12 +278,12 @@ export default function PedidosPage() {
                     {Array.from({ length: 8 }).map((_, i) => (
                         <div
                             key={`skeleton-ped-${i}`}
-                            className="flex flex-col gap-3 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-white/5 p-4 shadow-sm"
+                            className="animate-pulse rounded-2xl border border-border/50 bg-white/60 dark:bg-white/5 backdrop-blur-md overflow-hidden"
                         >
-                            <Skeleton className="aspect-4/3 w-full bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-3/4 bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
-                                <Skeleton className="h-3 w-1/2 bg-[#E8E5D8]/40 dark:bg-zinc-700/40" />
+                            <div className="aspect-4/3 w-full bg-gray-200 dark:bg-white/10" />
+                            <div className="p-3 space-y-2">
+                                <div className="h-4 w-3/4 rounded-full bg-gray-200 dark:bg-white/10" />
+                                <div className="h-3 w-1/2 rounded-full bg-gray-200 dark:bg-white/10" />
                             </div>
                         </div>
                     ))}
@@ -257,23 +294,22 @@ export default function PedidosPage() {
                         <ClipboardList className="size-7 text-[#708C3E]" />
                     </div>
                     <p className="text-base font-semibold text-gray-900 dark:text-white">
-                        {search || estadoFilter !== "todos"
-                            ? "Sin resultados para tu búsqueda"
-                            : "Aún no hay pedidos"}
+                        {search || estadoFilter !== "todos" ? "Sin resultados" : "Aún no hay pedidos"}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                         {search || estadoFilter !== "todos"
                             ? "Intentá con otra palabra o cambiá el filtro"
-                            : "Registrá el primer encargo que te hicieron"}
+                            : "Registrá el primer encargo"}
                     </p>
                     {!search && estadoFilter === "todos" && (
-                        <Button
+                        <button
+                            type="button"
                             onClick={handleAdd}
-                            className="mt-2 gap-1.5 rounded-full bg-[#708C3E] hover:bg-[#5E7634] text-white shadow-sm"
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-2xl bg-[#708C3E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#5f7634]"
                         >
                             <Plus className="size-4" />
                             Agregar primer pedido
-                        </Button>
+                        </button>
                     )}
                 </div>
             ) : (
@@ -290,22 +326,21 @@ export default function PedidosPage() {
                 </div>
             )}
 
-            <AppPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                className="mt-8"
-            />
-
-            {!isLoading && pedidos.length > 0 && (
-                <div className="mt-4 text-center">
-                    <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-                        {pedidos.length} {pedidos.length === 1 ? "pedido" : "pedidos"} en total
-                    </p>
-                </div>
+            {totalPages > 1 && (
+                <AppPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    className="pt-4"
+                />
             )}
 
-            {/* Detail view */}
+            {!isLoading && pedidos.length > 0 && (
+                <p className="text-center text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-white/25">
+                    {pedidos.length} {pedidos.length === 1 ? "pedido" : "pedidos"} en total
+                </p>
+            )}
+
             <PedidoDetailDialog
                 open={!!viewingPedido}
                 onClose={() => setViewingPedido(null)}
@@ -316,7 +351,6 @@ export default function PedidosPage() {
                 }}
             />
 
-            {/* Form dialog */}
             <PedidoFormDialog
                 key={editingPedido ? `edit-${editingPedido.id_pedido}` : `add-${dialogOpen}`}
                 open={dialogOpen}
@@ -324,7 +358,6 @@ export default function PedidosPage() {
                 pedido={editingPedido}
             />
 
-            {/* Delete confirm */}
             <ConfirmModal
                 open={!!deletingPedido}
                 onOpenChange={(v) => !v && setDeletingPedido(null)}
