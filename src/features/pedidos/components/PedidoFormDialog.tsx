@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { sileo } from "sileo"
+import { CalendarIcon } from "lucide-react"
+import { format } from "date-fns"
+import { es } from "date-fns/locale"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import {
@@ -10,6 +13,8 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/shared/components/ui/dialog"
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover"
+import { Calendar } from "@/shared/components/ui/calendar"
 import { ImageUpload } from "@/shared/components/ui/image-upload"
 import { useCreatePedido, useUpdatePedido } from "@/features/pedidos/hooks/usePedido"
 import {
@@ -17,6 +22,11 @@ import {
     cancelPedidoNotifications,
 } from "@/features/pedidos/services/pedido-notifications"
 import type { Pedido, PedidoEstado } from "@/features/pedidos/types/pedido.types"
+
+function toDateValue(d: Date) {
+    const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+    return x.toISOString().slice(0, 10)
+}
 
 interface PedidoFormDialogProps {
     open: boolean
@@ -31,6 +41,9 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
     const [nombreCliente, setNombreCliente] = useState(pedido?.nombre_cliente ?? "")
     const [imagenReferencia, setImagenReferencia] = useState<string | null>(pedido?.imagen_referencia ?? null)
     const [fechaEntrega, setFechaEntrega] = useState(pedido?.fecha_entrega ?? "")
+    const [dateObj, setDateObj] = useState<Date | undefined>(
+        pedido?.fecha_entrega ? new Date(pedido.fecha_entrega + "T12:00:00") : undefined
+    )
     const [precioEstimado, setPrecioEstimado] = useState<string>(
         pedido?.precio_estimado != null ? String(pedido.precio_estimado) : ""
     )
@@ -152,16 +165,35 @@ export function PedidoFormDialog({ open, onClose, pedido }: PedidoFormDialogProp
                     {/* Fecha de entrega */}
                     <div className="flex flex-col gap-1.5">
                         <div className="flex items-baseline justify-between">
-                            <label htmlFor="ped-fecha" className="text-sm font-semibold text-gray-700 dark:text-gray-300">Fecha de entrega</label>
+                            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Fecha de entrega</label>
                             <span className="text-xs text-gray-400">opcional</span>
                         </div>
-                        <input
-                            id="ped-fecha"
-                            type="date"
-                            value={fechaEntrega}
-                            onChange={(e) => setFechaEntrega(e.target.value)}
-                            className="w-full rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 px-3 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus-visible:ring-2 focus-visible:ring-[#708C3E]/30 focus-visible:border-transparent transition-all scheme-light dark:scheme-dark"
-                        />
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <button
+                                    type="button"
+                                    className="w-full flex items-center justify-between gap-2 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 px-3 py-2.5 text-sm text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-all outline-none focus:ring-2 focus:ring-[#708C3E]/30"
+                                >
+                                    <span className={fechaEntrega ? "" : "text-gray-400 dark:text-white/20"}>
+                                        {dateObj
+                                            ? format(dateObj, "dd 'de' MMMM 'de' yyyy", { locale: es })
+                                            : "Seleccioná una fecha"}
+                                    </span>
+                                    <CalendarIcon className="size-4 shrink-0 text-gray-400 dark:text-white/30" />
+                                </button>
+                            </PopoverTrigger>
+                            <PopoverContent align="start" className="w-auto p-2 rounded-2xl border border-border/50 bg-white dark:bg-zinc-900 shadow-lg">
+                                <Calendar
+                                    mode="single"
+                                    selected={dateObj}
+                                    onSelect={(d) => {
+                                        setDateObj(d)
+                                        setFechaEntrega(d ? toDateValue(d) : "")
+                                    }}
+                                    className="p-0"
+                                />
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
                     {/* Precio estimado */}

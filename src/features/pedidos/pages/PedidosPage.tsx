@@ -15,7 +15,6 @@ import {
     rescheduleAllNotifications,
     cancelPedidoNotifications,
 } from "@/features/pedidos/services/pedido-notifications"
-import { Capacitor } from "@capacitor/core"
 import type { Pedido, PedidoEstado } from "@/features/pedidos/types/pedido.types"
 
 const EMPTY_PEDIDOS: Pedido[] = []
