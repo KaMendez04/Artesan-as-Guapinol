@@ -77,7 +77,7 @@ export async function schedulePedidoNotifications(pedido: Pedido): Promise<void>
                     title,
                     body: desc,
                     channelId: "pedidos",
-                    smallIcon: "ic_stat_notify",
+                    smallIcon: "logo",
                     iconColor: "#708C3E",
                     extra: { id_pedido: pedido.id_pedido },
                     schedule: { at, allowWhileIdle: true },

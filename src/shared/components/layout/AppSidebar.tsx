@@ -43,7 +43,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b px-5 flex flex-row items-center justify-between h-[calc(3.5rem+var(--safe-area-inset-top))] pt-(--safe-area-inset-top) lg:h-[60px] lg:pt-0">
-        <h2 className="text-lg font-bold leading-tight">Artesanías Guapinol</h2>
+        <h2 className="text-sm font-bold leading-tight">Artesanías Guapinol</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -66,10 +66,10 @@ export function AppSidebar() {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   asChild
-                  size="lg"
+                  size="sm"
                   isActive={active}
                   className={[
-                    "gap-3 text-base transition-colors",
+                    "gap-3 text-sm transition-colors",
                     active
                       ? "bg-[#708C3E]/15 text-[#708C3E] dark:bg-[#A7D878]/15 dark:text-[#A7D878] font-semibold"
                       : "text-gray-700 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/5",
@@ -90,8 +90,8 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              size="lg"
-              className="gap-3 text-base font-normal text-gray-700 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/5"
+              size="sm"
+              className="gap-3 text-sm font-normal text-gray-700 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/5"
               onClick={toggleTheme}
             >
               {isDark ? <SunMedium className="size-5" /> : <MoonStar className="size-5" />}

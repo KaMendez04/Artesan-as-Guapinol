@@ -89,7 +89,7 @@ export default function PedidosPage() {
                 title: "Artesanías Guapinol",
                 body: "Las notificaciones funcionan correctamente",
                 channelId: "pedidos",
-                smallIcon: "ic_stat_notify",
+                smallIcon: "logo",
                 iconColor: "#708C3E",
                 schedule: { at, allowWhileIdle: true },
             }]
