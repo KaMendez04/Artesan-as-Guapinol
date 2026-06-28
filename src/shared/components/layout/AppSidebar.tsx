@@ -42,8 +42,8 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b px-5 flex flex-row items-center justify-between h-[calc(3.5rem+var(--safe-area-inset-top))] pt-(--safe-area-inset-top) lg:h-[60px] lg:pt-0">
-        <h2 className="text-sm font-bold leading-tight">Artesanías Guapinol</h2>
+      <SidebarHeader className="border-b px-5 flex flex-row items-center justify-between min-h-[calc(3.5rem+var(--safe-area-inset-top))] pt-(--safe-area-inset-top) lg:min-h-[60px] lg:pt-0 py-3">
+        <h2 className="text-[15px] font-bold leading-snug">Artesanías Guapinol</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -56,7 +56,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="p-2">
-        <SidebarMenu>
+        <SidebarMenu className="gap-1">
           {navItems.map((item) => {
             const active = item.exact
               ? pathname === item.url
@@ -66,10 +66,10 @@ export function AppSidebar() {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   asChild
-                  size="sm"
+                  size="default"
                   isActive={active}
                   className={[
-                    "gap-3 text-sm transition-colors",
+                    "gap-3 text-[15px] transition-colors",
                     active
                       ? "bg-[#708C3E]/15 text-[#708C3E] dark:bg-[#A7D878]/15 dark:text-[#A7D878] font-semibold"
                       : "text-gray-700 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/5",
@@ -87,11 +87,11 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t p-2 pb-[calc(0.5rem+var(--safe-area-inset-bottom))] lg:pb-2">
-        <SidebarMenu>
+        <SidebarMenu className="gap-1">
           <SidebarMenuItem>
             <SidebarMenuButton
-              size="sm"
-              className="gap-3 text-sm font-normal text-gray-700 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/5"
+              size="default"
+              className="gap-3 text-[15px] font-normal text-gray-700 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/5"
               onClick={toggleTheme}
             >
               {isDark ? <SunMedium className="size-5" /> : <MoonStar className="size-5" />}

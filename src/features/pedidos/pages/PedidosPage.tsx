@@ -16,7 +16,6 @@ import {
     cancelPedidoNotifications,
 } from "@/features/pedidos/services/pedido-notifications"
 import { Capacitor } from "@capacitor/core"
-import { LocalNotifications } from "@capacitor/local-notifications"
 import type { Pedido, PedidoEstado } from "@/features/pedidos/types/pedido.types"
 
 const EMPTY_PEDIDOS: Pedido[] = []
@@ -80,22 +79,6 @@ export default function PedidosPage() {
         currentPage * ITEMS_PER_PAGE
     )
 
-    async function handleTestNotification() {
-        if (!Capacitor.isNativePlatform()) { sileo.error({ title: "Solo funciona en Android" }); return }
-        const at = new Date(Date.now() + 10_000)
-        await LocalNotifications.schedule({
-            notifications: [{
-                id: 9999999,
-                title: "Artesanías Guapinol",
-                body: "Las notificaciones funcionan correctamente",
-                channelId: "pedidos",
-                smallIcon: "logo",
-                iconColor: "#708C3E",
-                schedule: { at, allowWhileIdle: true },
-            }]
-        })
-        sileo.success({ title: "Notificación en 10 seg", description: "Minimizá la app ahora" })
-    }
 
     function handleAdd() {
         setEditingPedido(null)
@@ -225,15 +208,6 @@ export default function PedidosPage() {
                             >
                                 Limpiar filtros
                             </button>
-                            {Capacitor.isNativePlatform() && (
-                                <button
-                                    type="button"
-                                    onClick={handleTestNotification}
-                                    className="text-xs text-gray-400 dark:text-white/30 hover:text-[#708C3E] transition"
-                                >
-                                    Probar notificación
-                                </button>
-                            )}
                         </div>
                     </div>
                 )}
